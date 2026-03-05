@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Consultor K30i">
+<title>Consultor K30i</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap');
+
+  :root {
+    --verde-kva: #1a7a4a;
+    --verde-claro: #25a666;
+    --verde-bg: #e8f5ee;
+    --cinza-escuro: #1c1c1c;
+    --cinza-medio: #4a4a4a;
+    --cinza-claro: #f0f0f0;
+    --branco: #ffffff;
+    --amarelo-alerta: #f5a623;
+    --vermelho: #d0021b;
+    --azul-link: #0066cc;
+    --balao-usuario: #dcf8c6;
+    --balao-app: #ffffff;
+    --fundo-chat: #e5ddd5;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+  body {
+    font-family: 'IBM Plex Sans', sans-serif;
+    background: var(--cinza-escuro);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    min-height: -webkit-fill-available;
+  }
+
+  #app {
+    width: 100%;
+    max-width: 480px;
+    height: 100vh;
+    height: -webkit-fill-available;
+    display: flex;
+    flex-direction: column;
+    background: var(--fundo-chat);
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* HEADER */
+  #header {
+    background: var(--verde-kva);
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    z-index: 10;
+  }
+
+  #header-avatar {
+    width: 42px;
+    height: 42px;
+    background: var(--verde-claro);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    font-weight: 700;
+    color: white;
+    flex-shrink: 0;
+  }
+
+  #header-info { flex: 1; }
+
+  #header-info h1 {
+    font-size: 16px;
+    font-weight: 700;
+    color: white;
+    letter-spacing: 0.3px;
+  }
+
+  #header-info p {
+    font-size: 12px;
+    color: rgba(255,255,255,0.75);
+    margin-top: 1px;
+  }
+
+  #header-badge {
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.3);
+    border-radius: 12px;
+    padding: 3px 10px;
+    font-size: 11px;
+    color: white;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+  }
+
+  /* CHAT AREA */
+  #chat {
+    flex: 1;
+    overflow-y: auto;
+    padding: 12px 10px;
+    scroll-behavior: smooth;
+  }
+
+  #chat::-webkit-scrollbar { width: 4px; }
+  #chat::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.2); border-radius: 2px; }
+
+  .msg-wrap {
+    display: flex;
+    margin-bottom: 6px;
+    animation: fadeIn 0.25s ease;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .msg-wrap.usuario { justify-content: flex-end; }
+  .msg-wrap.app { justify-content: flex-start; }
+
+  .balao {
+    max-width: 82%;
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 14px;
+    line-height: 1.5;
+    position: relative;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.15);
+  }
+
+  .msg-wrap.usuario .balao {
+    background: var(--balao-usuario);
+    border-bottom-right-radius: 2px;
+    color: var(--cinza-escuro);
+  }
+
+  .msg-wrap.app .balao {
+    background: var(--balao-app);
+    border-bottom-left-radius: 2px;
+    color: var(--cinza-escuro);
+  }
+
+  .balao .hora {
+    font-size: 10px;
+    color: #999;
+    float: right;
+    margin-left: 8px;
+    margin-top: 2px;
+  }
+
+  .balao strong { color: var(--verde-kva); }
+  .balao .titulo-alarme { font-size: 15px; font-weight: 700; color: var(--cinza-escuro); display: block; margin-bottom: 8px; }
+  .balao .secao { font-size: 12px; color: var(--verde-kva); font-weight: 600; margin-top: 8px; display: block; border-top: 1px solid #eee; padding-top: 6px; }
+  .balao ol, .balao ul { padding-left: 18px; margin: 6px 0; }
+  .balao li { margin-bottom: 3px; font-size: 13.5px; }
+  .balao .tag-alerta { background: #fff3cd; border-left: 3px solid var(--amarelo-alerta); padding: 6px 8px; border-radius: 4px; font-size: 13px; margin: 6px 0; display: block; }
+  .balao .tag-erro { background: #fde8e8; border-left: 3px solid var(--vermelho); padding: 6px 8px; border-radius: 4px; font-size: 13px; margin: 6px 0; display: block; }
+
+  /* BOTÕES RÁPIDOS */
+  #botoes-rapidos {
+    padding: 8px 10px;
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    background: rgba(229,221,213,0.8);
+    border-top: 1px solid rgba(0,0,0,0.08);
+  }
+
+  .btn-rapido {
+    flex: 1;
+    min-width: calc(50% - 3px);
+    background: var(--branco);
+    border: 1.5px solid var(--verde-kva);
+    border-radius: 20px;
+    padding: 7px 10px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--verde-kva);
+    cursor: pointer;
+    text-align: center;
+    font-family: 'IBM Plex Sans', sans-serif;
+    transition: all 0.15s;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .btn-rapido:active { background: var(--verde-bg); transform: scale(0.97); }
+
+  /* INPUT */
+  #input-area {
+    background: var(--cinza-claro);
+    padding: 8px 10px;
+    display: flex;
+    align-items: flex-end;
+    gap: 8px;
+    border-top: 1px solid rgba(0,0,0,0.1);
+  }
+
+  #input-texto {
+    flex: 1;
+    background: var(--branco);
+    border: none;
+    border-radius: 22px;
+    padding: 10px 16px;
+    font-size: 15px;
+    font-family: 'IBM Plex Sans', sans-serif;
+    color: var(--cinza-escuro);
+    resize: none;
+    outline: none;
+    max-height: 100px;
+    overflow-y: auto;
+    line-height: 1.4;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  }
+
+  #input-texto::placeholder { color: #aaa; }
+
+  #btn-enviar {
+    width: 44px;
+    height: 44px;
+    background: var(--verde-kva);
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: background 0.15s;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  }
+
+  #btn-enviar:active { background: var(--verde-claro); }
+  #btn-enviar svg { width: 22px; height: 22px; fill: white; }
+
+  /* TYPING INDICATOR */
+  .typing {
+    display: flex;
+    gap: 4px;
+    padding: 12px 14px;
+    background: white;
+    border-radius: 8px;
+    border-bottom-left-radius: 2px;
+    width: 60px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.15);
+  }
+
+  .typing span {
+    width: 8px; height: 8px;
+    background: #ccc;
+    border-radius: 50%;
+    animation: bounce 1.2s infinite;
+  }
+
+  .typing span:nth-child(2) { animation-delay: 0.2s; }
+  .typing span:nth-child(3) { animation-delay: 0.4s; }
+
+  @keyframes bounce {
+    0%, 80%, 100% { transform: translateY(0); background: #ccc; }
+    40% { transform: translateY(-6px); background: var(--verde-kva); }
+  }
+
+  /* OPÇÕES DE SELEÇÃO */
+  .opcoes-wrap { margin-top: 8px; display: flex; flex-direction: column; gap: 5px; }
+  .opcao-btn {
+    background: var(--verde-bg);
+    border: 1.5px solid var(--verde-kva);
+    border-radius: 8px;
+    padding: 8px 12px;
+    font-size: 13.5px;
+    font-weight: 500;
+    color: var(--verde-kva);
+    cursor: pointer;
+    text-align: left;
+    font-family: 'IBM Plex Sans', sans-serif;
+    transition: all 0.15s;
+  }
+  .opcao-btn:active { background: var(--verde-kva); color: white; }
+
+  .separator { text-align: center; font-size: 11px; color: #999; margin: 8px 0; }
+</style>
+</head>
+<body>
+<div id="app">
+
+  <div id="header">
+    <div id="header-avatar">K</div>
+    <div id="header-info">
+      <h1>Consultor K30i</h1>
+      <p>Base técnica KVA — offline</p>
+    </div>
+    <div id="header-badge">KVA</div>
+  </div>
+
+  <div id="chat"></div>
+
+  <div id="botoes-rapidos">
+    <button class="btn-rapido" onclick="atalho('alarme')">🔔 Código de alarme</button>
+    <button class="btn-rapido" onclick="atalho('procedimento')">📋 Procedimento</button>
+    <button class="btn-rapido" onclick="atalho('parametro')">⚙️ Parâmetro</button>
+    <button class="btn-rapido" onclick="atalho('reset')">🔄 Reset de falha</button>
+  </div>
+
+  <div id="input-area">
+    <textarea id="input-texto" placeholder="Digite sua dúvida técnica..." rows="1"
+      onkeydown="teclaEnter(event)" oninput="autoResize(this)"></textarea>
+    <button id="btn-enviar" onclick="enviar()">
+      <svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+    </button>
+  </div>
+
+</div>
+
+<script>
+// ============================================================
+// BASE TÉCNICA — MANUAL K30i (Versão 1.0 — 5 alarmes piloto)
+// ============================================================
+const BASE = {
+  alarmes: [
+    {
+      id: "baixa_pressao_oleo",
+      tags: ["baixa pressão", "pressão óleo", "pressao oleo", "pressão do óleo", "pressao do oleo", "óleo", "oleo", "pressão baixa"],
+      titulo: "⚠️ BAIXA PRESSÃO DO ÓLEO",
+      causa: "Pressão do óleo ficou abaixo do limite configurado (padrão: 1,0 Bar).",
+      verificar: [
+        "Nível de óleo no cárter — verificar primeiro",
+        "Bomba de óleo com defeito",
+        "Sensor de pressão com falha",
+        "Parametrização incorreta (limite configurado muito alto)"
+      ],
+      protecao: "Depende do parâmetro \"Ação Pressão Baixa\" — pode ser Resfriar e Parar ou Parar Imediatamente.",
+      reset: true,
+      referencia: "Seção 7.2 — Página 67"
+    },
+    {
+      id: "alta_temperatura",
+      tags: ["alta temperatura", "temperatura alta", "temperatura", "superaquecimento", "superaquecendo", "esquentando", "quente demais"],
+      titulo: "🌡️ ALTA TEMPERATURA",
+      causa: "Temperatura do motor ultrapassou o limite configurado (padrão: 97°C).",
+      verificar: [
+        "Nível da água do radiador — verificar primeiro",
+        "Bomba d'água com defeito",
+        "Correia do alternador/bomba partida ou frouxa",
+        "Sensor de temperatura com falha",
+        "Parametrização incorreta (limite configurado muito baixo)"
+      ],
+      protecao: "Depende do parâmetro \"Ação Alta Temperatura\" — pode ser Resfriar e Parar ou Parar Imediatamente.",
+      reset: true,
+      referencia: "Seção 7.2 — Página 68"
+    },
+    {
+      id: "falha_partida",
+      tags: ["falha na partida", "falha partida", "não parte", "nao parte", "não deu partida", "nao da partida", "não arranca", "não está partindo", "motor não liga"],
+      titulo: "🔴 FALHA NA PARTIDA",
+      causa: "O motor não confirmou funcionamento após o número configurado de tentativas.",
+      verificar: [
+        "Nível de combustível — verificar primeiro",
+        "Motor de arranque (starter) com defeito ou sem tensão",
+        "Bateria descarregada ou com mau contato",
+        "Válvula de combustível não está abrindo",
+        "Número de tentativas configurado muito baixo"
+      ],
+      protecao: "Impede novas tentativas de partida até o reset manual.",
+      reset: true,
+      referencia: "Seção 7.2 — Página 69"
+    },
+    {
+      id: "cgr_nao_fecha",
+      tags: ["cgr não fecha", "cgr nao fecha", "cgr", "contator grupo", "chave grupo não fecha", "gerador não assume", "gerador nao assume"],
+      titulo: "🔌 CGR NÃO FECHA",
+      causa: "O contator ou chave do grupo não confirmou fechamento dentro do tempo esperado.",
+      verificar: [
+        "Contator/chave com defeito mecânico ou elétrico",
+        "Contato auxiliar de retorno não está chegando ao controlador (entrada digital)",
+        "Fiação do comando do contator",
+        "Parametrização do tempo de confirmação"
+      ],
+      protecao: "Desliga a saída de comando da chave do grupo.",
+      reset: true,
+      referencia: "Seção 7.2 — Página 70"
+    },
+    {
+      id: "parada_emergencia",
+      tags: ["parada de emergência", "parada emergencia", "emergência", "emergencia", "botão emergência", "botao emergencia", "e-stop", "estop"],
+      titulo: "🚨 PARADA DE EMERGÊNCIA",
+      causa: "A entrada digital configurada como Parada de Emergência foi acionada.",
+      verificar: [
+        "Verificar se a botoeira de emergência foi acionada intencionalmente",
+        "Verificar se houve acionamento acidental da botoeira",
+        "Verificar fiação da entrada digital (pode ser fio partido ou curto)",
+        "Verificar se a lógica está configurada como NA ou NF corretamente"
+      ],
+      protecao: "Para o motor imediatamente, sem tempo de resfriamento.",
+      reset: true,
+      referencia: "Seção 7.2 — Página 72"
+    }
+  ],
+
+  procedimentos: {
+    reset: {
+      titulo: "🔄 PROCEDIMENTO DE RESET APÓS FALHA",
+      passos: [
+        "Colocar o controlador em modo <strong>Manual</strong>",
+        "Pressionar a tecla <strong>[X]</strong> para silenciar o alarme sonoro",
+        "Corrigir o defeito apresentado no display",
+        "Pressionar <strong>[X]</strong> novamente para limpar a falha da memória",
+        "Retornar ao modo de operação desejado (<strong>Automático</strong>)"
+      ],
+      alerta: "⚠️ Não retorne ao modo Automático sem antes corrigir o defeito. O alarme voltará imediatamente.",
+      referencia: "Seção 7 — Página 66"
+    }
+  }
+};
+
+// ============================================================
+// DICIONÁRIO DE LINGUAGEM DE CAMPO
+// ============================================================
+const DICIONARIO = {
+  "controaldor": "controlador",
+  "controador": "controlador",
+  "tá berrando": "alarme ativo",
+  "ta berrando": "alarme ativo",
+  "gmg": "grupo motor-gerador",
+  "cgr": "contator do grupo",
+  "crd": "contator da rede",
+  "qta": "quadro de transferência automática",
+  "pick-up": "sensor de rpm",
+  "pickup": "sensor de rpm",
+  "cremalheira": "engrenagem do volante",
+  "tc": "transformador de corrente",
+  "nao": "não",
+  "ta": "está"
+};
+
+// ============================================================
+// LÓGICA DO APP
+// ============================================================
+let aguardandoTipo = null;
+
+function hora() {
+  return new Date().toLocaleTimeString('pt-BR', {hour:'2-digit', minute:'2-digit'});
+}
+
+function normalizar(texto) {
+  let t = texto.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+  for (const [errado, certo] of Object.entries(DICIONARIO)) {
+    t = t.replace(new RegExp(errado, 'gi'), certo);
+  }
+  return t;
+}
+
+function adicionarMensagem(tipo, html, opcoes = null) {
+  const chat = document.getElementById('chat');
+  const wrap = document.createElement('div');
+  wrap.className = `msg-wrap ${tipo}`;
+
+  const balao = document.createElement('div');
+  balao.className = 'balao';
+  balao.innerHTML = html + `<span class="hora">${hora()}</span>`;
+
+  if (opcoes) {
+    const opcoesWrap = document.createElement('div');
+    opcoesWrap.className = 'opcoes-wrap';
+    opcoes.forEach(op => {
+      const btn = document.createElement('button');
+      btn.className = 'opcao-btn';
+      btn.textContent = op.texto;
+      btn.onclick = () => { op.acao(); opcoesWrap.remove(); };
+      opcoesWrap.appendChild(btn);
+    });
+    balao.appendChild(opcoesWrap);
+  }
+
+  wrap.appendChild(balao);
+  chat.appendChild(wrap);
+  chat.scrollTop = chat.scrollHeight;
+}
+
+function mostrarTyping() {
+  const chat = document.getElementById('chat');
+  const wrap = document.createElement('div');
+  wrap.className = 'msg-wrap app';
+  wrap.id = 'typing-indicator';
+  wrap.innerHTML = `<div class="typing"><span></span><span></span><span></span></div>`;
+  chat.appendChild(wrap);
+  chat.scrollTop = chat.scrollHeight;
+}
+
+function removerTyping() {
+  const t = document.getElementById('typing-indicator');
+  if (t) t.remove();
+}
+
+function responderAlarme(alarme) {
+  let html = `<span class="titulo-alarme">${alarme.titulo}</span>`;
+  html += `<strong>O que aconteceu:</strong><br>${alarme.causa}<br><br>`;
+  html += `<strong>Verifique em ordem:</strong><ol>`;
+  alarme.verificar.forEach(v => { html += `<li>${v}</li>`; });
+  html += `</ol><br>`;
+  html += `<strong>Proteção executada:</strong><br>${alarme.protecao}`;
+  if (alarme.reset) {
+    html += `<br><br><strong>Para resetar:</strong><ol>
+      <li>Colocar em modo <strong>Manual</strong></li>
+      <li>Pressionar <strong>[X]</strong> para silenciar</li>
+      <li>Corrigir o defeito</li>
+      <li>Pressionar <strong>[X]</strong> para limpar da memória</li>
+      <li>Retornar ao modo <strong>Automático</strong></li>
+    </ol>`;
+  }
+  html += `<span class="secao">📖 Manual K30i — ${alarme.referencia}</span>`;
+  return html;
+}
+
+function buscar(texto) {
+  const norm = normalizar(texto);
+
+  // Busca nos alarmes
+  for (const alarme of BASE.alarmes) {
+    for (const tag of alarme.tags) {
+      if (norm.includes(normalizar(tag))) {
+        return { tipo: 'alarme', dado: alarme };
+      }
+    }
+  }
+
+  // Busca procedimento reset
+  if (norm.includes("reset") || norm.includes("limpar falha") || norm.includes("apagar falha") || norm.includes("como resetar")) {
+    return { tipo: 'reset' };
+  }
+
+  return null;
+}
+
+function processar(texto) {
+  mostrarTyping();
+  setTimeout(() => {
+    removerTyping();
+    const resultado = buscar(texto);
+
+    if (!resultado) {
+      adicionarMensagem('app',
+        `Não encontrei essa informação na base técnica atual.<br><br>
+        <span class="tag-alerta">Esta versão piloto contém os 5 alarmes principais. Se sua dúvida for sobre outro alarme, parâmetro ou procedimento, a base será expandida em breve.</span><br>
+        Tente descrever o alarme que aparece no display ou use um dos botões abaixo.`
+      );
+      return;
+    }
+
+    if (resultado.tipo === 'alarme') {
+      adicionarMensagem('app', responderAlarme(resultado.dado));
+    }
+
+    if (resultado.tipo === 'reset') {
+      const proc = BASE.procedimentos.reset;
+      let html = `<span class="titulo-alarme">${proc.titulo}</span>`;
+      html += `<ol>`;
+      proc.passos.forEach(p => { html += `<li>${p}</li>`; });
+      html += `</ol>`;
+      html += `<span class="tag-alerta">${proc.alerta}</span>`;
+      html += `<span class="secao">📖 Manual K30i — ${proc.referencia}</span>`;
+      adicionarMensagem('app', html);
+    }
+
+  }, 900);
+}
+
+function atalho(tipo) {
+  if (tipo === 'alarme') {
+    adicionarMensagem('usuario', 'Tenho código de alarme');
+    mostrarTyping();
+    setTimeout(() => {
+      removerTyping();
+      adicionarMensagem('app',
+        `Qual alarme está aparecendo no display do K30i?<br><br>Digite o nome exato como aparece na tela, ou descreva o que está acontecendo com o equipamento.`,
+        null
+      );
+    }, 700);
+  }
+  if (tipo === 'procedimento') {
+    adicionarMensagem('usuario', 'Preciso de procedimento');
+    mostrarTyping();
+    setTimeout(() => {
+      removerTyping();
+      adicionarMensagem('app',
+        `Qual procedimento você precisa?`,
+        [
+          { texto: '🔄 Reset após falha', acao: () => { adicionarMensagem('usuario','Reset após falha'); processar('como resetar'); } },
+          { texto: '⚙️ Configurar sensor de óleo', acao: () => { adicionarMensagem('usuario','Configurar sensor de óleo'); sensorOleo(); } },
+          { texto: '🔌 Verificar sequência de partida', acao: () => { adicionarMensagem('usuario','Sequência de partida'); processar('sequencia partida'); } }
+        ]
+      );
+    }, 700);
+  }
+  if (tipo === 'parametro') {
+    adicionarMensagem('usuario', 'Consultar parâmetro');
+    mostrarTyping();
+    setTimeout(() => {
+      removerTyping();
+      adicionarMensagem('app',
+        `Qual parâmetro você precisa consultar?<br><br>
+        <span class="tag-alerta">⚙️ Dica: A parametrização completa está na Seção 6.2 — Páginas 37 a 47 do manual.</span><br>
+        Digite o nome do parâmetro ou descreva o que quer ajustar.`
+      );
+    }, 700);
+  }
+  if (tipo === 'reset') {
+    adicionarMensagem('usuario', 'Como fazer reset de falha?');
+    processar('como resetar');
+  }
+}
+
+function sensorOleo() {
+  mostrarTyping();
+  setTimeout(() => {
+    removerTyping();
+    adicionarMensagem('app',
+      `Para configurar o sensor de óleo corretamente, preciso saber o tipo de sensor instalado:<br><br>
+      <strong>Qual é o seu sensor?</strong>`,
+      [
+        {
+          texto: '1 — Sensor resistivo (2 fios, mede em Ohms)',
+          acao: () => {
+            adicionarMensagem('usuario', 'Sensor resistivo — 2 fios');
+            mostrarTyping();
+            setTimeout(() => {
+              removerTyping();
+              adicionarMensagem('app',
+                `<span class="titulo-alarme">⚙️ CONFIGURAR SENSOR RESISTIVO DE ÓLEO</span>
+                <strong>Entrada a usar:</strong> EA2 ou EA3 (ambas suportam 0–600Ω)<br><br>
+                <strong>Configurar em ordem:</strong>
+                <ol>
+                  <li>Acesse Menu → Configurações → Entradas Analógicas</li>
+                  <li>Selecione <strong>EA2</strong> ou <strong>EA3</strong></li>
+                  <li>Tipo: <strong>Pressão Óleo</strong></li>
+                  <li>Faixa: <strong>0–600Ω</strong></li>
+                  <li>Calibrar o zero (motor frio, parado)</li>
+                  <li>Definir limite de alarme em <strong>Proteções → Baixa Pressão</strong></li>
+                </ol>
+                <span class="tag-alerta">⚠️ Confirme a resistência máxima do seu sensor no manual do motor.</span>
+                <span class="secao">📖 Manual K30i — Seção 6.3, Páginas 48–51</span>`
+              );
+            }, 900);
+          }
+        },
+        {
+          texto: '2 — Pressostato (contato seco, liga/desliga)',
+          acao: () => {
+            adicionarMensagem('usuario', 'Pressostato — contato seco');
+            mostrarTyping();
+            setTimeout(() => {
+              removerTyping();
+              adicionarMensagem('app',
+                `<span class="titulo-alarme">⚙️ CONFIGURAR PRESSOSTATO DE ÓLEO</span>
+                <strong>Entrada a usar:</strong> Entrada Digital (DI1 a DI4)<br><br>
+                <strong>Configurar em ordem:</strong>
+                <ol>
+                  <li>Acesse Menu → Configurações → Entradas Digitais</li>
+                  <li>Selecione uma entrada livre (ex: DI2)</li>
+                  <li>Função: <strong>Pressostato Óleo</strong></li>
+                  <li>Lógica: verificar se o sensor é <strong>NA</strong> (normalmente aberto) ou <strong>NF</strong> (normalmente fechado)</li>
+                  <li>Configurar ação em <strong>Proteções → Baixa Pressão</strong></li>
+                </ol>
+                <span class="tag-alerta">⚠️ Confirme com o fabricante do motor se o pressostato é NA ou NF. Configuração errada pode causar alarme falso ou não detectar falha real.</span>
+                <span class="secao">📖 Manual K30i — Apêndice 1, Páginas 73–75</span>`
+              );
+            }, 900);
+          }
+        },
+        {
+          texto: '3 — Motor com CAN J1939',
+          acao: () => {
+            adicionarMensagem('usuario', 'Motor com CAN J1939');
+            mostrarTyping();
+            setTimeout(() => {
+              removerTyping();
+              adicionarMensagem('app',
+                `<span class="titulo-alarme">⚙️ SENSOR DE ÓLEO VIA CAN J1939</span>
+                Com motor CAN J1939, a pressão do óleo é lida diretamente da ECU do motor via barramento CAN.<br><br>
+                <strong>Pré-requisito:</strong> Motor com ECU compatível J1939.<br><br>
+                <strong>Configurar em ordem:</strong>
+                <ol>
+                  <li>Verificar que o cabo CAN está conectado (CAN H e CAN L)</li>
+                  <li>Acesse Menu → Configurações → CAN J1939</li>
+                  <li>Habilitar: <strong>Ativo</strong></li>
+                  <li>A pressão do óleo será lida automaticamente da ECU</li>
+                  <li>Não é necessário usar EA2/EA3 para pressão neste caso</li>
+                </ol>
+                <span class="tag-alerta">⚠️ Se aparecer "Falha Conexão CAN", verificar se CAN H e CAN L não estão invertidos.</span>
+                <span class="secao">📖 Manual K30i — Seção 6.3, Páginas 48–51</span>`
+              );
+            }, 900);
+          }
+        },
+        {
+          texto: '4 — Não sei / preciso verificar',
+          acao: () => {
+            adicionarMensagem('usuario', 'Não sei o tipo de sensor');
+            mostrarTyping();
+            setTimeout(() => {
+              removerTyping();
+              adicionarMensagem('app',
+                `Tudo bem. Veja como identificar o tipo de sensor:<br><br>
+                <strong>Sensor resistivo:</strong> Tem 2 fios. Usando um multímetro em modo Ω (ohms), mede entre 0 e 600Ω dependendo da pressão.<br><br>
+                <strong>Pressostato:</strong> Tem 2 fios. Usando multímetro em modo de continuidade, ou abre ou fecha o circuito. Não tem variação — é tudo ou nada.<br><br>
+                <strong>CAN J1939:</strong> Não tem sensor separado para óleo. O motor possui ECU eletrônica e um barramento de 2 fios (CAN) conectado ao K30i.<br><br>
+                Quando identificar, me diga o tipo e continuo a configuração.`
+              );
+            }, 900);
+          }
+        }
+      ]
+    );
+  }, 800);
+}
+
+function enviar() {
+  const input = document.getElementById('input-texto');
+  const texto = input.value.trim();
+  if (!texto) return;
+  adicionarMensagem('usuario', texto);
+  input.value = '';
+  input.style.height = 'auto';
+
+  // Verificar se é configuração de sensor (retomada da simulação)
+  const norm = normalizar(texto);
+  if (norm.includes("sensor") && (norm.includes("oleo") || norm.includes("pressao"))) {
+    sensorOleo();
+    return;
+  }
+
+  processar(texto);
+}
+
+function teclaEnter(e) {
+  if (e.key === 'Enter' && !e.shiftKey) {
+    e.preventDefault();
+    enviar();
+  }
+}
+
+function autoResize(el) {
+  el.style.height = 'auto';
+  el.style.height = Math.min(el.scrollHeight, 100) + 'px';
+}
+
+// ============================================================
+// MENSAGEM INICIAL
+// ============================================================
+window.onload = () => {
+  setTimeout(() => {
+    adicionarMensagem('app',
+      `Olá! Sou o <strong>Consultor Técnico K30i</strong>.<br><br>
+      Posso ajudar com alarmes, procedimentos e configurações do controlador K30i da KVA.<br><br>
+      <span class="tag-alerta">📌 Todas as respostas são baseadas exclusivamente no Manual K30i, com referência de seção e página.</span>
+      Use os botões abaixo ou descreva sua dúvida diretamente.`
+    );
+  }, 400);
+};
+</script>
+</body>
+</html>
