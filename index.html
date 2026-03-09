@@ -209,6 +209,7 @@
             list-style: none;
             font-size: 13px;
             color: #4B5563;
+            counter-reset: item;
         }
         
         .alarm-list li {
@@ -243,7 +244,7 @@
         
         .action-btn {
             background: white;
-            border: 1px solid #E5E7EB;
+            border: 1px solid #00A651;
             border-radius: 20px;
             padding: 8px 12px;
             font-size: 12px;
@@ -257,14 +258,12 @@
         }
         
         .action-btn:hover {
-            background: #F3F4F6;
-            border-color: #00A651;
+            background: #F0FDF4;
         }
         
         .action-btn.active {
             background: #00A651;
             color: white;
-            border-color: #00A651;
         }
         
         /* ÁREA DE INPUT */
@@ -337,6 +336,9 @@
             cursor: pointer;
             white-space: nowrap;
             transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
         }
         
         .suggestion-chip:hover {
@@ -344,9 +346,6 @@
             color: white;
             border-color: #00A651;
         }
-        
-        /* ESCONDER/MOSTRAR SEÇÕES */
-        .hidden { display: none; }
         
         /* SCROLLBAR */
         .chat-area::-webkit-scrollbar {
@@ -380,7 +379,7 @@
             <div class="message">
                 <div class="avatar system">K</div>
                 <div class="message-content">
-                    <div>Olá! Sou o Consultor Técnico K30i.</div>
+                    <div>Olá! Sou o <strong>Consultor Técnico K30i</strong>.</div>
                     <div style="margin-top: 8px;">Posso ajudar com alarmes, procedimentos e configurações do controlador K30i da KVA.</div>
                     <div class="warning-box">
                         Todas as respostas são baseadas exclusivamente no Manual K30i — Seção 7.2, com referência de seção e página.
@@ -395,10 +394,18 @@
         
         <!-- SUGESTÕES RÁPIDAS -->
         <div class="quick-suggestions">
-            <div class="suggestion-chip" onclick="sendQuick('temperatura')">🌡️ Temperatura</div>
-            <div class="suggestion-chip" onclick="sendQuick('óleo')">🛢️ Pressão do óleo</div>
-            <div class="suggestion-chip" onclick="sendQuick('rede')">⚡ Tensão da rede</div>
-            <div class="suggestion-chip" onclick="sendQuick('frequência')">📊 Frequência</div>
+            <div class="suggestion-chip" onclick="sendQuick('temperatura')">
+                <span>🌡️</span> Temperatura
+            </div>
+            <div class="suggestion-chip" onclick="sendQuick('óleo')">
+                <span>🛢️</span> Pressão do óleo
+            </div>
+            <div class="suggestion-chip" onclick="sendQuick('rede')">
+                <span>⚡</span> Tensão da rede
+            </div>
+            <div class="suggestion-chip" onclick="sendQuick('frequência')">
+                <span>📊</span> Frequência
+            </div>
         </div>
         
         <!-- ÁREA DE INPUT -->
@@ -519,7 +526,7 @@
         };
 
         let currentAlarm = null;
-        let currentView = 'procedimento'; // procedimento, codigo, parametro, reset
+        let currentView = 'procedimento';
 
         function getCurrentTime() {
             const now = new Date();
@@ -592,59 +599,32 @@
 
         function addAlarmResponse(alarme) {
             const chatArea = document.getElementById('chatArea');
+            const messageId = 'msg_' + Date.now();
+            
             const html = `
-                <div class="message">
+                <div class="message" id="${messageId}">
                     <div class="avatar system">K</div>
                     <div class="message-content" style="max-width: 95%;">
-                        <div class="alarm-response" id="alarmContent">
+                        <div class="alarm-response">
                             <div class="alarm-title">${alarme.codigo}</div>
                             
-                            <div class="alarm-section" id="secProcedimento">
-                                <div class="alarm-section-title">O QUE ACONTECEU:</div>
-                                <div class="alarm-text">${alarme.oQueAconteceu}</div>
-                            </div>
-                            
-                            <div class="alarm-section" id="secVerifique">
-                                <div class="alarm-section-title">VERIFIQUE EM ORDEM:</div>
-                                <ol class="alarm-list">
-                                    ${alarme.verifique.map((item, i) => `<li data-num="${i + 1}">${item}</li>`).join('')}
-                                </ol>
-                            </div>
-                            
-                            <div class="alarm-section hidden" id="secCodigo">
-                                <div class="alarm-section-title">CÓDIGO DO ALARME:</div>
-                                <div class="alarm-text"><strong>${alarme.id}</strong> — ${alarme.codigo}</div>
-                                <div style="margin-top: 8px; font-size: 12px; color: #6B7280;">
-                                    Tipo: Falha<br>
-                                    Categoria: Proteção do ${alarme.id.includes('REDE') ? 'GMG' : alarme.id.includes('TEMP') || alarme.id.includes('OLEO') ? 'Motor' : 'Gerador'}
-                                </div>
-                            </div>
-                            
-                            <div class="alarm-section hidden" id="secParametro">
-                                <div class="alarm-section-title">PARÂMETROS:</div>
-                                <div class="alarm-text">
-                                    ${Object.entries(alarme.parametros).map(([k, v]) => `<div style="margin-bottom: 4px;"><strong>${k}:</strong> ${v}</div>`).join('')}
-                                </div>
-                            </div>
-                            
-                            <div class="alarm-section hidden" id="secReset">
-                                <div class="alarm-section-title">RESET DE FALHA:</div>
-                                <div class="alarm-text">${alarme.reset}</div>
+                            <div id="content-${messageId}">
+                                ${renderProcedimento(alarme)}
                             </div>
                             
                             <div class="reference">📚 ${alarme.referencia}</div>
                             
                             <div class="action-buttons">
-                                <button class="action-btn ${currentView === 'codigo' ? 'active' : ''}" onclick="showSection('codigo')">
+                                <button class="action-btn" onclick="showView('${messageId}', 'codigo')">
                                     ⚠️ Código de alarme
                                 </button>
-                                <button class="action-btn ${currentView === 'procedimento' ? 'active' : ''}" onclick="showSection('procedimento')">
+                                <button class="action-btn active" onclick="showView('${messageId}', 'procedimento')">
                                     📋 Procedimento
                                 </button>
-                                <button class="action-btn ${currentView === 'parametro' ? 'active' : ''}" onclick="showSection('parametro')">
+                                <button class="action-btn" onclick="showView('${messageId}', 'parametro')">
                                     ⚙️ Parâmetro
                                 </button>
-                                <button class="action-btn ${currentView === 'reset' ? 'active' : ''}" onclick="showSection('reset')">
+                                <button class="action-btn" onclick="showView('${messageId}', 'reset')">
                                     🔄 Reset de falha
                                 </button>
                             </div>
@@ -655,35 +635,88 @@
             `;
             chatArea.insertAdjacentHTML('beforeend', html);
             scrollToBottom();
-            showSection('procedimento');
         }
 
-        function showSection(section) {
-            currentView = section;
+        function renderProcedimento(alarme) {
+            return `
+                <div class="alarm-section">
+                    <div class="alarm-section-title">O QUE ACONTECEU:</div>
+                    <div class="alarm-text">${alarme.oQueAconteceu}</div>
+                </div>
+                <div class="alarm-section">
+                    <div class="alarm-section-title">VERIFIQUE EM ORDEM:</div>
+                    <ol class="alarm-list">
+                        ${alarme.verifique.map((item, i) => `<li data-num="${i + 1}">${item}</li>`).join('')}
+                    </ol>
+                </div>
+            `;
+        }
+
+        function renderCodigo(alarme) {
+            return `
+                <div class="alarm-section">
+                    <div class="alarm-section-title">CÓDIGO DO ALARME:</div>
+                    <div class="alarm-text">
+                        <strong>${alarme.id}</strong><br>
+                        ${alarme.codigo}<br><br>
+                        <strong>Tipo:</strong> Falha<br>
+                        <strong>Categoria:</strong> Proteção do ${getCategoria(alarme.id)}
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderParametro(alarme) {
+            const params = Object.entries(alarme.parametros).map(([k, v]) => 
+                `<div style="margin-bottom: 8px;"><strong>${k}:</strong> ${v}</div>`
+            ).join('');
             
-            // Esconde todas as seções
-            document.getElementById('secProcedimento')?.classList.add('hidden');
-            document.getElementById('secVerifique')?.classList.add('hidden');
-            document.getElementById('secCodigo')?.classList.add('hidden');
-            document.getElementById('secParametro')?.classList.add('hidden');
-            document.getElementById('secReset')?.classList.add('hidden');
+            return `
+                <div class="alarm-section">
+                    <div class="alarm-section-title">PARÂMETROS:</div>
+                    <div class="alarm-text">${params}</div>
+                </div>
+            `;
+        }
+
+        function renderReset(alarme) {
+            return `
+                <div class="alarm-section">
+                    <div class="alarm-section-title">RESET DE FALHA:</div>
+                    <div class="alarm-text">${alarme.reset}</div>
+                </div>
+            `;
+        }
+
+        function getCategoria(id) {
+            if (id.includes('TEMP') || id.includes('OLEO')) return 'Motor';
+            if (id.includes('REDE')) return 'GMG';
+            return 'Gerador';
+        }
+
+        function showView(messageId, view) {
+            const alarme = currentAlarm;
+            if (!alarme) return;
             
-            // Mostra a seção selecionada
-            if (section === 'procedimento') {
-                document.getElementById('secProcedimento')?.classList.remove('hidden');
-                document.getElementById('secVerifique')?.classList.remove('hidden');
-            } else if (section === 'codigo') {
-                document.getElementById('secCodigo')?.classList.remove('hidden');
-            } else if (section === 'parametro') {
-                document.getElementById('secParametro')?.classList.remove('hidden');
-            } else if (section === 'reset') {
-                document.getElementById('secReset')?.classList.remove('hidden');
+            const contentDiv = document.getElementById(`content-${messageId}`);
+            const messageEl = document.getElementById(messageId);
+            const buttons = messageEl.querySelectorAll('.action-btn');
+            
+            // Atualiza conteúdo
+            if (view === 'procedimento') {
+                contentDiv.innerHTML = renderProcedimento(alarme);
+            } else if (view === 'codigo') {
+                contentDiv.innerHTML = renderCodigo(alarme);
+            } else if (view === 'parametro') {
+                contentDiv.innerHTML = renderParametro(alarme);
+            } else if (view === 'reset') {
+                contentDiv.innerHTML = renderReset(alarme);
             }
             
             // Atualiza botões ativos
-            document.querySelectorAll('.action-btn').forEach(btn => {
+            buttons.forEach(btn => {
                 btn.classList.remove('active');
-                if (btn.textContent.toLowerCase().includes(section)) {
+                if (btn.textContent.toLowerCase().includes(view)) {
                     btn.classList.add('active');
                 }
             });
