@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Suporte Técnico K30i">
+<title>Suporte Técnico K30i</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+:root {
+  --verde: #25a244;
+  --verde-escuro: #1a7a35;
+  --verde-bg: #e8f5ee;
+  --header-bg: #1a1a2e;
+  --cinza-escuro: #1c1c1c;
+  --cinza-claro: #f5f5f5;
+  --branco: #ffffff;
+  --amarelo: #f5a623;
+  --fundo-chat: #f0f2f5;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html, body { height: 100%; background: #f0f2f5; }
+body { font-family: 'Inter', sans-serif; display: flex; justify-content: center; align-items: flex-start; }
+#app { width: 100%; max-width: 480px; height: 100vh; height: 100dvh; display: flex; flex-direction: column; background: var(--fundo-chat); overflow: hidden; }
+
+/* HEADER */
+#header { background: var(--header-bg); padding: 14px 16px; display: flex; align-items: center; gap: 12px; z-index: 10; box-shadow: 0 2px 10px rgba(0,0,0,0.4); flex-shrink: 0; }
+#header-avatar { width: 40px; height: 40px; background: var(--verde-escuro); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 17px; font-weight: 700; color: white; flex-shrink: 0; }
+#header-info { flex: 1; }
+#header-info h1 { font-size: 15px; font-weight: 700; color: white; }
+#header-status { display: flex; align-items: center; gap: 5px; margin-top: 3px; }
+#header-status .dot { width: 8px; height: 8px; background: #4cff72; border-radius: 50%; }
+#header-status span { font-size: 11px; color: #4cff72; font-weight: 600; letter-spacing: 0.5px; }
+#header-menu { color: rgba(255,255,255,0.5); font-size: 20px; cursor: pointer; background: none; border: none; letter-spacing: 3px; }
+
+/* CHAT */
+#chat { flex: 1; overflow-y: auto; padding: 12px; scroll-behavior: smooth; }
+#chat::-webkit-scrollbar { width: 3px; }
+#chat::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.15); border-radius: 2px; }
+
+.date-sep { text-align: center; margin: 6px 0 14px; font-size: 11px; color: #999; font-weight: 600; letter-spacing: 0.8px; }
+
+/* MENSAGENS */
+.msg-wrap { display: flex; flex-direction: column; margin-bottom: 14px; animation: fadeIn 0.25s ease; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+.msg-wrap.usuario { align-items: flex-end; }
+.msg-wrap.app { align-items: flex-start; }
+
+.msg-label { font-size: 10px; font-weight: 700; letter-spacing: 0.8px; margin-bottom: 3px; display: flex; align-items: center; gap: 5px; }
+.msg-wrap.app .msg-label { color: #888; }
+.msg-wrap.usuario .msg-label { color: var(--verde-escuro); flex-direction: row-reverse; }
+.label-av { width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; color: white; font-weight: 700; }
+.msg-wrap.app .label-av { background: #555; }
+.msg-wrap.usuario .label-av { background: var(--verde); }
+
+.balao { max-width: 82%; padding: 10px 14px; border-radius: 16px; font-size: 14px; line-height: 1.55; box-shadow: 0 1px 4px rgba(0,0,0,0.1); }
+.msg-wrap.usuario .balao { background: var(--verde); border-bottom-right-radius: 4px; color: white; }
+.msg-wrap.app .balao { background: var(--branco); border-bottom-left-radius: 4px; color: var(--cinza-escuro); }
+.msg-wrap.usuario .balao strong { color: rgba(255,255,255,0.9); }
+.msg-wrap.app .balao strong { color: var(--verde-escuro); }
+
+.balao .hora { font-size: 10px; float: right; margin-left: 10px; margin-top: 3px; }
+.msg-wrap.usuario .balao .hora { color: rgba(255,255,255,0.65); }
+.msg-wrap.app .balao .hora { color: #bbb; }
+
+.titulo-alarme { font-size: 14px; font-weight: 700; color: var(--cinza-escuro); display: block; margin-bottom: 8px; }
+.secao { font-size: 11px; color: var(--verde-escuro); font-weight: 600; margin-top: 8px; display: block; border-top: 1px solid #eee; padding-top: 6px; }
+.balao ol, .balao ul { padding-left: 18px; margin: 6px 0; }
+.balao li { margin-bottom: 3px; font-size: 13px; }
+.tag-alerta { background: #fff8e1; border-left: 3px solid var(--amarelo); padding: 6px 9px; border-radius: 4px; font-size: 12.5px; margin: 6px 0; display: block; color: #555; }
+
+/* BOTÕES RÁPIDOS */
+#botoes-rapidos { padding: 8px 12px; display: flex; gap: 6px; flex-wrap: wrap; background: var(--fundo-chat); border-top: 1px solid #e0e0e0; flex-shrink: 0; }
+.btn-rapido { flex: 1; min-width: calc(50% - 4px); background: var(--branco); border: 1.5px solid var(--verde); border-radius: 20px; padding: 7px 8px; font-size: 11.5px; font-weight: 600; color: var(--verde-escuro); cursor: pointer; text-align: center; font-family: 'Inter', sans-serif; transition: all 0.15s; }
+.btn-rapido:active { background: var(--verde-bg); transform: scale(0.97); }
+
+/* INPUT */
+#input-area { background: var(--branco); padding: 10px 12px; display: flex; align-items: flex-end; gap: 10px; border-top: 1px solid #e8e8e8; flex-shrink: 0; }
+#btn-mais { width: 34px; height: 34px; background: none; border: none; color: #bbb; font-size: 28px; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; line-height: 1; padding-bottom: 1px; }
+#input-texto { flex: 1; background: var(--fundo-chat); border: none; border-radius: 22px; padding: 10px 16px; font-size: 14px; font-family: 'Inter', sans-serif; color: var(--cinza-escuro); resize: none; outline: none; max-height: 100px; overflow-y: auto; line-height: 1.4; }
+#input-texto::placeholder { color: #aaa; }
+#btn-enviar { width: 40px; height: 40px; background: var(--verde); border: none; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; box-shadow: 0 2px 8px rgba(37,162,68,0.4); }
+#btn-enviar:active { background: var(--verde-escuro); }
+#btn-enviar svg { width: 20px; height: 20px; fill: white; }
+
+/* TYPING */
+.typing { display: flex; gap: 4px; padding: 12px 14px; background: white; border-radius: 16px; border-bottom-left-radius: 4px; width: 58px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+.typing span { width: 7px; height: 7px; background: #ccc; border-radius: 50%; animation: bounce 1.2s infinite; }
+.typing span:nth-child(2) { animation-delay: 0.2s; }
+.typing span:nth-child(3) { animation-delay: 0.4s; }
+@keyframes bounce { 0%, 80%, 100% { transform: translateY(0); background: #ccc; } 40% { transform: translateY(-5px); background: var(--verde); } }
+
+/* OPÇÕES */
+.opcoes-wrap { margin-top: 8px; display: flex; flex-direction: column; gap: 5px; }
+.opcao-btn { background: var(--verde-bg); border: 1.5px solid var(--verde); border-radius: 10px; padding: 8px 12px; font-size: 13px; font-weight: 500; color: var(--verde-escuro); cursor: pointer; text-align: left; font-family: 'Inter', sans-serif; }
+.opcao-btn:active { background: var(--verde); color: white; }
+</style>
+</head>
+<body>
+<div id="app">
+  <div id="header">
+    <div id="header-avatar">K</div>
+    <div id="header-info">
+      <h1>Suporte Técnico K30i</h1>
+      <div id="header-status"><div class="dot"></div><span>ONLINE AGORA</span></div>
+    </div>
+    <button id="header-menu">···</button>
+  </div>
+  <div id="chat"></div>
+  <div id="botoes-rapidos">
+    <button class="btn-rapido" onclick="atalho('alarme')">🔔 Código de alarme</button>
+    <button class="btn-rapido" onclick="atalho('procedimento')">📋 Procedimento</button>
+    <button class="btn-rapido" onclick="atalho('parametro')">⚙️ Parâmetro</button>
+    <button class="btn-rapido" onclick="atalho('reset')">🔄 Reset de falha</button>
+  </div>
+  <div id="input-area">
+    <button id="btn-mais">+</button>
+    <textarea id="input-texto" placeholder="Digite sua mensagem..." rows="1" onkeydown="teclaEnter(event)" oninput="autoResize(this)"></textarea>
+    <button id="btn-enviar" onclick="enviar()"><svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg></button>
+  </div>
+</div>
+<script>
+const ALARMES = [
+  { id:"alta_temperatura", tags:["alta temperatura","temperatura alta","superaquecimento","superaquecendo","esquentando","quente demais","componente quente","motor quente","gerador quente","excesso de calor","superaquecimento motor","superaquecimento gerador","refrigeração insuficiente","falha térmica","sensor temperatura alto","alerta temperatura","sobreaquecimento","temperatura excessiva","aquecimento anormal","falha de refrigeração","painel quente","rolamento quente","circuito aberto temperatura","cabo sensor temperatura desconectado","cabos dos sensores desconectados"], titulo:"🌡️ ALTA TEMPERATURA", causa:"A temperatura da água do motor está acima da máxima permitida.", verificar:["Baixo nível de água do radiador — verificar primeiro","Bomba d'água com defeito","Correia quebrada ou frouxa","Falha do sensor de temperatura"], protecao:"Configurado no parâmetro \"Ação Alta Temperatura\" — Resfriar e Parar ou Parada Imediata.", reset:true, ref:"Seção 7.2 — Página 67" },
+  { id:"alta_tensao_gerador", tags:["alta tensão do gerador","alta tensao do gerador","alta tensão gerador","alta tensao gerador","sobretensão gerador","sobretensao gerador","tensão alta gerador","tensao alta gerador","voltagem alta","gerador com sobretensão","gerador com sobretensao","sobrevoltagem"], titulo:"⚡ ALTA TENSÃO DO GERADOR", causa:"Tensão do gerador acima da máxima programada.", verificar:["Regulador de tensão com defeito ou desajustado","Erro de parametrização (limite configurado muito baixo)"], protecao:"Configurado no parâmetro \"Ação Sobretensão\" — Resfriar e Parar ou Parada Imediata.", reset:true, ref:"Seção 7.2 — Página 67" },
+  { id:"baixa_pressao_oleo", tags:["baixa pressão","pressão óleo","pressão do óleo","pressão baixa","baixa pressão óleo","pressão do óleo baixa","óleo com pressão baixa","falta de pressão no óleo","pressão insuficiente de óleo","nível de óleo baixo","luz de óleo acesa","alarme de pressão de óleo","manômetro de óleo baixo","sensor de pressão de óleo","problema na bomba de óleo","filtro de óleo entupido","vazamento de óleo","desligamento por baixa pressão de óleo","óleo do motor baixo","circulação de óleo deficiente","lubrificação insuficiente","pressão bomba de óleo","restrição fluxo óleo","circuito aberto pressão","cabo sensor pressão desconectado","cabos dos sensores desconectados"], titulo:"⚠️ BAIXA PRESSÃO DO ÓLEO", causa:"Pressão do óleo abaixo da mínima permitida.", verificar:["Baixo nível de óleo no cárter — verificar primeiro","Bomba de óleo com defeito","Falha do sensor de pressão","Erro de parametrização (limite configurado muito alto)"], protecao:"Configurado no parâmetro \"Ação Pressão Baixa\" — Resfriar e Parar ou Parar Imediatamente.", reset:true, ref:"Seção 7.2 — Página 67" },
+  { id:"baixa_tensao_gerador", tags:["baixa tensão do gerador","baixa tensao do gerador","baixa tensão gerador","baixa tensao gerador","subtensão gerador","subtensao gerador","tensão baixa gerador","tensao baixa gerador","voltagem baixa","gerador com subtensão","gerador com subtensao","queda de tensão","queda de tensao"], titulo:"⚡ BAIXA TENSÃO DO GERADOR", causa:"Tensão do gerador abaixo da mínima programada.", verificar:["Grupo não suporta a carga aplicada — verificar primeiro","Regulador de tensão com defeito","Erro de parametrização (limite configurado muito alto)"], protecao:"Configurado no parâmetro \"Ação Subtensão\" — Resfriar e Parar ou Parada Imediata.", reset:true, ref:"Seção 7.2 — Página 68" },
+  { id:"baixo_nivel_agua", tags:["baixo nível de água","baixo nivel agua","nível água","nivel agua","água radiador","falta água"], titulo:"💧 BAIXO NÍVEL DE ÁGUA", causa:"Entrada auxiliar programada para sensor de nível de água foi acionada.", verificar:["Baixo nível de água do radiador — verificar primeiro","Mangueiras furadas ou com vazamento","Falha do sensor de nível","Erro de parametrização"], protecao:"Configurado no parâmetro \"Ação Baixo Nível Água\" — Resfriar e Parar ou Parada Imediata.", reset:true, ref:"Seção 7.2 — Página 68" },
+  { id:"bateria_descarregada", tags:["bateria descarregada","bateria fraca","bateria baixa","bateria"], titulo:"🔋 BATERIA DESCARREGADA", causa:"Tensão das baterias em nível crítico.", verificar:["Verificar se o carregador de baterias está funcionando","Verificar conexões e terminais da bateria","Bateria com defeito ou vida útil esgotada"], protecao:"Aviso no display.", reset:true, ref:"Seção 7.2 — Página 68" },
+  { id:"cgr_nao_abre", tags:["cgr não abre","cgr nao abre","contator grupo não abre","contator grupo nao abre","chave grupo não abre","chave grupo nao abre","cgr travado","não desliga cgr","nao desliga cgr","contator grupo nao abre","cgr preso fechado","contator não abre grupo","chave não abre grupo"], titulo:"🔌 CGR NÃO ABRE", causa:"O controlador não está recebendo o sinal que informa que o contator do GMG está aberto.", verificar:["Contator com defeito mecânico ou elétrico","Erro na instalação elétrica","Falha no contato auxiliar de retorno","Erro na parametrização de confirmação do contator"], protecao:"Aviso no display.", reset:true, ref:"Seção 7.2 — Página 69" },
+  { id:"cgr_nao_fecha", tags:["cgr não fecha","cgr nao fecha","cgr","contator grupo não fecha","chave grupo não fecha","gerador não assume"], titulo:"🔌 CGR NÃO FECHA", causa:"O controlador não está recebendo o sinal que informa que o contator do GMG está fechado.", verificar:["Contator com defeito mecânico ou elétrico","Erro na instalação elétrica","Falha no contato auxiliar de retorno"], protecao:"Desliga a chave de grupo.", reset:true, ref:"Seção 7.2 — Página 69" },
+  { id:"crd_nao_abre", tags:["crd não abre","crd nao abre","contator rede não abre","contator rede nao abre","chave rede não abre","chave rede nao abre","crd travado","não desliga crd","nao desliga crd","crd preso fechado","contator não abre rede","chave não abre rede"], titulo:"🔌 CRD NÃO ABRE", causa:"O controlador não está recebendo o sinal que informa que o contator da Rede está aberto.", verificar:["Contator com defeito mecânico ou elétrico","Erro na instalação elétrica","Falha no contato auxiliar de retorno"], protecao:"Impede a partida do grupo.", reset:true, ref:"Seção 7.2 — Página 69" },
+  { id:"crd_nao_fecha", tags:["crd não fecha","crd nao fecha","contator rede não fecha","chave rede não fecha"], titulo:"🔌 CRD NÃO FECHA", causa:"O controlador não está recebendo o sinal que informa que o contator da Rede está fechado.", verificar:["Contator com defeito mecânico ou elétrico","Erro na instalação elétrica","Falha no contato auxiliar de retorno"], protecao:"Aviso no display.", reset:true, ref:"Seção 7.2 — Página 69" },
+  { id:"defeito_carregador", tags:["defeito no carregador","defeito carregador","carregador com defeito","carregador bateria"], titulo:"🔋 DEFEITO NO CARREGADOR", causa:"Entrada auxiliar programada para esta função está ativada.", verificar:["Verificar o que está ligado à entrada em questão","Carregador de baterias com defeito","Fiação da entrada digital"], protecao:"Aviso no display.", reset:true, ref:"Seção 7.2 — Página 69" },
+  { id:"erro_pickup", tags:["erro no pick-up","erro pickup","pick-up com falha","pickup com falha","sensor de rpm com erro","erro rotação","erro rotacao","sinal do pick-up perdido","sinal do pickup perdido","sensor desconectado pick-up","cabos não conectados pick-up","sensor rpm","erro rpm"], titulo:"📡 ERRO NO PICK-UP", causa:"Não foi detectado sinal de pick-up no momento da partida.", verificar:["Sensor configurado para pick-up magnético sem que tenha sido instalado","Pick-up magnético com defeito","Regulador de velocidade com defeito","Problemas na instalação do pick-up"], protecao:"Aviso (padrão) ou Impede a partida — conforme parâmetro.", reset:true, ref:"Seção 7.2 — Página 70" },
+  { id:"erro_pressostato", tags:["erro no pressostato","erro pressostato","pressostato com defeito","falha pressostato"], titulo:"⚠️ ERRO NO PRESSOSTATO", causa:"O controlador está recebendo o sinal do pressostato de forma inconsistente.", verificar:["Sensor desconectado — verificar primeiro","Sensor com defeito","Erro de parametrização"], protecao:"Aviso no display.", reset:true, ref:"Seção 7.2 — Página 70" },
+  { id:"erro_sensor_combustivel", tags:["erro no sensor de combustível","erro sensor combustivel","falha sensor combustível","sensor de combustível com erro","sensor de combustível defeituoso","problema no sensor de combustível","leitura incorreta de combustível","sensor de combustível avariado","falha na leitura de combustível","mau funcionamento sensor combustível","sensor combustível danificado","sinal de combustível inconsistente","circuito aberto sensor combustível","curto no sensor combustível","cabo sensor combustível desconectado","cabos dos sensores desconectados combustível","sensor combustível desconectado","nivel combustivel incorreto","leitura nivel combustivel errada"], titulo:"⛽ ERRO NO SENSOR DE COMBUSTÍVEL", causa:"O controlador está recebendo o sinal do sensor de nível de combustível de forma inconsistente.", verificar:["Sensor desconectado — verificar primeiro","Sensor com defeito","Erro de parametrização"], protecao:"Aviso no display.", reset:true, ref:"Seção 7.2 — Página 70" },
+  { id:"erro_sensor_pressao", tags:["erro no sensor de pressão do óleo","erro sensor pressão óleo","falha sensor pressão óleo","sensor de pressão com erro","sensor de pressão defeituoso","problema no sensor de pressão","leitura incorreta de pressão","sensor de pressão avariado","falha na leitura de pressão","descalibragem sensor pressão","mau funcionamento sensor pressão","sensor descalibrado pressão","pressão irreal","anomalia sensor pressão","sensor de pressão danificado","sensor de pressão estragado","avaria no sensor de pressão","medida de pressão falsa","sinal de pressão inconsistente","circuito aberto sensor pressão","curto no sensor pressão","cabo sensor pressão desconectado","cabos dos sensores desconectados pressão","sensor pressão desconectado"], titulo:"⚠️ ERRO NO SENSOR DE PRESSÃO DO ÓLEO", causa:"O controlador está recebendo o sinal do sensor de pressão de forma inconsistente.", verificar:["Sensor desconectado — verificar primeiro","Sensor com defeito","Erro de parametrização"], protecao:"Aviso na tela (padrão) ou Resfriar e Parar — conforme parâmetro.", reset:true, ref:"Seção 7.2 — Página 70" },
+  { id:"erro_sensor_temperatura", tags:["erro no sensor de temperatura","erro sensor temperatura","falha sensor temperatura","sensor de temperatura com erro","sensor de temperatura defeituoso","problema no sensor de temperatura","leitura incorreta de temperatura","sensor de temperatura avariado","falha na leitura de temperatura","descalibragem sensor temperatura","mau funcionamento sensor temperatura","sensor descalibrado temperatura","temperatura irreal","anomalia sensor temperatura","sensor de temperatura danificado","sensor de temperatura estragado","avaria no sensor de temperatura","medida de temperatura falsa","sinal de temperatura inconsistente","circuito aberto sensor temperatura","curto no sensor temperatura","cabo sensor temperatura desconectado","cabos dos sensores desconectados temperatura","sensor temperatura desconectado"], titulo:"🌡️ ERRO NO SENSOR DE TEMPERATURA", causa:"O controlador está recebendo o sinal do sensor de temperatura de forma inconsistente.", verificar:["Sensor desconectado — verificar primeiro","Sensor com defeito","Erro de parametrização"], protecao:"Aviso na tela (padrão) ou Resfriar e Parar — conforme parâmetro.", reset:true, ref:"Seção 7.2 — Página 70" },
+  { id:"falha_conexao_can", tags:["falha na conexão can","falha conexao can","falha can","erro can","can j1939","can l","can h","ecu"], titulo:"📡 FALHA NA CONEXÃO CAN", causa:"O controlador não consegue se comunicar com a ECU do motor eletrônico.", verificar:["CAN L e CAN H invertidos — verificar primeiro","Cabo CAN não conectado ou rompido","ECU com defeito"], protecao:"Impede a partida ou Para Imediatamente se em funcionamento.", reset:true, ref:"Seção 7.2 — Página 71" },
+  { id:"falha_partida", tags:["falha na partida","falha partida","não parte","nao parte","não deu partida","não arranca","motor não liga","falha após tentativas de partidas","falha apos tentativas de partidas","não partiu após tentativas","nao partiu apos tentativas","tentativas de partida sem sucesso","tentativas de partida fracassadas","não arrancou após tentativas","nao arrancou apos tentativas","motor não ligou após partidas","motor nao ligou apos partidas","partidas sem êxito","partidas sem exito","falha nas partidas"], titulo:"🔴 FALHA NA PARTIDA", causa:"O controlador esgotou o número de tentativas de partida sem conseguir fazer o grupo funcionar.", verificar:["Falta de combustível — verificar primeiro","Motor de arranque com defeito","Bateria descarregada","Válvula de combustível não está abrindo"], protecao:"Impede a partida do GMG até reset manual.", reset:true, ref:"Seção 7.2 — Página 71" },
+  { id:"falha_refrigeracao", tags:["falha na refrigeração","falha refrigeracao","falha resfriamento","resfriamento","problema refrigeração","refrigeração defeito"], titulo:"🌡️ FALHA NA REFRIGERAÇÃO", causa:"Uma das entradas foi programada para esta função e se encontra acionada.", verificar:["Verificar o que está ligado à entrada em questão","Sistema de pré-aquecimento ou resfriamento com defeito","Fiação da entrada digital"], protecao:"Resfriar e Parar ou Aviso na Tela — conforme parâmetro.", reset:true, ref:"Seção 7.2 — Página 71" },
+  { id:"fora_horario", tags:["fora do horário de serviço","fora horario servico","horário de serviço","fora do horario"], titulo:"🕐 FORA DO HORÁRIO DE SERVIÇO", causa:"A falha ocorreu fora do horário ou dia da semana configurado como Horário de Serviço.", verificar:["Verificar configuração de Horário de Serviço no controlador","Confirmar se o horário atual está correto"], protecao:"Aviso na tela — o grupo não parte fora do horário configurado.", reset:false, ref:"Seção 7.2 — Página 71" },
+  { id:"manutencao_vencida", tags:["manutenção periódica vencida","manutencao vencida","manutenção vencida","manutenção preventiva"], titulo:"🔧 MANUTENÇÃO PERIÓDICA VENCIDA", causa:"O grupo gerador está com a manutenção periódica vencida.", verificar:["Realizar a manutenção conforme plano preventivo","Verificar horas de funcionamento no display","Resetar o contador de manutenção após o serviço"], protecao:"Aviso na tela ou Desativada — conforme configuração.", reset:true, ref:"Seção 7.2 — Página 71" },
+  { id:"motor_frio", tags:["motor frio","motor frio aquecendo","aquecendo","pré-aquecedor","pre aquecedor"], titulo:"🌡️ MOTOR FRIO. AQUECENDO...", causa:"Motor não está suficientemente aquecido para entrar em carga.", verificar:["Verificar se o sistema de pré-aquecimento está instalado e funcionando","Sistema de pré-aquecimento com defeito","Verificar parâmetro \"Alimentar carga com motor frio\""], protecao:"Aviso na tela ou Desativada — conforme configuração.", reset:false, ref:"Seção 7.2 — Página 71" },
+  { id:"nivel_combustivel_baixo", tags:["nível de combustível baixo","nivel combustivel baixo","combustível baixo","pouco combustível","combustível acabando"], titulo:"⛽ NÍVEL DE COMBUSTÍVEL BAIXO", causa:"Nível de combustível abaixo do configurado no parâmetro \"Nível de Combustível Baixo\".", verificar:["Verificar o nível real de combustível no tanque","Verificar instalação do sensor de nível","Erro de parametrização"], protecao:"Aviso na tela ou Aciona bomba de transferência — conforme configuração.", reset:false, ref:"Seção 7.2 — Página 71" },
+  { id:"nivel_combustivel_critico", tags:["nível de combustível crítico","nivel combustivel critico","combustível crítico","combustível acabou","sem combustível"], titulo:"⛽ NÍVEL DE COMBUSTÍVEL CRÍTICO", causa:"Nível de combustível abaixo do configurado no parâmetro \"Nível de Combustível Crítico\".", verificar:["Verificar o nível real de combustível — urgente","Verificar instalação do sensor de nível","Erro de parametrização"], protecao:"Resfriar e Parar ou Parada Imediata — conforme configuração.", reset:true, ref:"Seção 7.2 — Página 72" },
+  { id:"parada_emergencia", tags:["parada de emergência","parada emergencia","emergência","emergencia","botão emergência","e-stop","estop"], titulo:"🚨 PARADA DE EMERGÊNCIA", causa:"A entrada auxiliar configurada para Parada de Emergência foi ativada.", verificar:["Verificar se a botoeira foi acionada intencionalmente","Verificar se houve acionamento acidental","Verificar fiação da entrada digital","Confirmar se a lógica está configurada como NA ou NF corretamente"], protecao:"Parada Imediata — sem tempo de resfriamento.", reset:true, ref:"Seção 7.2 — Página 72" },
+  { id:"partida_inibida", tags:["partida inibida","feriado","partida bloqueada","inibido"], titulo:"🚫 PARTIDA INIBIDA (FERIADO)", causa:"Há um feriado habilitado para não partir nesta data.", verificar:["Verificar configuração de feriados no controlador","Confirmar se a data atual está correta"], protecao:"Impede a partida do motor.", reset:false, ref:"Seção 7.2 — Página 72" },
+  { id:"sem_sensor_partida", tags:["sem sensor de partida","sem sensor partida","sem pickup sem pressostato","sem pick-up de velocidade","sem sensor de pressão do óleo","sem sensor de pressao do oleo","falta pick-up","falta sensor de pressão","falta sensor de pressao"], titulo:"⚠️ SEM SENSOR DE PARTIDA", causa:"Não há pressostato e pick-up configurados. Sem esses sinais, uma partida longa pode danificar o motor.", verificar:["Configurar o pick-up magnético (sensor de RPM)","Ou configurar o pressostato de óleo como confirmação de funcionamento"], protecao:"Impede a partida do motor.", reset:false, ref:"Seção 7.2 — Página 72" },
+  { id:"sem_sensor_pressao", tags:["sem sensor de pressão do óleo","sem sensor pressao oleo","nenhum sensor pressão","sem proteção pressão"], titulo:"⚠️ SEM SENSOR DE PRESSÃO DO ÓLEO", causa:"Não há nenhum sensor de pressão do óleo configurado. O motor não está protegido contra baixa pressão.", verificar:["Configurar sensor resistivo na EA2 ou EA3","Ou configurar pressostato em entrada digital","Ou habilitar leitura via CAN J1939"], protecao:"Aviso na tela — motor fica sem proteção de pressão.", reset:false, ref:"Seção 7.2 — Página 72" },
+  { id:"sem_sensor_temperatura", tags:["sem sensor de temperatura","sem sensor temperatura","nenhum sensor temperatura"], titulo:"⚠️ SEM SENSOR DE TEMPERATURA", causa:"Não há nenhum sensor de temperatura configurado. O motor não está protegido contra alta temperatura.", verificar:["Configurar sensor PT100 na EA1","Ou habilitar leitura via CAN J1939"], protecao:"Aviso na tela — motor fica sem proteção de temperatura.", reset:false, ref:"Seção 7.2 — Página 72" },
+  { id:"sequencia_fases", tags:["sequência de fases da rede","sequencia de fases","sequencia fases","fases invertidas","fase errada"], titulo:"⚡ SEQUÊNCIA DE FASES DA REDE", causa:"A sequência de fases da rede está errada. Impossibilita que a chave de rede seja fechada.", verificar:["Verificar se as fases R, S, T chegam na sequência correta","Inverter duas fases na entrada da rede para corrigir","Verificar fiação do painel"], protecao:"Impossibilita o fechamento da chave de rede.", reset:false, ref:"Seção 7.2 — Página 72" },
+  { id:"sobrecarga", tags:["sobrecarga","carga alta","corrente alta","sobrecorrente","excesso de carga","demanda excessiva","amperagem elevada","limite de carga excedido"], titulo:"⚡ SOBRECARGA", causa:"A carga em uma ou mais fases do gerador está acima da máxima programada.", verificar:["Grupo gerador subdimensionado para a carga — verificar primeiro","Verificar parametrização dos TCs","Verificar valor configurado para sobrecarga"], protecao:"Resfriar e Parar ou Parada Imediata — conforme parâmetro.", reset:true, ref:"Seção 7.2 — Página 72" },
+  { id:"sobrevelocidade", tags:["sobrevelocidade","sobre velocidade","rotação alta","rotacao alta","rpm alto","rpm elevado","motor acelerado","limite de velocidade excedido","velocidade acima do normal","excesso de rpm"], titulo:"⚡ SOBREVELOCIDADE", causa:"Rotação do motor está acima da máxima permitida.", verificar:["Regulador de velocidade com defeito ou descalibrado — verificar primeiro","Motor acelerado demasiadamente","Verificar parametrização do limite de sobrevelocidade"], protecao:"Resfriar e Parar ou Parada Imediata — conforme parâmetro.", reset:true, ref:"Seção 7.2 — Página 72" },
+  { id:"sub_frequencia", tags:["sub frequência","sub frequencia","subfrequência","subfrequencia","frequência baixa","frequencia baixa","frequência abaixo","frequencia abaixo","hertz baixo","rotação baixa","rotacao baixa","gerador com baixa frequência","gerador com baixa frequencia"], titulo:"⚡ SUB FREQUÊNCIA", causa:"Frequência do gerador abaixo da mínima programada.", verificar:["Grupo não suporta a carga aplicada — verificar primeiro","Regulador de velocidade com defeito","Filtros de combustível entupidos","Erro de parametrização"], protecao:"Resfriar e Parar ou Parada Imediata — conforme parâmetro.", reset:true, ref:"Seção 7.2 — Página 72" }
+];
+
+
+const PARAMETROS = [
+  // 6.2.1 Rede
+  { id:"tensao_minima_rede", tags:["tensão mínima rede","tensao minima rede","tensão minima da rede","tensao minima","tensao rede minima","tensão rede","tensao rede"], titulo:"⚡ TENSÃO MÍNIMA REDE", padrao:"190 V", descricao:"Tensão mínima entre fases aceitável para a rede. Abaixo deste valor o controlador considera falha de rede.", ref:"Seção 6.2.1 — Página 38" },
+  { id:"tensao_maxima_rede", tags:["tensão máxima rede","tensao maxima rede","tensão maxima da rede","tensao maxima rede","tensao rede maxima","tensão rede"], titulo:"⚡ TENSÃO MÁXIMA REDE", padrao:"420 V", descricao:"Tensão máxima entre fases aceitável para a rede. Acima deste valor o controlador considera falha de rede.", ref:"Seção 6.2.1 — Página 38" },
+  { id:"tempo_subtensao_rede", tags:["tempo subtensão rede","tempo subtensao rede","tempo subtensão","subtensao rede","subtensao tempo"], titulo:"⏱️ TEMPO SUBTENSÃO (REDE)", padrao:"00:00:05", descricao:"Tempo que a rede pode ficar com tensão abaixo da faixa antes de abrir a chave de carga por falha na rede.", ref:"Seção 6.2.1 — Página 38" },
+  { id:"tempo_sobretensao_rede", tags:["tempo sobretensão rede","tempo sobretensao rede","tempo sobretensão","sobretensao rede","sobretensao tempo"], titulo:"⏱️ TEMPO SOBRETENSÃO (REDE)", padrao:"00:00:05", descricao:"Tempo que a rede pode ficar com tensão acima da faixa antes de abrir a chave de carga por falha na rede.", ref:"Seção 6.2.1 — Página 38" },
+  { id:"tempo_liga_crd", tags:["tempo liga crd","tempo retorno rede","tempo transferência rede","tempo liga chave rede"], titulo:"⏱️ TEMPO LIGA CRD", padrao:"00:00:05", descricao:"Tempo de espera após o retorno da rede, para retransferir a carga do grupo para a rede.", ref:"Seção 6.2.1 — Página 38" },
+  { id:"transicao_gmg_rede", tags:["transição gmg rede","transicao gmg rede","tempo transição","intervalo transferência"], titulo:"⏱️ TRANSIÇÃO GMG→REDE", padrao:"00:00:01", descricao:"Intervalo entre a abertura da chave de grupo e o fechamento da chave de rede.", ref:"Seção 6.2.1 — Página 38" },
+  // 6.2.2 Gerador
+  { id:"tensao_minima_gmg", tags:["tensão mínima gmg","tensao minima gmg","tensão mínima gerador","tensao minima gerador","tensao gmg","tensao gerador","tensao grupo"], titulo:"⚡ TENSÃO MÍNIMA GMG", padrao:"200 V", descricao:"Tensão mínima entre fases aceitável para o grupo gerador.", ref:"Seção 6.2.2 — Página 39" },
+  { id:"tensao_maxima_gmg", tags:["tensão máxima gmg","tensao maxima gmg","tensão máxima gerador","tensao maxima gerador","tensao gmg maxima","tensao gerador maxima"], titulo:"⚡ TENSÃO MÁXIMA GMG", padrao:"240 V", descricao:"Tensão máxima entre fases aceitável para o grupo gerador.", ref:"Seção 6.2.2 — Página 39" },
+  { id:"acao_subtensao_gmg", tags:["ação subtensão gmg","acao subtensao gmg","ação subtensão gerador","subtensao gmg","subtensao gerador","subtensao grupo"], titulo:"⚙️ AÇÃO SUBTENSÃO (GMG)", padrao:"Resfriar e Parar", descricao:"Tipo de ação quando ocorrer subtensão no gerador. Opções: Resfriar e Parar ou Parar Imediatamente.", ref:"Seção 6.2.2 — Página 39" },
+  { id:"acao_sobretensao_gmg", tags:["ação sobretensão gmg","acao sobretensao gmg","ação sobretensão gerador","sobretensao gmg","sobretensao gerador","sobretensao grupo"], titulo:"⚙️ AÇÃO SOBRETENSÃO (GMG)", padrao:"Parar Imediatamente", descricao:"Tipo de ação quando ocorrer sobretensão no gerador. Opções: Resfriar e Parar ou Parar Imediatamente.", ref:"Seção 6.2.2 — Página 39" },
+  { id:"tempo_liga_cgr", tags:["tempo liga cgr","tempo liga chave grupo","tempo estabilização gerador"], titulo:"⏱️ TEMPO LIGA CGR", padrao:"00:00:05", descricao:"Tempo aguardado antes de acionar a chave de carga do gerador após este entrar em funcionamento. Pode ser usado para pré-aquecimento.", ref:"Seção 6.2.2 — Página 39" },
+  { id:"frequencia_minima", tags:["frequência mínima","frequencia minima","freq mínima gerador","frequencia minima gerador"], titulo:"📊 FREQUÊNCIA MÍNIMA", padrao:"57.5 Hz", descricao:"Frequência mínima aceitável para o grupo gerador.", ref:"Seção 6.2.2 — Página 39" },
+  { id:"frequencia_maxima", tags:["frequência máxima","frequencia maxima","freq máxima gerador","frequencia maxima gerador"], titulo:"📊 FREQUÊNCIA MÁXIMA", padrao:"63.0 Hz", descricao:"Frequência máxima aceitável para o grupo gerador.", ref:"Seção 6.2.2 — Página 39" },
+  { id:"acao_subfrequencia", tags:["ação subfrequência","acao subfrequencia","ação sub frequência"], titulo:"⚙️ AÇÃO SUBFREQUÊNCIA", padrao:"Resfriar e Parar", descricao:"Tipo de ação quando a frequência ficar abaixo da mínima. Opções: Resfriar e Parar ou Parar Imediatamente.", ref:"Seção 6.2.2 — Página 39" },
+  { id:"acao_sobrefrequencia", tags:["ação sobrefrequência","acao sobrefrequencia","ação sobre frequência"], titulo:"⚙️ AÇÃO SOBREFREQUÊNCIA", padrao:"Parar Imediatamente", descricao:"Tipo de ação quando a frequência ficar acima da máxima. Opções: Resfriar e Parar ou Parar Imediatamente.", ref:"Seção 6.2.2 — Página 39" },
+  // 6.2.3 Supervisão AC
+  { id:"supervisao_ac", tags:["supervisão ac","supervisao ac","monofásico","trifásico","supervisão rede gmg"], titulo:"⚙️ SUPERVISÃO DE REDE/GMG", padrao:"Trifásica", descricao:"Supervisão de tensão da rede e do gerador. Pode ser configurada para operação monofásica ou trifásica.", ref:"Seção 6.2.3 — Página 40" },
+  // 6.2.4 Carga
+  { id:"relacao_tc", tags:["relação de tc","relacao de tc","relação tc","tc","transformador corrente","ratio tc"], titulo:"⚙️ RELAÇÃO DE TC", padrao:"1000/5A", descricao:"Relação entre primário e secundário dos TCs instalados na carga. Configure conforme os TCs instalados no painel.", ref:"Seção 6.2.4 — Página 40" },
+  { id:"carga_maxima", tags:["carga máxima","carga maxima","corrente máxima","sobrecarga limite"], titulo:"⚙️ CARGA MÁXIMA", padrao:"900 A", descricao:"Carga máxima por fase para o grupo gerador. Acima deste valor o alarme de sobrecarga é ativado.", ref:"Seção 6.2.4 — Página 40" },
+  { id:"tempo_sobrecarga", tags:["tempo sobrecarga","tempo de sobrecarga"], titulo:"⏱️ TEMPO SOBRECARGA", padrao:"00:00:10", descricao:"Tempo que o grupo pode ficar em sobrecarga antes de acionar o alarme e desligar a chave de carga.", ref:"Seção 6.2.4 — Página 40" },
+  { id:"acao_sobrecarga", tags:["ação sobrecarga","acao sobrecarga"], titulo:"⚙️ AÇÃO SOBRECARGA", padrao:"Resfriar e Parar", descricao:"Tipo de ação quando a carga ficar acima da máxima configurada. Opções: Resfriar e Parar ou Parar Imediatamente.", ref:"Seção 6.2.4 — Página 40" },
+  // 6.2.5 Motor
+  { id:"tipo_motor", tags:["tipo de motor","tipo motor","injeção mecânica","motor eletrônico","motor eletronico","j1939"], titulo:"⚙️ TIPO DE MOTOR", padrao:"Injeção Mecânica", descricao:"O K30i é compatível com motores de injeção mecânica e motores eletrônicos J1939. Para motor eletrônico, escolha o modelo ou use Standard J1939.", ref:"Seção 6.2.5 — Página 41" },
+  { id:"espera_para_partir", tags:["espera para partir","tempo espera partida","espera partida"], titulo:"⏱️ ESPERA PARA PARTIR", padrao:"00:00:04", descricao:"Tempo de espera para acionamento do motor de partida após acionamento da válvula de funcionamento.", ref:"Seção 6.2.5 — Página 41" },
+  { id:"tentativas_partida", tags:["tentativas de partida","tentativas partida","numero tentativas","quantas tentativas"], titulo:"⚙️ TENTATIVAS DE PARTIDA", padrao:"03", descricao:"Número de tentativas de partida antes de acionar o alarme de falha na partida. Após esgotar as tentativas o alarme é ativado.", ref:"Seção 6.2.5 — Página 41" },
+  { id:"tempo_partida", tags:["tempo de partida","tempo partida","duração partida"], titulo:"⏱️ TEMPO DE PARTIDA", padrao:"00:00:05", descricao:"Tempo máximo de cada uma das tentativas de partida.", ref:"Seção 6.2.5 — Página 41" },
+  { id:"intervalo_partida", tags:["intervalo de partida","intervalo partida","intervalo entre tentativas"], titulo:"⏱️ INTERVALO DE PARTIDA", padrao:"00:00:06", descricao:"Intervalo entre cada uma das tentativas de partida.", ref:"Seção 6.2.5 — Página 41" },
+  { id:"marcha_lenta", tags:["marcha-lenta","marcha lenta","rpm reduzido","aquecimento marcha lenta"], titulo:"⚙️ MARCHA-LENTA", padrao:"Na Partida e na Parada", descricao:"Configura quando a saída de Marcha Lenta é acionada. Opções: Na partida; Na parada; ou Na partida e na parada.", ref:"Seção 6.2.5 — Página 41" },
+  { id:"tempo_resfriamento", tags:["tempo de resfriamento","tempo resfriamento","tempo marcha lenta parada","resfriamento motor"], titulo:"⏱️ TEMPO DE RESFRIAMENTO", padrao:"00:01:00", descricao:"Tempo de resfriamento do motor antes de parar, após a transferência da carga para a rede. Se houver saída de marcha-lenta configurada, este será o tempo dela.", ref:"Seção 6.2.5 — Página 41" },
+  // 6.2.7 Temperatura
+  { id:"temperatura_preaquecimento", tags:["temperatura pré-aquecimento","temp preaquecimento","temperatura preaquecimento","temp aquecimento"], titulo:"🌡️ TEMP. PRÉ-AQUECIMENTO", padrao:"60°C", descricao:"Temperatura de pré-aquecimento do motor. O gerador aguarda atingir esta temperatura antes de assumir a carga (se configurado).", ref:"Seção 6.2.7 — Página 43" },
+  { id:"temperatura_maxima", tags:["temperatura máxima","temperatura maxima","temp máxima motor","limite temperatura"], titulo:"🌡️ TEMPERATURA MÁXIMA", padrao:"97°C", descricao:"Temperatura máxima permitida para funcionamento do grupo gerador. Acima deste valor o alarme de Alta Temperatura é ativado.", ref:"Seção 6.2.7 — Página 43" },
+  { id:"tempo_alta_temperatura", tags:["tempo alta temperatura","tempo temperatura alta"], titulo:"⏱️ TEMPO ALTA TEMPERATURA", padrao:"00:00:10", descricao:"Tempo máximo em alta temperatura antes de ativar o alarme e abrir a chave de carga do grupo gerador.", ref:"Seção 6.2.7 — Página 43" },
+  { id:"acao_alta_temperatura", tags:["ação alta temperatura","acao alta temperatura","ação temperatura"], titulo:"⚙️ AÇÃO ALTA TEMPERATURA", padrao:"Resfriar e Parar", descricao:"Tipo de ação quando ocorrer alta temperatura. Opções: Resfriar e Parar ou Parar Imediatamente.", ref:"Seção 6.2.7 — Página 43" },
+  { id:"alimentar_motor_frio", tags:["alimentar carga com motor frio","motor frio carga","ligar com motor frio"], titulo:"⚙️ ALIMENTAR CARGA COM MOTOR FRIO", padrao:"Sim", descricao:"Define se o gerador deve alimentar a carga mesmo com o motor frio (abaixo da temperatura de pré-aquecimento).", ref:"Seção 6.2.7 — Página 43" },
+  // 6.2.8 Pressão do Óleo
+  { id:"pressao_minima", tags:["pressão mínima","pressao minima","pressão mínima óleo","pressao minima oleo","limite pressão"], titulo:"⚙️ PRESSÃO MÍNIMA", padrao:"1.0 Bar", descricao:"Pressão do óleo mínima permitida para trabalho. Abaixo deste valor o alarme de Baixa Pressão é ativado.", ref:"Seção 6.2.8 — Página 44" },
+  { id:"tempo_pressao_baixa", tags:["tempo pressão baixa","tempo pressao baixa","tempo baixa pressão"], titulo:"⏱️ TEMPO PRESSÃO BAIXA", padrao:"00:00:05", descricao:"Tempo em baixa pressão antes de acionar o alarme.", ref:"Seção 6.2.8 — Página 44" },
+  { id:"acao_pressao_baixa", tags:["ação pressão baixa","acao pressao baixa","ação pressão óleo"], titulo:"⚙️ AÇÃO PRESSÃO BAIXA", padrao:"Parar Imediatamente", descricao:"Tipo de ação quando a pressão do óleo cair abaixo do mínimo. Opções: Resfriar e Parar ou Parar Imediatamente.", ref:"Seção 6.2.8 — Página 44" },
+  // 6.2.10 Rotação
+  { id:"sensor_velocidade", tags:["sensor de velocidade","sensor velocidade","tipo sensor rpm","pick-up magnético"], titulo:"⚙️ SENSOR DE VELOCIDADE", padrao:"Pick-Up Magnético", descricao:"Tipo de sensor de velocidade do motor. Se for Frequência do Gerador, não serve para retirar o motor de arranque durante a partida.", ref:"Seção 6.2.10 — Página 45" },
+  { id:"dentes_cremalheira", tags:["dentes cremalheira","dentes da cremalheira","número dentes","numero dentes cremalheira"], titulo:"⚙️ DENTES DA CREMALHEIRA", padrao:"158", descricao:"Número de dentes da cremalheira do motor. Consulte o Apêndice 2 para a tabela com os principais motores.", ref:"Seção 6.2.10 — Página 45 / Apêndice 2 — Página 76" },
+  { id:"velocidade_maxima", tags:["velocidade máxima","velocidade maxima","rpm máximo","rpm maximo","sobrevelocidade limite"], titulo:"⚙️ VELOCIDADE MÁXIMA", padrao:"1950 RPM", descricao:"Velocidade máxima do motor. Qualquer velocidade acima desta irá acionar o alarme e parar o motor.", ref:"Seção 6.2.10 — Página 45" },
+  { id:"rpm_corte_arranque", tags:["rpm de corte do arranque","rpm corte arranque","rpm desliga starter","velocidade corte partida"], titulo:"⚙️ RPM DE CORTE DO ARRANQUE", padrao:"350 RPM", descricao:"Velocidade na qual o motor de arranque será desligado durante a partida.", ref:"Seção 6.2.10 — Página 45" },
+  // 6.2.11 Manutenção
+  { id:"manutencao_periodica", tags:["manutenção periódica","manutencao periodica","periodicidade manutenção","semestral anual horimetro"], titulo:"⚙️ MANUTENÇÃO PERIÓDICA", padrao:"Anual", descricao:"O controlador pode ser programado para alarmar uma manutenção preventiva com periodicidade Semestral, Anual ou pelo Horímetro.", ref:"Seção 6.2.11 — Página 46" },
+  { id:"intervalo_revisoes", tags:["intervalo entre revisões","intervalo revisoes","horas revisão","horas manutenção"], titulo:"⚙️ INTERVALO ENTRE REVISÕES", padrao:"A cada 250 horas", descricao:"Horas de trabalho acumuladas depois de uma manutenção que dispara o novo aviso. Visível apenas quando Manutenção Periódica estiver configurada como Horímetro.", ref:"Seção 6.2.11 — Página 46" },
+  { id:"acao_manutencao_vencida", tags:["ação manutenção vencida","acao manutencao vencida","ação manutenção"], titulo:"⚙️ AÇÃO MANUTENÇÃO VENCIDA", padrao:"Aviso na Tela", descricao:"Tipo de ação quando chegar a data ou tempo de manutenção. Opções: Aviso na tela ou Nenhuma ação.", ref:"Seção 6.2.11 — Página 46" },
+  // 6.2.12 Supervisão de Falhas
+  { id:"inicio_supervisao_falhas", tags:["início supervisão de falhas","inicio supervisao falhas","tempo supervisão","tempo estabilização supervisão"], titulo:"⏱️ INÍCIO SUPERVISÃO DE FALHAS", padrao:"00:00:20", descricao:"Tempo de espera para estabilização antes de iniciar a supervisão de algumas falhas do grupo, como subtensão, pressão, subfrequência, etc.", ref:"Seção 6.2.12 — Página 47" },
+  // 6.2.13 Potência do Gerador
+  { id:"potencia_gerador", tags:["potência do gerador","potencia do gerador","kva gerador","potência nominal"], titulo:"⚙️ POTÊNCIA DO GERADOR", padrao:"300 kVA", descricao:"Potência nominal do gerador em kVA. Utilizado para exibição do percentual de carga nas telas de rede e de grupo.", ref:"Seção 6.2.13 — Página 47" }
+];
+
+const DICIONARIO = {
+  "controaldor":"controlador","controador":"controlador",
+  "ta berrando":"alarme ativo","tá berrando":"alarme ativo",
+  "gmg":"grupo motor-gerador","cgr":"contator do grupo",
+  "crd":"contator da rede","qta":"quadro de transferência automática",
+  "pickup":"pick-up","tc":"transformador de corrente"
+};
+
+function hora() {
+  return new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+}
+
+function normalizar(t) {
+  let s = t.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"");
+  for(const[k,v] of Object.entries(DICIONARIO)) s = s.replace(new RegExp(k,'gi'),v);
+  return s;
+}
+
+function adicionarMensagem(tipo, html, opcoes=null) {
+  const chat = document.getElementById('chat');
+  const wrap = document.createElement('div');
+  wrap.className = 'msg-wrap ' + tipo;
+  const label = document.createElement('div');
+  label.className = 'msg-label';
+  if(tipo === 'app') {
+    label.innerHTML = '<div class="label-av">K</div> SISTEMA';
+  } else {
+    label.innerHTML = 'TÉCNICO <div class="label-av">T</div>';
+  }
+  wrap.appendChild(label);
+  const balao = document.createElement('div');
+  balao.className = 'balao';
+  balao.innerHTML = html + '<span class="hora">' + hora() + '</span>';
+  if(opcoes) {
+    const ow = document.createElement('div');
+    ow.className = 'opcoes-wrap';
+    opcoes.forEach(op => {
+      const btn = document.createElement('button');
+      btn.className = 'opcao-btn';
+      btn.textContent = op.texto;
+      btn.onclick = () => { op.acao(); ow.remove(); };
+      ow.appendChild(btn);
+    });
+    balao.appendChild(ow);
+  }
+  wrap.appendChild(balao);
+  chat.appendChild(wrap);
+  chat.scrollTop = chat.scrollHeight;
+}
+
+function typing(mostrar) {
+  if(mostrar) {
+    const chat = document.getElementById('chat');
+    const w = document.createElement('div');
+    w.className = 'msg-wrap app'; w.id = 'typing';
+    w.innerHTML = '<div class="typing"><span></span><span></span><span></span></div>';
+    chat.appendChild(w); chat.scrollTop = chat.scrollHeight;
+  } else {
+    const t = document.getElementById('typing'); if(t) t.remove();
+  }
+}
+
+function responderAlarme(a) {
+  let h = '<span class="titulo-alarme">' + a.titulo + '</span>';
+  h += '<strong>O que aconteceu:</strong><br>' + a.causa + '<br><br>';
+  h += '<strong>Verifique em ordem:</strong><ol>';
+  a.verificar.forEach(v => { h += '<li>' + v + '</li>'; });
+  h += '</ol><br><strong>Proteção executada:</strong><br>' + a.protecao;
+  if(a.reset) {
+    h += '<br><br><strong>Para resetar:</strong><ol>' +
+      '<li>Colocar em modo <strong>Manual</strong></li>' +
+      '<li>Pressionar <strong>[X]</strong> para silenciar</li>' +
+      '<li>Corrigir o defeito</li>' +
+      '<li>Pressionar <strong>[X]</strong> para limpar da memória</li>' +
+      '<li>Retornar ao modo <strong>Automático</strong></li></ol>';
+  }
+  h += '<span class="secao">📖 Manual K30i — ' + a.ref + '</span>';
+  return h;
+}
+
+// Levenshtein — mede similaridade entre duas palavras
+function levenshtein(a, b) {
+  const m = a.length, n = b.length;
+  const dp = Array.from({length: m+1}, (_,i) => Array.from({length: n+1}, (_,j) => i===0?j:j===0?i:0));
+  for(let i=1;i<=m;i++) for(let j=1;j<=n;j++)
+    dp[i][j] = a[i-1]===b[j-1] ? dp[i-1][j-1] : 1+Math.min(dp[i-1][j],dp[i][j-1],dp[i-1][j-1]);
+  return dp[m][n];
+}
+
+// Verifica se duas strings são similares o suficiente
+function similar(input, tag) {
+  const a = normalizar(input);
+  const b = normalizar(tag);
+  // Busca exata primeiro
+  if(a.includes(b) || b.includes(a)) return true;
+  // Palavras com 3+ caracteres para pegar palavras curtas como "rede"
+  const palavrasInput = a.split(/\s+/).filter(p => p.length >= 3);
+  const palavrasTag = b.split(/\s+/).filter(p => p.length >= 3);
+  if(palavrasTag.length === 0 || palavrasInput.length === 0) return false;
+
+  // Conta quantas palavras do input casam com palavras da tag
+  let acertos = 0;
+  for(const pi of palavrasInput) {
+    for(const pt of palavrasTag) {
+      // Diferença de tamanho máxima: 3 caracteres
+      if(Math.abs(pi.length - pt.length) > 3) continue;
+      // Tolerância por tamanho da palavra
+      const maxErros = pt.length <= 4 ? 1 : pt.length <= 7 ? 2 : 3;
+      if(levenshtein(pi, pt) <= maxErros) { acertos++; break; }
+    }
+  }
+
+  // Para tags curtas (1-2 palavras): exige TODAS as palavras
+  // Para tags longas (3+ palavras): exige pelo menos 2/3
+  let minAcertos;
+  if(palavrasTag.length <= 2) {
+    minAcertos = palavrasTag.length; // exige 100% das palavras
+  } else {
+    minAcertos = Math.max(2, Math.ceil(palavrasTag.length * 0.65));
+  }
+  return acertos >= minAcertos;
+}
+
+function buscar(texto) {
+  const n = normalizar(texto);
+  const encontrados = [];
+  const idsVistos = new Set();
+
+  // Reset — prioridade máxima
+  if(n.includes("reset")||n.includes("limpar falha")||n.includes("como resetar"))
+    return {tipo:'reset'};
+
+  // Busca exata — alarmes
+  for(const a of ALARMES) {
+    for(const tag of a.tags) {
+      if(n.includes(normalizar(tag)) && !idsVistos.has(a.id)) {
+        encontrados.push({tipo:'alarme', dado:a, exato:true});
+        idsVistos.add(a.id);
+      }
+    }
+  }
+  // Busca exata — parâmetros
+  for(const p of PARAMETROS) {
+    for(const tag of p.tags) {
+      if(n.includes(normalizar(tag)) && !idsVistos.has(p.id)) {
+        encontrados.push({tipo:'parametro', dado:p, exato:true});
+        idsVistos.add(p.id);
+      }
+    }
+  }
+
+  // Se só encontrou 1 resultado exato — responde direto
+  if(encontrados.length === 1) return encontrados[0];
+
+  // Se encontrou mais de 1 exato — ambiguidade
+  if(encontrados.length > 1) return {tipo:'ambiguo', opcoes: encontrados};
+
+  // Busca por similaridade — alarmes
+  for(const a of ALARMES) {
+    for(const tag of a.tags) {
+      if(similar(texto, tag) && !idsVistos.has(a.id)) {
+        encontrados.push({tipo:'alarme', dado:a, exato:false});
+        idsVistos.add(a.id);
+      }
+    }
+  }
+  // Busca por similaridade — parâmetros
+  for(const p of PARAMETROS) {
+    for(const tag of p.tags) {
+      if(similar(texto, tag) && !idsVistos.has(p.id)) {
+        encontrados.push({tipo:'parametro', dado:p, exato:false});
+        idsVistos.add(p.id);
+      }
+    }
+  }
+
+  if(encontrados.length === 1) return encontrados[0];
+  if(encontrados.length > 1) return {tipo:'ambiguo', opcoes: encontrados};
+  return null;
+}
+
+function responderParametro(p) {
+  return '<span class="titulo-alarme">' + p.titulo + '</span>' +
+    '<strong>Valor padrão de fábrica:</strong> ' + p.padrao + '<br><br>' +
+    '<strong>O que faz:</strong><br>' + p.descricao +
+    '<span class="secao">📖 Manual K30i — ' + p.ref + '</span>';
+}
+
+function processar(texto) {
+  typing(true);
+  setTimeout(() => {
+    typing(false);
+    const r = buscar(texto);
+    if(!r) {
+      adicionarMensagem('app', 'Não encontrei essa informação na base técnica.<br><br><span class="tag-alerta">💡 Dica: Digite o nome exato como aparece no display do K30i, ou use os botões de atalho abaixo.</span>');
+      return;
+    }
+    // Ambiguidade — mostra TODAS as opções encontradas
+    if(r.tipo === 'ambiguo') {
+      const opcoes = r.opcoes.map(item => ({
+        texto: item.dado.titulo,
+        acao: () => {
+          adicionarMensagem('usuario', item.dado.titulo);
+          if(item.tipo === 'alarme') adicionarMensagem('app', responderAlarme(item.dado));
+          else adicionarMensagem('app', responderParametro(item.dado));
+        }
+      }));
+      adicionarMensagem('app',
+        'Encontrei mais de uma informação relacionada. Qual você precisa?',
+        opcoes
+      );
+      return;
+    }
+    if(r.tipo === 'alarme') adicionarMensagem('app', responderAlarme(r.dado));
+    if(r.tipo === 'parametro') adicionarMensagem('app', responderParametro(r.dado));
+    if(r.tipo === 'reset') {
+      const h = '<span class="titulo-alarme">🔄 PROCEDIMENTO DE RESET APÓS FALHA</span><ol>' +
+        '<li>Colocar o controlador em modo <strong>Manual</strong></li>' +
+        '<li>Pressionar a tecla <strong>[X]</strong> para silenciar o alarme sonoro</li>' +
+        '<li>Corrigir o defeito apresentado no display</li>' +
+        '<li>Pressionar <strong>[X]</strong> novamente para limpar a falha da memória</li>' +
+        '<li>Retornar ao modo de operação desejado (<strong>Automático</strong>)</li></ol>' +
+        '<span class="tag-alerta">⚠️ Não retorne ao modo Automático sem antes corrigir o defeito.</span>' +
+        '<span class="secao">📖 Manual K30i — Seção 7 — Página 66</span>';
+      adicionarMensagem('app', h);
+    }
+  }, 900);
+}
+
+function atalho(tipo) {
+  if(tipo === 'alarme') {
+    adicionarMensagem('usuario', 'Tenho código de alarme');
+    typing(true);
+    setTimeout(() => { typing(false); adicionarMensagem('app', 'Qual alarme está aparecendo no display do K30i?<br><br>Digite o nome exato como aparece na tela, ou descreva o que está acontecendo.'); }, 700);
+  }
+  if(tipo === 'procedimento') {
+    adicionarMensagem('usuario', 'Preciso de procedimento');
+    typing(true);
+    setTimeout(() => {
+      typing(false);
+      adicionarMensagem('app', 'Qual procedimento você precisa?', [
+        {texto:'🔄 Reset após falha', acao:()=>{ adicionarMensagem('usuario','Reset após falha'); processar('como resetar'); }},
+        {texto:'⚙️ Configurar sensor de óleo', acao:()=>{ adicionarMensagem('usuario','Configurar sensor de óleo'); sensorOleo(); }}
+      ]);
+    }, 700);
+  }
+  if(tipo === 'parametro') {
+    adicionarMensagem('usuario', 'Consultar parâmetro');
+    typing(true);
+    setTimeout(() => {
+      typing(false);
+      adicionarMensagem('app', 'Qual parâmetro você precisa consultar?<br><br><span class="tag-alerta">⚙️ A parametrização completa está na Seção 6.2 — Páginas 37 a 47 do manual.</span><br>Digite o nome do parâmetro ou descreva o que quer ajustar.');
+    }, 700);
+  }
+  if(tipo === 'reset') {
+    adicionarMensagem('usuario', 'Como fazer reset de falha?');
+    processar('como resetar');
+  }
+}
+
+function sensorOleo() {
+  typing(true);
+  setTimeout(() => {
+    typing(false);
+    adicionarMensagem('app', 'Para configurar o sensor de óleo corretamente, preciso saber o tipo instalado:<br><br><strong>Qual é o seu sensor?</strong>', [
+      {texto:'1 — Sensor resistivo (2 fios, mede em Ohms)', acao:()=>{
+        adicionarMensagem('usuario','Sensor resistivo — 2 fios');
+        typing(true);
+        setTimeout(()=>{ typing(false); adicionarMensagem('app',
+          '<span class="titulo-alarme">⚙️ CONFIGURAR SENSOR RESISTIVO DE ÓLEO</span>' +
+          '<strong>Entrada a usar:</strong> EA2 ou EA3 (ambas suportam 0–600Ω)<br><br>' +
+          '<strong>Configurar em ordem:</strong><ol>' +
+          '<li>Acesse Menu → Configurações → Entradas Analógicas</li>' +
+          '<li>Selecione EA2 ou EA3</li>' +
+          '<li>Tipo: <strong>Pressão Óleo</strong></li>' +
+          '<li>Faixa: <strong>0–600Ω</strong></li>' +
+          '<li>Calibrar o zero (motor frio, parado)</li>' +
+          '<li>Definir limite em Proteções → Baixa Pressão</li></ol>' +
+          '<span class="tag-alerta">⚠️ Confirme a resistência máxima do sensor no manual do motor.</span>' +
+          '<span class="secao">📖 Manual K30i — Seção 6.3, Páginas 48–51</span>'
+        ); }, 900);
+      }},
+      {texto:'2 — Pressostato (contato seco, liga/desliga)', acao:()=>{
+        adicionarMensagem('usuario','Pressostato — contato seco');
+        typing(true);
+        setTimeout(()=>{ typing(false); adicionarMensagem('app',
+          '<span class="titulo-alarme">⚙️ CONFIGURAR PRESSOSTATO DE ÓLEO</span>' +
+          '<strong>Entrada a usar:</strong> Entrada Digital (DI1 a DI4)<br><br>' +
+          '<strong>Configurar em ordem:</strong><ol>' +
+          '<li>Acesse Menu → Configurações → Entradas Digitais</li>' +
+          '<li>Selecione uma entrada livre (ex: DI2)</li>' +
+          '<li>Função: <strong>Pressostato Óleo</strong></li>' +
+          '<li>Verificar se o sensor é NA (normalmente aberto) ou NF (normalmente fechado)</li>' +
+          '<li>Configurar ação em Proteções → Baixa Pressão</li></ol>' +
+          '<span class="tag-alerta">⚠️ Confirme com o fabricante do motor se o pressostato é NA ou NF.</span>' +
+          '<span class="secao">📖 Manual K30i — Apêndice 1, Páginas 73–75</span>'
+        ); }, 900);
+      }},
+      {texto:'3 — Motor com CAN J1939', acao:()=>{
+        adicionarMensagem('usuario','Motor com CAN J1939');
+        typing(true);
+        setTimeout(()=>{ typing(false); adicionarMensagem('app',
+          '<span class="titulo-alarme">⚙️ SENSOR DE ÓLEO VIA CAN J1939</span>' +
+          'Com motor CAN J1939, a pressão do óleo é lida diretamente da ECU via barramento CAN.<br><br>' +
+          '<strong>Configurar em ordem:</strong><ol>' +
+          '<li>Verificar que o cabo CAN está conectado (CAN H e CAN L)</li>' +
+          '<li>Acesse Menu → Configurações → CAN J1939</li>' +
+          '<li>Habilitar: <strong>Ativo</strong></li>' +
+          '<li>A pressão do óleo será lida automaticamente da ECU</li>' +
+          '<li>Não é necessário usar EA2/EA3 neste caso</li></ol>' +
+          '<span class="tag-alerta">⚠️ Se aparecer "Falha Conexão CAN", verificar se CAN H e CAN L não estão invertidos.</span>' +
+          '<span class="secao">📖 Manual K30i — Seção 6.3, Páginas 48–51</span>'
+        ); }, 900);
+      }},
+      {texto:'4 — Não sei / preciso verificar', acao:()=>{
+        adicionarMensagem('usuario','Não sei o tipo de sensor');
+        typing(true);
+        setTimeout(()=>{ typing(false); adicionarMensagem('app',
+          'Tudo bem. Veja como identificar o tipo:<br><br>' +
+          '<strong>Sensor resistivo:</strong> 2 fios. Multímetro em Ω mede entre 0 e 600Ω conforme a pressão.<br><br>' +
+          '<strong>Pressostato:</strong> 2 fios. Multímetro em continuidade — abre ou fecha. Não tem variação, é tudo ou nada.<br><br>' +
+          '<strong>CAN J1939:</strong> Sem sensor separado. Motor possui ECU com barramento CAN conectado ao K30i.<br><br>' +
+          'Quando identificar, me diga o tipo e continuo a configuração.'
+        ); }, 900);
+      }}
+    ]);
+  }, 800);
+}
+
+function enviar() {
+  const input = document.getElementById('input-texto');
+  const texto = input.value.trim();
+  if(!texto) return;
+  adicionarMensagem('usuario', texto);
+  input.value = ''; input.style.height = 'auto';
+  const n = normalizar(texto);
+  if(n.includes("sensor") && (n.includes("oleo") || n.includes("pressao"))) { sensorOleo(); return; }
+  processar(texto);
+}
+
+function teclaEnter(e) {
+  if(e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); enviar(); }
+}
+
+function autoResize(el) {
+  el.style.height = 'auto';
+  el.style.height = Math.min(el.scrollHeight, 100) + 'px';
+}
+
+window.onload = () => {
+  const chat = document.getElementById('chat');
+  const sep = document.createElement('div');
+  sep.className = 'date-sep'; sep.textContent = 'HOJE';
+  chat.appendChild(sep);
+  setTimeout(() => {
+    adicionarMensagem('app',
+      'Olá! Sou o <strong>Consultor Técnico K30i</strong>.<br><br>' +
+      'Posso ajudar com alarmes, procedimentos e configurações do controlador K30i da KVA.<br><br>' +
+      '<span class="tag-alerta">📌 Todas as respostas são baseadas exclusivamente no Manual K30i — Seção 7.2, com referência de seção e página.</span>' +
+      'Use os botões abaixo ou descreva sua dúvida diretamente.'
+    );
+  }, 400);
+};
+</script>
+</body>
+</html>
