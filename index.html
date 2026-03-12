@@ -72,8 +72,8 @@ body { font-family: 'Inter', sans-serif; display: flex; justify-content: center;
 .tag-alerta { background: #fff8e1; border-left: 3px solid var(--amarelo); padding: 6px 9px; border-radius: 4px; font-size: 12.5px; margin: 6px 0; display: block; color: #555; }
 
 /* BOTÕES RÁPIDOS */
-#atalhos-toggle { background: linear-gradient(to bottom, #c8c8c8, #e8e8e8 40%, #ffffff 70%, #d8d8d8); border-top: none; display: flex; justify-content: center; align-items: center; padding: 5px 0 7px 0; cursor: pointer; flex-shrink: 0; user-select: none; }
-#atalhos-toggle.recolhido { background: linear-gradient(to top, #c8c8c8, #e8e8e8 40%, #ffffff 70%, #d8d8d8); }
+#atalhos-toggle { background: linear-gradient(to bottom, #1a8a2e, #25a244 40%, #2ecc71 70%, #1a8a2e); border-top: none; display: flex; justify-content: center; align-items: center; padding: 5px 0 7px 0; cursor: pointer; flex-shrink: 0; user-select: none; }
+#atalhos-toggle.recolhido { background: linear-gradient(to top, #1a8a2e, #25a244 40%, #2ecc71 70%, #1a8a2e); }
 #atalhos-toggle svg { transition: transform 0.25s; display: block; }
 #atalhos-toggle.recolhido svg { transform: rotate(180deg); }
 #botoes-rapidos { padding: 8px 12px; display: flex; gap: 6px; flex-wrap: wrap; background: var(--fundo-chat); flex-shrink: 0; overflow: hidden; max-height: 200px; transition: max-height 0.3s ease, padding 0.3s ease; }
@@ -114,7 +114,7 @@ body { font-family: 'Inter', sans-serif; display: flex; justify-content: center;
     <button id="header-menu">···</button>
   </div>
   <div id="chat"></div>
-  <div id="atalhos-toggle" onclick="toggleAtalhos()"><svg width="28" height="16" viewBox="0 0 28 16" fill="none" xmlns="http://www.w3.org/2000/svg"><polyline points="3,3 14,13 25,3" stroke="#ffffff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.7"/><polyline points="3,2 14,12 25,2" stroke="#000000" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+  <div id="atalhos-toggle" onclick="toggleAtalhos()"><svg width="28" height="16" viewBox="0 0 28 16" fill="none" xmlns="http://www.w3.org/2000/svg"><polyline points="3,3 14,13 25,3" stroke="rgba(255,255,255,0.3)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><polyline points="3,2 14,12 25,2" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
   <div id="botoes-rapidos">
     <button class="btn-rapido" style="border-color:#c0392b;color:#c0392b;" onclick="atalhoFalhaAviso('falha')"><svg style="width:16px;height:16px;vertical-align:middle;margin-right:4px;" viewBox="0 0 24 24" fill="#c0392b"><path d="M12 2C9 2 6.5 4 6 7H18C17.5 4 15 2 12 2ZM5 9V13H19V9H5ZM4 15V17C4 18.1 4.9 19 6 19H18C19.1 19 20 18.1 20 17V15H4ZM10 21V22H14V21H10Z"/></svg> Tenho uma Falha</button>
     <button class="btn-rapido" style="border-color:#e67e22;color:#e67e22;" onclick="atalhoFalhaAviso('aviso')"><svg style="width:16px;height:16px;vertical-align:middle;margin-right:4px;" viewBox="0 0 24 24" fill="#e67e22"><path d="M12 2C9 2 6.5 4 6 7H18C17.5 4 15 2 12 2ZM5 9V13H19V9H5ZM4 15V17C4 18.1 4.9 19 6 19H18C19.1 19 20 18.1 20 17V15H4ZM10 21V22H14V21H10Z"/></svg> Tenho um Aviso</button>
