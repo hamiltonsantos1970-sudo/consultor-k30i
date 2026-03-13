@@ -118,7 +118,7 @@ body { font-family: 'Inter', sans-serif; display: flex; justify-content: center;
     <div id="header-avatar">K</div>
     <div id="header-info">
       <h1>Suporte Técnico K30i</h1>
-      <div id="header-status"><div class="dot"></div><span>ONLINE AGORA</span><span style="color:rgba(255,255,255,0.4);font-size:10px;margin-left:8px;">v1.21</span></div>
+      <div id="header-status"><div class="dot"></div><span>ONLINE AGORA</span><span style="color:rgba(255,255,255,0.4);font-size:10px;margin-left:8px;">v1.22</span></div>
     </div>
     <button id="header-menu">···</button>
   </div>
@@ -131,6 +131,7 @@ body { font-family: 'Inter', sans-serif; display: flex; justify-content: center;
     <button class="btn-rapido" onclick="atalho('reset')">🔄 Reset de Falha</button>
     <button class="btn-rapido" onclick="atalhoMenu()">📋 Programação</button>
     <button class="btn-rapido" onclick="atalhoApendice1()">⚙️ Entradas/Saídas</button>
+    <button class="btn-rapido" onclick="atalhoInstalacao()">🔧 Guias de Instalação</button>
   </div>
   <div id="input-area">
     <button id="btn-mais">+</button>
@@ -1925,11 +1926,55 @@ function atalhoApendice1() {
   }, 600);
 }
 
+function atalhoInstalacao() {
+  adicionarMensagem('usuario', '🔧 Guias de Instalação');
+  typing(true);
+  setTimeout(() => {
+    typing(false);
+    const guias = [
+      { id:'instalar_pressostato',       emoji:'🛢️',  nome:'Pressostato de Óleo' },
+      { id:'instalar_termostato',        emoji:'🌡️',  nome:'Termostato de Temperatura' },
+      { id:'instalar_entrada_analogica', emoji:'📊', nome:'Entradas Analógicas (EA)' },
+      { id:'instalar_entrada_digital', emoji:'🔌',  nome:'Entradas Digitais (ED)' },
+      { id:'instalar_pickup_magnetico',  emoji:'📡',  nome:'Pick-up Magnético' },
+      { id:'instalar_saidas_dc',         emoji:'⚡',  nome:'Relés de Saída DC' },
+      { id:'instalar_sensores_corrente', emoji:'🔢',  nome:'Sensores de Corrente (TCs)' },
+      { id:'instalar_chaves_transferencia', emoji:'🔀', nome:'Chaves de Transferência (CRD/CGR)' },
+      { id:'instalar_rede_can_j1939',    emoji:'🖧',  nome:'Rede CAN J1939' }
+    ];
+    const opcoes = guias.map(g => ({
+      texto: g.emoji + ' ' + g.nome,
+      acao: () => {
+        adicionarMensagem('usuario', g.nome);
+        const found = INSTALACAO.find(i => i.id === g.id);
+        if(found) adicionarMensagem('app', responderInstalacao(found));
+        else adicionarMensagem('app', 'Guia ainda não disponível nesta versão.');
+      }
+    }));
+    adicionarMensagem('app',
+      '🔧 <strong>Guias de Instalação — K30i</strong><br><br>' +
+      '<span class="tag-alerta">📋 Selecione o componente que deseja instalar ou configurar:</span>',
+      opcoes
+    );
+  }, 600);
+}
+
 function responderInstalacao(i) {
   let h = '<span class="titulo-alarme">' + i.titulo + '</span>';
-  h += '<strong>Passo a passo:</strong><ol>';
-  i.passos.forEach(p => { h += '<li>' + p + '</li>'; });
-  h += '</ol>';
+  // Detect rich passos (contain HTML tags beyond simple <strong>)
+  const isRich = i.passos.some(p => /<(ol|ul|table|br|li)/.test(p));
+  if(isRich) {
+    i.passos.forEach((p, idx) => {
+      h += '<div style="border-left:3px solid var(--verde);padding:8px 10px;margin:8px 0;background:#f9fffe;border-radius:0 8px 8px 0;">';
+      h += '<span style="font-size:10px;color:var(--verde-escuro);font-weight:700;display:block;margin-bottom:4px;">PASSO ' + (idx+1) + ' DE ' + i.passos.length + '</span>';
+      h += p;
+      h += '</div>';
+    });
+  } else {
+    h += '<strong>Passo a passo:</strong><ol>';
+    i.passos.forEach(p => { h += '<li>' + p + '</li>'; });
+    h += '</ol>';
+  }
   h += '<span class="tag-alerta">' + i.alerta + '</span>';
   h += '<span class="secao">📖 Manual K30i — ' + i.ref + '</span>';
   return h;
