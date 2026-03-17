@@ -173,7 +173,28 @@ body {
 #btn-enviar { width: 40px; height: 40px; background: var(--verde); border: none; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; box-shadow: 0 2px 8px rgba(37,162,68,0.4); }
 #btn-enviar:active { background: var(--verde-escuro); }
 #btn-enviar svg { width: 20px; height: 20px; fill: white; }
+/* ESTILO DO CÍRCULO VERDE DO MICROFONE */
+#btn-voz {
+  width: 40px;
+  height: 40px;
+  background-color: var(--verde) !important; /* Usa o verde que já definimos no topo */
+  border-radius: 50%; /* Isto faz o botão ficar redondo */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: transform 0.1s; /* Suaviza o efeito de apertar */
+  -webkit-touch-callout: none; /* Evita menus de contexto ao segurar */
+}
 
+/* ESTILO DO ÍCONE DENTRO DO CÍRCULO */
+#btn-voz svg {
+  width: 22px;
+  height: 22px;
+  fill: white !important; /* Deixa o microfone branco */
+}
 /* TYPING */
 .typing { display: flex; gap: 4px; padding: 12px 14px; background: white; border-radius: 16px; border-bottom-left-radius: 4px; width: 58px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
 .typing span { width: 7px; height: 7px; background: #ccc; border-radius: 50%; animation: bounce 1.2s infinite; }
@@ -212,10 +233,11 @@ body {
     <button id="btn-mais">+</button>
     <textarea id="input-texto" autofocus placeholder="Digite sua mensagem..." rows="1" onkeydown="teclaEnter(event)" oninput="autoResize(this)"></textarea>
     
-    <button id="btn-voz" type="button" style="background: none; border: none; cursor: pointer; padding: 10px; display: flex; align-items: center; justify-content: center;">
-    <svg viewBox="0 0 24 24" width="24" height="24" fill="#8696a0">
-        <path d="M11.999 14.942c2.001 0 3.531-1.53 3.531-3.531V4.35c0-2.001-1.53-3.531-3.531-3.531S8.469 2.35 8.469 4.35v7.061c0 2.001 1.53 3.531 3.531 3.531zm6.238-3.53c0 3.531-2.942 6.002-6.237 6.002s-6.237-2.471-6.237-6.002H3.761c0 4.001 3.178 7.297 7.061 7.885v3.885h2.354v-3.885c3.884-.588 7.061-3.884 7.061-7.885h-2.001z"></path>
-    </svg>
+    <button id="btn-voz" type="button">
+  <svg viewBox="0 0 24 24">
+    <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"></path>
+    <path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"></path>
+  </svg>
 </button>
   
 </div>
