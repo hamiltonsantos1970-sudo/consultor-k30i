@@ -2547,6 +2547,39 @@ window.onload = () => {
 })();
 </script>
 <script>
+const Recognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+if (Recognition) {
+    const recognition = new Recognition();
+    recognition.lang = 'pt-BR';
+    const btnVoz = document.getElementById('btn-voz');
+    const inputTexto = document.getElementById('input-texto');
+
+    // Ao segurar o botão: Fica VERDE
+    btnVoz.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        const svg = btnVoz.querySelector('svg');
+        if(svg) svg.style.fill = "#00a884"; 
+        recognition.start();
+        if (navigator.vibrate) navigator.vibrate(40);
+    });
+
+    // Ao soltar o botão: Volta a ser CINZA
+    btnVoz.addEventListener('touchend', () => {
+        const svg = btnVoz.querySelector('svg');
+        if(svg) svg.style.fill = "#8696a0";
+        recognition.stop();
+    });
+
+    // Quando o Google termina de ouvir
+    recognition.onresult = (event) => {
+        const texto = event.results[0][0].transcript;
+        inputTexto.value = texto;
+        setTimeout(() => { 
+            if (typeof enviar === "function") enviar(); 
+        }, 500);
+    };
+}  
 // "Cérebro Offline" do Consultor K30i
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
