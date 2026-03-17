@@ -209,8 +209,11 @@ body {
     <button class="btn-rapido" onclick="atalhoInstalacao()">🔧 Guias de Instalação</button>
   </div>
   <div id="input-area">
-    <button id="btn-voz" type="button">
-    <svg viewBox="0 0 24 24" width="24" height="24">
+    <button id="btn-mais">+</button>
+    <textarea id="input-texto" autofocus placeholder="Digite sua mensagem..." rows="1" onkeydown="teclaEnter(event)" oninput="autoResize(this)"></textarea>
+    
+    <button id="btn-voz" type="button" style="background: none; border: none; cursor: pointer; padding: 10px; display: flex; align-items: center; justify-content: center;">
+    <svg viewBox="0 0 24 24" width="24" height="24" fill="#8696a0">
         <path d="M11.999 14.942c2.001 0 3.531-1.53 3.531-3.531V4.35c0-2.001-1.53-3.531-3.531-3.531S8.469 2.35 8.469 4.35v7.061c0 2.001 1.53 3.531 3.531 3.531zm6.238-3.53c0 3.531-2.942 6.002-6.237 6.002s-6.237-2.471-6.237-6.002H3.761c0 4.001 3.178 7.297 7.061 7.885v3.885h2.354v-3.885c3.884-.588 7.061-3.884 7.061-7.885h-2.001z"></path>
     </svg>
 </button>
@@ -2595,51 +2598,4 @@ if ('serviceWorker' in navigator) {
 }
 </script>
 </body>
-<style>
-<script>
-const Recognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-if (Recognition) {
-    const recognition = new Recognition();
-    recognition.lang = 'pt-BR';
-    const btnVoz = document.getElementById('btn-voz');
-
-    btnVoz.addEventListener('touchstart', (e) => {
-        e.preventDefault();
-        btnVoz.classList.add('gravando'); 
-        recognition.start();
-    });
-
-    btnVoz.addEventListener('touchend', () => {
-        btnVoz.classList.remove('gravando');
-        recognition.stop();
-    });
-
-    recognition.onresult = (event) => {
-        document.getElementById('input-texto').value = event.results[0][0].transcript;
-        if (typeof enviar === "function") enviar();
-    };
-}
-</script>
-#btn-voz {
-    background-color: #f0f2f5; 
-    border-radius: 50%;
-    width: 45px;
-    height: 45px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border: none;
-    cursor: pointer;
-    margin-left: 5px;
-}
-#btn-voz.gravando {
-    background-color: #00a884 !important;
-}
-#btn-voz svg {
-    fill: #8696a0;
-}
-#btn-voz.gravando svg {
-    fill: #ffffff !important;
-}
-</style>
 </html>
