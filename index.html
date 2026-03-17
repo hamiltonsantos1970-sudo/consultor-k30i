@@ -8,7 +8,6 @@
 <meta name="apple-mobile-web-app-title" content="Suporte Técnico K30i">
 <title>Suporte Técnico K30i</title>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 :root {
   --verde: #25a244;
   --verde-escuro: #1a7a35;
@@ -22,7 +21,12 @@
 }
 * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 html, body { height: 100%; background: #f0f2f5; }
-body { font-family: 'Inter', sans-serif; display: flex; justify-content: center; align-items: flex-start; }
+body { 
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
+  display: flex; 
+  justify-content: center; 
+  align-items: flex-start; 
+}
 #app { width: 100%; max-width: 480px; height: 100vh; height: 100dvh; display: flex; flex-direction: column; background: var(--fundo-chat); overflow: hidden; }
 
 /* HEADER */
