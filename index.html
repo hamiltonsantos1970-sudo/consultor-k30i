@@ -128,7 +128,18 @@ body {
 #atalhos-toggle.recolhido { background: linear-gradient(to top, #1a8a2e, #25a244 40%, #2ecc71 70%, #1a8a2e); }
 #atalhos-toggle svg { transition: transform 0.25s; display: block; }
 #atalhos-toggle.recolhido svg { transform: rotate(180deg); }
-#botoes-rapidos { padding: 8px 12px; display: flex; gap: 6px; flex-wrap: wrap; background: #000000; flex-shrink: 0; overflow: hidden; max-height: 200px; transition: max-height 0.3s ease, padding 0.3s ease; }
+#botoes-rapidos {
+  padding: 8px 12px;
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  /* Alterado de #000000 para var(--cinza-claro) */
+  background: var(--cinza-claro);
+  flex-shrink: 0;
+  overflow: hidden;
+  max-height: 200px;
+  transition: max-height 0.3s ease, padding 0.3s ease;
+}
 #botoes-rapidos.recolhido { max-height: 0; padding-top: 0; padding-bottom: 0; }
 .btn-rapido { flex: 1; min-width: calc(50% - 4px); background: transparent; border: 1.5px solid rgba(255,255,255,0.7); border-radius: 20px; padding: 7px 8px; font-size: 14px; font-weight: 600; color: #ffffff; cursor: pointer; text-align: center; transition: all 0.15s; }
 .btn-rapido:active { background: rgba(255,255,255,0.15); transform: scale(0.97); }
