@@ -212,9 +212,12 @@ body {
     <button id="btn-mais">+</button>
     <textarea id="input-texto" autofocus placeholder="Digite sua mensagem..." rows="1" onkeydown="teclaEnter(event)" oninput="autoResize(this)"></textarea>
     
-    <button id="btn-voz" type="button" style="background:none; border:none; font-size:20px; margin:0 5px; cursor:pointer;">🎤</button>
-    
-    <button id="btn-enviar" onclick="enviar()"><svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg></button>
+    <button id="btn-voz" type="button" style="background: none; border: none; cursor: pointer; padding: 10px; display: flex; align-items: center; justify-content: center;">
+    <svg viewBox="0 0 24 24" width="24" height="24" fill="#8696a0">
+        <path d="M11.999 14.942c2.001 0 3.531-1.53 3.531-3.531V4.35c0-2.001-1.53-3.531-3.531-3.531S8.469 2.35 8.469 4.35v7.061c0 2.001 1.53 3.531 3.531 3.531zm6.238-3.53c0 3.531-2.942 6.002-6.237 6.002s-6.237-2.471-6.237-6.002H3.761c0 4.001 3.178 7.297 7.061 7.885v3.885h2.354v-3.885c3.884-.588 7.061-3.884 7.061-7.885h-2.001z"></path>
+    </svg>
+</button>
+  
 </div>
 </div>
 <script>
