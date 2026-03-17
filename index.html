@@ -2578,20 +2578,30 @@ if (Recognition) {
     const inputTexto = document.getElementById('input-texto');
 
     // Ao segurar o botão: Fica VERDE
-    btnVoz.addEventListener('touchstart', (e) => {
-        e.preventDefault();
-        const svg = btnVoz.querySelector('svg');
-        if(svg) svg.style.fill = "#00a884"; 
-        recognition.start();
-        if (navigator.vibrate) navigator.vibrate(40);
-    });
+    // Ação ao ENCOSTAR o dedo: O botão AUMENTA (Igual WhatsApp)
+btnVoz.addEventListener('touchstart', (e) => {
+    e.preventDefault();
+    
+    // Faz o círculo aumentar de tamanho
+    btnVoz.style.transform = "scale(1.2)"; 
+    // Opcional: deixa a cor um pouco mais viva ao aumentar
+    btnVoz.style.backgroundColor = "#2cc351"; 
+    
+    recognition.start();
+    if (navigator.vibrate) navigator.vibrate(40);
+});
 
-    // Ao soltar o botão: Volta a ser CINZA
-    btnVoz.addEventListener('touchend', () => {
-        const svg = btnVoz.querySelector('svg');
-        if(svg) svg.style.fill = "#8696a0";
-        recognition.stop();
-    });
+// Ação ao SOLTAR o dedo: O botão VOLTA ao tamanho normal
+btnVoz.addEventListener('touchend', (e) => {
+    e.preventDefault();
+    
+    // Volta ao tamanho original (1.0)
+    btnVoz.style.transform = "scale(1)";
+    // Volta para a cor padrão definida no CSS
+    btnVoz.style.backgroundColor = "var(--verde)";
+    
+    recognition.stop();
+});
 
     // Quando o Google termina de ouvir
     recognition.onresult = (event) => {
