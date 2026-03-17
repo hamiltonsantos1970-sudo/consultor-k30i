@@ -129,15 +129,21 @@ body {
 #atalhos-toggle svg { transition: transform 0.25s; display: block; }
 #atalhos-toggle.recolhido svg { transform: rotate(180deg); }
 #botoes-rapidos { 
-  padding: 8px 12px; 
+  padding: 12px; 
   display: flex; 
-  gap: 6px; 
+  gap: 8px; 
   flex-wrap: wrap; 
-  background: #6c757d; /* OPÇÃO 2: CINZA AZULADO MODERNO */
+  
+  /* DEGRADÊ: Começa no cinza azulado e termina num cinza mais claro */
+  background: linear-gradient(180deg, #d1d7db 0%, #e2e6e9 100%);
+  
   flex-shrink: 0; 
   overflow: hidden; 
-  max-height: 200px; 
-  transition: max-height 0.3s ease, padding 0.3s ease; 
+  max-height: 250px; 
+  transition: max-height 0.3s ease, padding 0.3s ease;
+  
+  /* Borda sutil no topo para separar das mensagens, como no modelo */
+  border-top: 1px solid rgba(0,0,0,0.05); 
 }
 
 #botoes-rapidos.recolhido { max-height: 0; padding-top: 0; padding-bottom: 0; }
