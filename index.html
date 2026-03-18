@@ -2598,13 +2598,20 @@ if (Recognition) {
     });
 
     // Ao soltar o botão: Volta ao normal
+    // Ao soltar o botão: Volta ao normal e impede o teclado
     btnVoz.addEventListener('touchend', (e) => {
         e.preventDefault();
         
-        // Volta ao tamanho normal
+        // 1. Volta o botão ao tamanho original
         btnVoz.style.transform = "scale(1)"; 
         
+        // 2. Para a gravação
         recognition.stop();
+
+        // 3. ESTA LINHA IMPEDE O TECLADO DE ABRIR
+        if (document.activeElement) {
+            document.activeElement.blur();
+        }
     });
   
         // Quando o Google termina de ouvir
