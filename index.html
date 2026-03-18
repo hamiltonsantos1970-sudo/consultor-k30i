@@ -175,18 +175,22 @@ body {
 #btn-enviar svg { width: 20px; height: 20px; fill: white; }
 /* ESTILO DO CÍRCULO VERDE DO MICROFONE */
 #btn-voz {
-  width: 40px;
-  height: 40px;
-  background-color: var(--verde) !important; /* Usa o verde que já definimos no topo */
-  border-radius: 50%; /* Isto faz o botão ficar redondo */
-  display: flex;
+  width: 45px;
+  height: 45px;
+  background-color: var(--verde) !important;
+  border-radius: 50%;
+  
+  /* ESTAS LINHAS SÃO ESSENCIAIS PARA O EFEITO DE AUMENTAR */
+  display: inline-flex; 
   align-items: center;
   justify-content: center;
+  transform: scale(1); 
+  transition: transform 0.1s ease-out; 
+  
   border: none;
   cursor: pointer;
   flex-shrink: 0;
-  transition: transform 0.1s; /* Suaviza o efeito de apertar */
-  -webkit-touch-callout: none; /* Evita menus de contexto ao segurar */
+  -webkit-touch-callout: none;
 }
 
 /* ESTILO DO ÍCONE DENTRO DO CÍRCULO */
@@ -2577,21 +2581,22 @@ if (Recognition) {
     const btnVoz = document.getElementById('btn-voz');
     const inputTexto = document.getElementById('input-texto');
 
-// Efeito WhatsApp: Aumenta o círculo ao tocar
+// Ao segurar o botão: Aumenta o tamanho
     btnVoz.addEventListener('touchstart', (e) => {
         e.preventDefault();
-        // Aumenta o círculo inteiro em 1.3x (30% maior)
-        btnVoz.style.transform = "scale(1.3)"; 
-        btnVoz.style.transition = "transform 0.1s ease-out";
+        
+        // Mudamos para 1.5 para o aumento ser bem visível
+        btnVoz.style.transform = "scale(1.5)"; 
         
         recognition.start();
         if (navigator.vibrate) navigator.vibrate(40);
     });
 
-    // Volta ao tamanho normal ao soltar o dedo
+    // Ao soltar o botão: Volta ao normal
     btnVoz.addEventListener('touchend', (e) => {
         e.preventDefault();
-        // Volta para o tamanho original (1.0)
+        
+        // Volta ao tamanho normal
         btnVoz.style.transform = "scale(1)"; 
         
         recognition.stop();
