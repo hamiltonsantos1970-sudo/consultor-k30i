@@ -221,7 +221,7 @@ body {
     <div id="header-avatar">K</div>
     <div id="header-info">
       <h1>Suporte Técnico K30i</h1>
-      <div id="header-status"><div class="dot"></div><span>ONLINE AGORA</span><span style="color:rgba(255,255,255,0.4);font-size:10px;margin-left:8px;">v1.43</span></div>
+      <div id="header-status"><div class="dot"></div><span>ONLINE AGORA</span><span style="color:rgba(255,255,255,0.4);font-size:10px;margin-left:8px;">v1.42</span></div>
     </div>
     <button id="header-menu">···</button>
   </div>
@@ -238,7 +238,7 @@ body {
   </div>
   <div id="input-area">
     <button id="btn-mais">+</button>
-    <textarea id="input-texto" placeholder="Digite sua mensagem..." rows="1" onkeydown="teclaEnter(event)" oninput="autoResize(this)"></textarea>
+    <textarea id="input-texto" autofocus placeholder="Digite sua mensagem..." rows="1" onkeydown="teclaEnter(event)" oninput="autoResize(this)"></textarea>
     
     <button id="btn-voz" type="button">
   <svg viewBox="0 0 24 24">
@@ -2453,22 +2453,12 @@ function enviar() {
   const input = document.getElementById('input-texto');
   const texto = input.value.trim();
   if(!texto) return;
-
   adicionarMensagem('usuario', texto);
-  
-  // 1. Limpa o texto e o tamanho
-  input.value = ''; 
-  input.style.height = 'auto';
-
-  // 2. ADICIONE ESTA LINHA AQUI:
-  // Ela remove o foco do campo e fecha o teclado após o envio
-  input.blur(); 
-
+  input.value = ''; input.style.height = 'auto';
   const n = normalizar(texto);
   if(n.includes("sensor") && (n.includes("oleo") || n.includes("pressao"))) { sensorOleo(); return; }
   if(n.includes("apendice") || n.includes("apêndice") || (n.includes("entrada") && n.includes("auxiliar")) || (n.includes("saida") && n.includes("auxiliar")) || n.includes("entradas auxiliares") || n.includes("saidas auxiliares")) { atalhoApendice1(); return; }
   processar(texto);
-}
 }
 
 function teclaEnter(e) {
@@ -2597,31 +2587,31 @@ if (Recognition) {
     const inputTexto = document.getElementById('input-texto');
 
 // Ao segurar o botão: Aumenta o tamanho
-  btnVoz.addEventListener('touchend', (e) => {
-    e.preventDefault(); // <-- ESSA LINHA É OBRIGATÓRIA
-    
-    btnVoz.style.transform = "scale(1)"; 
-    recognition.stop();
-});
+    btnVoz.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        
+        // Mudamos para 1.5 para o aumento ser bem visível
+        btnVoz.style.transform = "scale(1.5)"; 
+        
+        recognition.start();
+        if (navigator.vibrate) navigator.vibrate(40);
+    });
 
-      // Ao soltar o botão: Volta ao normal e impede o teclado
+    // Ao soltar o botão: Volta ao normal
+    // Ao soltar o botão: Volta ao normal e impede o teclado
     btnVoz.addEventListener('touchend', (e) => {
-    // 1. O preventDefault e o stopPropagation impedem o navegador de
-    // transformar esse toque em um "clique" logo em seguida.
-    e.preventDefault();
-    e.stopPropagation();
+        e.preventDefault();
+        
+        // 1. Volta o botão ao tamanho original
+        btnVoz.style.transform = "scale(1)"; 
+        
+        // 2. Para a gravação
+        recognition.stop();
 
-    // 2. Volta o botão ao tamanho normal
-    btnVoz.style.transform = "scale(1)";
-
-    // 3. Para a gravação
-    recognition.stop();
-
-    // 4. Remove o foco de qualquer lugar para garantir que o teclado não suba
-    if (document.activeElement) {
-        document.activeElement.blur();
-    }
-}, {passive: false}); // O passive: false é importante para o preventDefault funcionar
+        // 3. ESTA LINHA IMPEDE O TECLADO DE ABRIR
+        if (document.activeElement) {
+            document.activeElement.blur();
+        }
     });
   
         // Quando o Google termina de ouvir
