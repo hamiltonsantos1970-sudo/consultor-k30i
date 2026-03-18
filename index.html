@@ -2577,20 +2577,22 @@ if (Recognition) {
     const btnVoz = document.getElementById('btn-voz');
     const inputTexto = document.getElementById('input-texto');
 
-// Ao segurar o botão: Aumenta o tamanho (Efeito WhatsApp)
+// Efeito WhatsApp: Aumenta o círculo ao tocar
     btnVoz.addEventListener('touchstart', (e) => {
         e.preventDefault();
-        btnVoz.style.transform = "scale(1.3)"; // Aumenta 30%
-        btnVoz.style.transition = "transform 0.1s ease-out"; // Deixa o movimento suave
+        // Aumenta o círculo inteiro em 1.3x (30% maior)
+        btnVoz.style.transform = "scale(1.3)"; 
+        btnVoz.style.transition = "transform 0.1s ease-out";
         
         recognition.start();
         if (navigator.vibrate) navigator.vibrate(40);
     });
 
-    // Ao soltar o botão: Volta ao normal
+    // Volta ao tamanho normal ao soltar o dedo
     btnVoz.addEventListener('touchend', (e) => {
         e.preventDefault();
-        btnVoz.style.transform = "scale(1)"; // Volta ao tamanho 1 (original)
+        // Volta para o tamanho original (1.0)
+        btnVoz.style.transform = "scale(1)"; 
         
         recognition.stop();
     });
