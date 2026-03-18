@@ -186,7 +186,10 @@ body {
   justify-content: center;
   transform: scale(1); 
   transition: transform 0.1s ease-out; 
-  
+  /* ADICIONE ESTAS DUAS LINHAS ABAIXO */
+  **position: relative;**
+  **z-index: 999;**
+}
   border: none;
   cursor: pointer;
   flex-shrink: 0;
@@ -259,14 +262,16 @@ if (Recognition) {
     // Ao segurar o botão
     btnVoz.addEventListener('touchstart', (e) => {
         e.preventDefault();
-        btnVoz.style.filter = "drop-shadow(0 0 5px red)"; // Feedback visual simples
+        // Aumenta bem (1.5x) para garantir que saia da barra
+        btnVoz.style.transform = "scale(1.5)"; 
+        
         recognition.start();
         if (navigator.vibrate) navigator.vibrate(40);
     });
 
-    // Ao soltar o botão
-    btnVoz.addEventListener('touchend', () => {
-        btnVoz.style.filter = "none";
+    btnVoz.addEventListener('touchend', (e) => {
+        e.preventDefault();
+        btnVoz.style.transform = "scale(1)"; 
         recognition.stop();
     });
 
