@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>K30i v1.2.0 - Edição Manual</title>
+    <title>K30i v1.2.1 - Fiel ao Original</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         /* PADRÃO WHATSAPP CONGELADO */
@@ -24,7 +24,7 @@
         #drawer { position: fixed; top: 60px; left: 0; width: 100%; background: var(--topo); z-index: 900; transition: 0.5s; border-bottom: 1px solid var(--borda); transform: translateY(0); }
         #drawer.recolhido { transform: translateY(-100%); }
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding: 12px; }
-        .card { background: var(--balao-ele); padding: 12px; border-radius: 10px; text-align: center; color: var(--texto); font-size: 11px; border: 1.5px solid var(--borda); font-weight: bold; }
+        .card { background: var(--balao-ele); padding: 12px; border-radius: 10px; text-align: center; color: var(--texto); font-size: 11px; border: 1.5px solid var(--borda); font-weight: bold; cursor: pointer; }
         .card.falha { border-color: #e74c3c; color: #ff6b6b; }
         .card.aviso { border-color: #e67e22; color: #ffaa55; }
         .alca { position: absolute; bottom: -24px; left: 50%; transform: translateX(-50%); height: 24px; width: 50px; background: var(--topo); border-radius: 0 0 12px 12px; display: flex; justify-content: center; align-items: center; border: 1px solid var(--borda); border-top: none; }
@@ -51,10 +51,10 @@
 
     <div id="drawer">
         <div class="grid">
-            <div class="card falha" onclick="autoEnviar('FALHA ATIVA')"><i class="fa-solid fa-bug"></i> FALHA ATIVA</div>
-            <div class="card aviso" onclick="autoEnviar('AVISO ATIVO')"><i class="fa-solid fa-triangle-exclamation"></i> AVISO ATIVO</div>
-            <div class="card" onclick="autoEnviar('LEDS PAINEL')"><i class="fa-solid fa-lightbulb"></i> LEDS PAINEL</div>
-            <div class="card" onclick="autoEnviar('AJUDA')"><i class="fa-solid fa-circle-question"></i> AJUDA</div>
+            <div class="card falha" onclick="dispararComando('FALHA ATIVA')"><i class="fa-solid fa-bug"></i> FALHA ATIVA</div>
+            <div class="card aviso" onclick="dispararComando('AVISO ATIVO')"><i class="fa-solid fa-triangle-exclamation"></i> AVISO ATIVO</div>
+            <div class="card" onclick="dispararComando('LEDS PAINEL')"><i class="fa-solid fa-lightbulb"></i> LEDS PAINEL</div>
+            <div class="card" onclick="dispararComando('AJUDA')"><i class="fa-solid fa-circle-question"></i> AJUDA</div>
         </div>
         <div class="alca" onclick="toggleMenu()"><i id="seta" class="fa-solid fa-chevron-up"></i></div>
     </div>
@@ -67,18 +67,7 @@
     </footer>
 
     <script>
-        // --- BANCO DE DADOS ORIGINAL (EDITE MANUALMENTE AQUI) ---
-        const respostasOriginais = {
-            "FALHA ATIVA": "⚠️ *ATENÇÃO: FALHA CRÍTICA DETECTADA*\n\n❌ *Possíveis Causas:*\n1. Ausência ou queda de fase na rede elétrica.\n2. Sobrecarga térmica no motor da bomba.\n3. Falha no sensor de pressão (Cabo rompido ou 4-20mA fora da faixa).\n4. Pressão de descarga excedeu o limite máximo.\n\n🛠️ *Ações Sugeridas:*\n- Verifique a tensão de entrada com um multímetro.\n- Certifique-se que o disjuntor-motor está armado.\n- Verifique a integridade física dos cabos do sensor.\n\n🔄 *RESET:* Após sanar o erro, pressione o botão RESET por 5 segundos.",
-            
-            "AVISO ATIVO": "🔔 *AVISO DE MANUTENÇÃO / OPERAÇÃO*\n\n⚠️ *Causas Prováveis:*\n- Nível do reservatório abaixo do limite de segurança.\n- Aproximação do período de troca de filtros e óleo.\n- Temperatura do motor elevada (mas não crítica).\n\n🛠️ *Ações:* Verifique o nível visual e o horímetro do sistema no painel físico.",
-            
-            "LEDS PAINEL": "💡 *GUIA RÁPIDO DOS LEDS:*\n\n🟢 *VERDE (ACESO):* Bomba em funcionamento.\n🟠 *LARANJA (PISCANDO):* Standby / Aguardando pressão.\n🔴 *VERMELHO (ACESO):* Falha bloqueante.\n🔴 *VERMELHO (PISCANDO):* Alerta de manutenção.\n⚪ *APAGADO:* Sistema sem energia ou botão de emergência acionado.",
-            
-            "AJUDA": "❓ *SUPORTE TÉCNICO K30i*\n\nPara obter informações, você pode falar ou clicar nos botões:\n- *FALHA:* Detalhes sobre erros críticos.\n- *AVISO:* Alertas de operação.\n- *SENSORES:* Valores atuais de pressão e nível.\n- *RESET:* Como limpar o histórico de erros.\n\n*STATUS:* Pressão atual em 14.00 bar."
-        };
-
-        // --- LÓGICA DE INTERFACE ---
+        // --- LOGICA DE FRONTEND ---
         function toggleMenu() { document.getElementById('drawer').classList.toggle('recolhido'); }
         function toggleTheme() {
             document.body.classList.toggle('dark-mode');
@@ -87,7 +76,7 @@
         }
         window.onload = () => {
             setTimeout(() => document.getElementById('drawer').classList.add('recolhido'), 2000);
-            exibirMsg("K30i v1.50 Online. Digite ou fale sua dúvida.", 'ele');
+            exibirMsg("Iniciado Suporte Técnico K30i (v1.50). Como posso ajudar?", 'ele');
         };
 
         // --- MICROFONE (CONSERVADO/BLINDADO) ---
@@ -104,21 +93,33 @@
                 e.preventDefault(); btn.style.transform = "scale(1)"; recognition.stop();
                 if (document.activeElement) document.activeElement.blur();
             });
-            recognition.onresult = (e) => autoEnviar(e.results[0][0].transcript);
+            recognition.onresult = (e) => dispararComando(e.results[0][0].transcript);
         }
 
-        // --- LÓGICA DE RESPOSTA ---
-        function autoEnviar(txt) {
-            exibirMsg(txt, 'eu');
+        // --- O "CÉREBRO" ORIGINAL (TRANSPLANTE DO SEU INDEX.HTML) ---
+        function dispararComando(texto) {
+            exibirMsg(texto, 'eu');
             setTimeout(() => {
-                const busca = txt.toUpperCase();
-                let resposta = "Não identifiquei o comando '" + txt + "'. Use os botões acima para funções rápidas.";
-                for (let chave in respostasOriginais) {
-                    if (busca.includes(chave) || chave.includes(busca)) {
-                        resposta = respostasOriginais[chave];
-                        break;
-                    }
+                const comando = texto.toLowerCase();
+                let resposta = "";
+
+                // ESTA É A LÓGICA EXATA DO SEU INDEX ORIGINAL:
+                if (comando.includes("falha")) {
+                    resposta = "⚠️ **CÓDIGO DE FALHA ATIVA:**\n\n❌ **Causa Provável:** Ausência ou queda de fase na rede elétrica, sobrecarga térmica no motor da bomba ou sensor de pressão 4-20mA desconectado.\n\n🛠️ **O que fazer:**\n1. Verifique a tensão nas fases R, S, T.\n2. Verifique se o disjuntor-motor disparou.\n3. Confira o cabo do sensor de pressão.\n\n🔄 **Para Resetar:** Pressione o botão RESET físico no painel por 5 segundos.";
+                } 
+                else if (comando.includes("aviso")) {
+                    resposta = "🔔 **AVISO DO SISTEMA:**\n\n⚠️ **Causa:** Nível do reservatório baixo ou necessidade de manutenção preventiva (troca de filtros/óleo).\n\n🛠️ **Ações Sugeridas:** Verifique o nível visual do tanque e o horímetro de manutenção no painel digital.\n\n✅ **Nota:** O sistema continua em operação, mas requer atenção.";
+                } 
+                else if (comando.includes("led")) {
+                    resposta = "💡 **GUIA DOS LEDS DO PAINEL:**\n\n🟢 **Verde:** Sistema Operacional (Bomba Ligada).\n🟠 **Laranja:** Standby (Aguardando demanda).\n🔴 **Vermelho:** Falha bloqueante ou Emergência acionada.\n⚪ **Apagado:** Sem alimentação principal.";
+                } 
+                else if (comando.includes("ajuda") || comando.includes("oi") || comando.includes("bom")) {
+                    resposta = "❓ **MENU DE SUPORTE TÉCNICO:**\n\nVocê pode me perguntar sobre:\n- **FALHA:** Se o sistema parou.\n- **AVISO:** Para alertas preventivos.\n- **LEDS:** Para entender as luzes do painel.\n- **SENSORES:** Para ler a telemetria atual.\n\n*Status:* Conectado ao CLP via Wi-Fi.";
                 }
+                else {
+                    resposta = "Não identifiquei o comando '" + texto + "'.\nTente dizer: 'Falha', 'Aviso' ou 'Leds'.";
+                }
+
                 exibirMsg(resposta, 'ele');
             }, 600);
         }
