@@ -3,204 +3,120 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>K30i WhatsApp Standard</title>
+    <title>K30i v1.1.6 - Standard</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    
     <style>
-        /* TEMA CLARO WHATSAPP (PADRÃO DE ABERTURA) */
+        /* PADRÃO WHATSAPP CONGELADO */
         :root {
-            --topo: #ffffff;
-            --fundo: #efeae2;
-            --balao-eu: #d9fdd3;
-            --balao-ele: #ffffff;
-            --texto: #111b21;
-            --subtitulo: #667781;
-            --accent: #25d366;
-            --borda: #e9edef;
+            --topo: #ffffff; --fundo: #efeae2; --balao-eu: #d9fdd3; --balao-ele: #ffffff;
+            --texto: #111b21; --subtitulo: #667781; --accent: #25d366; --borda: #e9edef;
         }
-
-        /* MODO ESCURO (OPCIONAL NO BOTÃO) */
         body.dark-mode {
-            --topo: #202c33;
-            --fundo: #0b141a;
-            --balao-eu: #005c4b;
-            --balao-ele: #202c33;
-            --texto: #e9edef;
-            --subtitulo: #8696a0;
-            --accent: #00a884;
-            --borda: rgba(255,255,255,0.1);
+            --topo: #202c33; --fundo: #0b141a; --balao-eu: #005c4b; --balao-ele: #202c33;
+            --texto: #e9edef; --subtitulo: #8696a0; --accent: #00a884; --borda: rgba(255,255,255,0.1);
         }
-
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: sans-serif; -webkit-tap-highlight-color: transparent; }
-        
-        html, body { 
-            height: 100dvh; width: 100vw; 
-            background-color: var(--fundo); 
-            display: flex; flex-direction: column; 
-            overflow: hidden;
-        }
+        html, body { height: 100dvh; width: 100vw; background-color: var(--fundo); display: flex; flex-direction: column; overflow: hidden; }
 
-        /* HEADER */
-        header { 
-            height: 60px; background: var(--topo); 
-            display: flex; justify-content: space-between; align-items: center; 
-            padding: 0 15px; z-index: 1000; border-bottom: 1px solid var(--borda);
-        }
+        header { height: 60px; background: var(--topo); display: flex; justify-content: space-between; align-items: center; padding: 0 15px; z-index: 1000; border-bottom: 1px solid var(--borda); }
+        .foto { width: 38px; height: 38px; border-radius: 50%; background: #1a7a35; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; }
 
-        .perfil { display: flex; align-items: center; gap: 10px; }
-        .foto { width: 38px; height: 38px; border-radius: 50%; background: #667781; display: flex; align-items: center; justify-content: center; color: white; }
-
-        /* MENU DRAWER (DESLIZA PARA CIMA E PARA BAIXO) */
-        #drawer { 
-            position: fixed; top: 60px; left: 0; width: 100%; 
-            background: var(--topo); z-index: 900; 
-            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1); 
-            border-bottom: 1px solid var(--borda);
-            transform: translateY(0); /* Inicia aberto (para baixo) */
-        }
+        #drawer { position: fixed; top: 60px; left: 0; width: 100%; background: var(--topo); z-index: 900; transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1); border-bottom: 1px solid var(--borda); transform: translateY(0); }
         #drawer.recolhido { transform: translateY(-100%); }
-
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 15px; }
-        .card { background: var(--balao-ele); padding: 15px; border-radius: 10px; text-align: center; color: var(--texto); font-size: 11px; font-weight: bold; border: 1px solid var(--borda); box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
-        .card i { display: block; font-size: 20px; margin-bottom: 5px; color: var(--accent); }
-
-        .alca { 
-            position: absolute; bottom: -24px; left: 50%; transform: translateX(-50%);
-            height: 24px; width: 50px; background: var(--topo); 
-            border-radius: 0 0 12px 12px; display: flex; justify-content: center; align-items: center;
-            border: 1px solid var(--borda); border-top: none; cursor: pointer;
-        }
-
-        /* CHAT */
-        #chat { flex: 1; padding: 20px 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; background: var(--fundo); }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding: 12px; }
+        .card { background: var(--balao-ele); padding: 12px; border-radius: 10px; text-align: center; color: var(--texto); font-size: 11px; border: 1.5px solid var(--borda); font-weight: bold; }
         
+        /* CORES DO TRANSPLANTE */
+        .card.falha { border-color: #e74c3c; color: #ff6b6b; }
+        .card.aviso { border-color: #e67e22; color: #ffaa55; }
+
+        .alca { position: absolute; bottom: -24px; left: 50%; transform: translateX(-50%); height: 24px; width: 50px; background: var(--topo); border-radius: 0 0 12px 12px; display: flex; justify-content: center; align-items: center; border: 1px solid var(--borda); border-top: none; }
+
+        #chat { flex: 1; padding: 20px 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
         .msg { max-width: 85%; padding: 8px 12px; border-radius: 8px; font-size: 14.5px; color: var(--texto); box-shadow: 0 1px 1px rgba(0,0,0,0.1); position: relative; }
         .eu { align-self: flex-end; background: var(--balao-eu); border-top-right-radius: 0; }
         .ele { align-self: flex-start; background: var(--balao-ele); border-top-left-radius: 0; }
-
         .tempo { font-size: 10px; color: var(--subtitulo); text-align: right; margin-top: 4px; display: block; }
 
-        /* RODAPÉ ESTILO WHATSAPP */
-        footer { padding: 10px; display: flex; align-items: center; gap: 8px; background: transparent; }
-        .input-bar { flex: 1; background: var(--topo); border-radius: 25px; padding: 12px 15px; color: var(--subtitulo); font-size: 15px; box-shadow: 0 1px 2px rgba(0,0,0,0.1); display: flex; justify-content: space-between; }
-        
-        .btn-mic { 
-            width: 50px; height: 50px; border-radius: 50%; border: none; 
-            background: var(--accent); color: white; font-size: 20px;
-            display: flex; align-items: center; justify-content: center;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
-        }
-        .gravando { background: #ff5252; animation: pulse 1.5s infinite; }
-
-        @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(255, 82, 82, 0.7); } 70% { box-shadow: 0 0 0 10px rgba(255, 82, 82, 0); } 100% { box-shadow: 0 0 0 0 rgba(255, 82, 82, 0); } }
-        
-        .icon { cursor: pointer; color: var(--subtitulo); font-size: 20px; padding: 5px; }
+        footer { padding: 10px; display: flex; align-items: center; gap: 8px; }
+        .input-bar { flex: 1; background: var(--topo); border-radius: 25px; padding: 12px 15px; color: var(--subtitulo); font-size: 15px; display: flex; justify-content: space-between; box-shadow: 0 1px 2px rgba(0,0,0,0.1); }
+        .btn-mic { width: 50px; height: 50px; border-radius: 50%; border: none; background: #25a244; color: white; font-size: 20px; transition: 0.1s; }
     </style>
 </head>
 <body>
-
     <header>
-        <div class="perfil">
-            <div class="foto"><i class="fa-solid fa-robot"></i></div>
+        <div style="display:flex; align-items:center; gap:10px;">
+            <div class="foto">K</div>
             <div>
-                <b style="color: var(--texto); font-size: 16px;">K30i v1.1.5</b><br>
-                <span style="color: var(--accent); font-size: 11px; font-weight: bold;">online</span>
+                <b style="color:var(--texto)">Suporte K30i</b><br>
+                <span style="color:#4cff72; font-size:10px; font-weight:bold;">● ONLINE v1.50</span>
             </div>
         </div>
-        <div style="display: flex; gap: 10px;">
-            <i class="fa-solid fa-moon icon" id="theme-btn" onclick="toggleTheme()"></i>
-            <i class="fa-solid fa-rotate icon" onclick="location.reload()"></i>
-        </div>
+        <i class="fa-solid fa-moon" id="theme-btn" style="color:var(--subtitulo)" onclick="toggleTheme()"></i>
     </header>
 
     <div id="drawer">
         <div class="grid">
-            <div class="card"><i class="fa-solid fa-triangle-exclamation"></i>FALHA</div>
-            <div class="card"><i class="fa-solid fa-circle-exclamation"></i>AVISO</div>
-            <div class="card"><i class="fa-solid fa-calendar-check"></i>AGENDA</div>
-            <div class="card"><i class="fa-solid fa-microchip"></i>I/O</div>
+            <div class="card falha" onclick="processar('falha')"><i class="fa-solid fa-bug"></i><br>FALHA ATIVA</div>
+            <div class="card aviso" onclick="processar('aviso')"><i class="fa-solid fa-triangle-exclamation"></i><br>AVISO ATIVO</div>
+            <div class="card" onclick="processar('leds')"><i class="fa-solid fa-lightbulb"></i><br>LEDS PAINEL</div>
+            <div class="card" onclick="processar('reset')"><i class="fa-solid fa-rotate"></i><br>RESET FALHA</div>
         </div>
-        <div class="alca" onclick="toggleMenu()"><i id="seta" class="fa-solid fa-chevron-up" style="color: var(--subtitulo); transition: 0.3s;"></i></div>
+        <div class="alca" onclick="toggleMenu()"><i id="seta" class="fa-solid fa-chevron-up"></i></div>
     </div>
 
-    <main id="chat">
-        <div class="msg ele">
-            Olá! Sistema K30i inicializado no modo WhatsApp.
-            <span class="tempo">11:00</span>
-        </div>
-    </main>
+    <main id="chat"></main>
 
     <footer>
-        <div class="input-bar">
-            <span id="status">Mensagem</span>
-            <i class="fa-solid fa-paperclip" style="transform: rotate(-45deg);"></i>
-        </div>
-        <button class="btn-mic" id="mic"><i class="fa-solid fa-microphone"></i></button>
+        <div class="input-bar"><span id="status">Mensagem</span><i class="fa-solid fa-paperclip"></i></div>
+        <button class="btn-mic" id="btn-voz"><i class="fa-solid fa-microphone"></i></button>
     </footer>
 
     <script>
-        const drw = document.getElementById('drawer');
-        const seta = document.getElementById('seta');
-        const themeBtn = document.getElementById('theme-btn');
-        const mic = document.getElementById('mic');
-        const status = document.getElementById('status');
-        const chat = document.getElementById('chat');
+        // LÓGICA DO FRONTEND
+        function toggleMenu() { document.getElementById('drawer').classList.toggle('recolhido'); }
+        window.onload = () => setTimeout(() => document.getElementById('drawer').classList.add('recolhido'), 2000);
+        function toggleTheme() { document.body.classList.toggle('dark-mode'); }
 
-        // 1. Lógica do Menu (Abertura e Fechamento Passo a Passo)
-        function toggleMenu() {
-            const isRec = drw.classList.toggle('recolhido');
-            seta.style.transform = isRec ? 'rotate(180deg)' : 'rotate(0deg)';
-        }
-
-        // Fecha automaticamente após 2 segundos na abertura
-        window.onload = () => {
-            setTimeout(() => {
-                drw.classList.add('recolhido');
-                seta.style.transform = 'rotate(180deg)';
-            }, 2000);
-        };
-
-        // 2. Alternar Tema (Invertido: Se claro mostra lua, se escuro mostra sol)
-        function toggleTheme() {
-            document.body.classList.toggle('dark-mode');
-            const isDark = document.body.classList.contains('dark-mode');
-            themeBtn.className = isDark ? 'fa-solid fa-sun icon' : 'fa-solid fa-moon icon';
-        }
-
-        // 3. Microfone e Voz (Estabilizado)
-        const Rec = window.SpeechRecognition || window.webkitSpeechRecognition;
-
-        if (Rec) {
-            const recognition = new Rec();
+        // LÓGICA DO TRANSPLANTE (MICROFONE)
+        const Recognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        if (Recognition) {
+            const recognition = new Recognition();
             recognition.lang = 'pt-BR';
-            recognition.continuous = false;
+            const btnVoz = document.getElementById('btn-voz');
 
-            mic.onclick = () => { 
-                try {
-                    recognition.start(); 
-                    mic.classList.add('gravando'); 
-                    status.innerText = "Gravando áudio...";
-                } catch(e) {
-                    recognition.stop();
-                }
+            btnVoz.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                btnVoz.style.transform = "scale(1.5)"; 
+                recognition.start();
+                if (navigator.vibrate) navigator.vibrate(40);
+                document.getElementById('status').innerText = "Ouvindo...";
+            });
+
+            btnVoz.addEventListener('touchend', (e) => {
+                btnVoz.style.transform = "scale(1)";
+                recognition.stop();
+            });
+
+            recognition.onresult = (event) => {
+                const texto = event.results[0][0].transcript;
+                enviarMsg(texto, 'eu');
+                // Aqui você chamaria sua função processar(texto) do index antigo
             };
-            
-            recognition.onresult = (e) => {
-                const txt = e.results[0][0].transcript;
-                const agora = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-                status.innerText = "Mensagem";
-                
-                const html = `
-                    <div class="msg eu" style="margin-top:10px;">
-                        ${txt}
-                        <span class="tempo">${agora} <i class="fa-solid fa-check-double" style="color:#53bdeb; margin-left:3px;"></i></span>
-                    </div>`;
-                chat.insertAdjacentHTML('beforeend', html);
-                chat.scrollTop = chat.scrollHeight;
-            };
-            
-            recognition.onerror = () => { status.innerText = "Erro ao ouvir..."; };
-            recognition.onend = () => { mic.classList.remove('gravando'); if(status.innerText === "Gravando áudio...") status.innerText = "Mensagem"; };
+        }
+
+        function enviarMsg(txt, tipo) {
+            const agora = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+            const check = tipo === 'eu' ? '<i class="fa-solid fa-check-double" style="color:#53bdeb; margin-left:3px;"></i>' : '';
+            const html = `<div class="msg ${tipo}">${txt}<span class="tempo">${agora} ${check}</span></div>`;
+            document.getElementById('chat').insertAdjacentHTML('beforeend', html);
+            document.getElementById('chat').scrollTop = document.getElementById('chat').scrollHeight;
+            document.getElementById('status').innerText = "Mensagem";
+        }
+
+        // SERVICE WORKER (CÉREBRO OFFLINE)
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js'); // Use o sw do seu index antigo aqui
         }
     </script>
 </body>
