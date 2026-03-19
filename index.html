@@ -3,150 +3,66 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>K30i v1.1.2</title>
+    <title>K30i - WhatsApp Style</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <style>
+        /* TEMA ESCURO (PADRÃO) */
         :root {
-            --bg-p: #0b111e; --bg-h: #0b111e; --bg-c: #161c2b;
-            --bg-b-p: #2b3344; --bg-b-r: #1a2235; --txt: #e0e6ed;
-            --txt-d: #8696a0; --azul: #4fc3f7; --verde: #39d353;
-            --borda: rgba(255,255,255,0.1);
+            --bg-p: #0b141a; --bg-h: #202c33; --bg-c: #202c33;
+            --bg-b-p: #005c4b; --bg-b-r: #202c33; --txt: #e9edef;
+            --txt-d: #8696a0; --verde-wa: #00a884; --borda: rgba(255,255,255,0.1);
+            --chat-bg: #0b141a;
         }
 
+        /* MODO CLARO (ESTILO WHATSAPP) */
         body.light-mode {
-            --bg-p: #f0f2f5; --bg-h: #ffffff; --bg-c: #ffffff;
-            --bg-b-p: #e3f2fd; --bg-b-r: #ffffff; --txt: #1c1e21;
-            --txt-d: #606770; --azul: #1976d2; --verde: #2e7d32;
-            --borda: #ced4da;
+            --bg-p: #efeae2; --bg-h: #ffffff; --bg-c: #ffffff;
+            --bg-b-p: #d9fdd3; --bg-b-r: #ffffff; --txt: #111b21;
+            --txt-d: #667781; --verde-wa: #25d366; --borda: #e9edef;
+            --chat-bg: #efeae2;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: sans-serif; -webkit-tap-highlight-color: transparent; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; -webkit-tap-highlight-color: transparent; }
+        
         html, body { height: 100dvh; width: 100vw; background-color: var(--bg-p); overflow: hidden; display: flex; flex-direction: column; }
 
-        header { height: 60px; padding: 0 15px; background: var(--bg-h); display: flex; justify-content: space-between; align-items: center; z-index: 2000; border-bottom: 1px solid var(--borda); }
+        /* HEADER */
+        header { 
+            height: 60px; padding: 0 15px; background: var(--bg-h); 
+            display: flex; justify-content: space-between; align-items: center; 
+            z-index: 2000; border-bottom: 1px solid var(--borda);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+        }
+
+        .user-info { display: flex; align-items: center; gap: 10px; }
+        .avatar { width: 35px; height: 35px; background: #667781; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; }
 
         /* MENU DRAWER */
-        #drawer { position: fixed; top: 60px; left: 0; width: 100%; background: var(--bg-h); z-index: 1000; transition: transform 0.5s ease; border-bottom: 1px solid var(--borda); transform: translateY(0); }
+        #drawer { 
+            position: fixed; top: 60px; left: 0; width: 100%; 
+            background: var(--bg-h); z-index: 1000; 
+            transition: transform 0.4s cubic-bezier(0.17, 0.84, 0.44, 1); 
+            border-bottom: 1px solid var(--borda);
+            transform: translateY(0);
+        }
         #drawer.recolhido { transform: translateY(-100%); }
+
         .grid-botoes { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 15px; }
-        .card { background: var(--bg-c); border-radius: 12px; padding: 15px; text-align: center; border: 1px solid var(--borda); color: var(--txt); font-size: 11px; font-weight: bold; }
-        .card i { display: block; font-size: 20px; margin-bottom: 5px; }
-        .alca { position: absolute; bottom: -24px; left: 50%; transform: translateX(-50%); height: 24px; width: 55px; background: var(--bg-h); display: flex; justify-content: center; align-items: center; border-radius: 0 0 12px 12px; border: 1px solid var(--borda); border-top: none; }
+        .card { background: var(--bg-c); border-radius: 10px; padding: 12px; text-align: center; border: 1px solid var(--borda); color: var(--txt); font-size: 11px; font-weight: 500; box-shadow: 0 1px 2px rgba(0,0,0,0.1); }
+        .card i { display: block; font-size: 18px; margin-bottom: 4px; color: var(--verde-wa); }
 
-        /* CHAT */
-        #chat { flex: 1; padding: 20px 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; background: var(--bg-p); }
-        .balao { max-width: 85%; padding: 15px; font-size: 14px; border-radius: 15px; color: var(--txt); box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
-        .pergunta .balao { background: var(--bg-b-p); border-left: 4px solid var(--azul); align-self: flex-end; }
-        .resposta .balao { background: var(--bg-b-r); border-left: 4px solid #546e7a; align-self: flex-start; }
-
-        /* RODAPÉ */
-        footer { padding: 12px; background: var(--bg-h); display: flex; align-items: center; gap: 10px; border-top: 1px solid var(--borda); }
-        .input-box { flex: 1; background: var(--bg-c); border-radius: 20px; padding: 12px 15px; color: var(--txt-d); font-size: 14px; border: 1px solid var(--borda); }
-        .btn-mic { width: 50px; height: 50px; border-radius: 50%; border: none; background: var(--azul); color: #fff; font-size: 20px; display: flex; align-items: center; justify-content: center; }
-        .gravando { background: #f44336 !important; animation: pulse 1.2s infinite; }
-
-        @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(244, 67, 54, 0.7); } 70% { box-shadow: 0 0 0 12px rgba(244, 67, 54, 0); } 100% { box-shadow: 0 0 0 0 rgba(244, 67, 54, 0); } }
-        .icon-btn { cursor: pointer; padding: 10px; font-size: 18px; color: var(--txt-d); }
-    </style>
-</head>
-<body>
-
-    <header>
-        <i class="fa-solid fa-bars icon-btn"></i>
-        <div style="text-align: center;">
-            <h1 style="font-size: 18px; color: var(--txt);">K30i <span class="fw-tag">v1.1.2</span></h1>
-        </div>
-        <div style="display: flex; gap: 5px;">
-            <i class="fa-solid fa-sun icon-btn" id="theme-btn" onclick="toggleTheme()"></i>
-            <i class="fa-solid fa-rotate icon-btn" onclick="location.reload()"></i>
-        </div>
-    </header>
-
-    <div id="drawer">
-        <div class="grid-botoes">
-            <div class="card" style="color:#f44336"><i class="fa-solid fa-triangle-exclamation"></i>FALHA</div>
-            <div class="card" style="color:#ff9800"><i class="fa-solid fa-circle-exclamation"></i>AVISO</div>
-            <div class="card"><i class="fa-solid fa-calendar"></i>AGENDA</div>
-            <div class="card"><i class="fa-solid fa-microchip"></i>I/O</div>
-        </div>
-        <div class="alca" onclick="toggleMenu()"><i class="fa-solid fa-chevron-up" id="seta" style="color: var(--txt-d); transition: 0.3s;"></i></div>
-    </div>
-
-    <main id="chat">
-        <div class="wrapper resposta">
-            <div class="balao">Aguardando permissão de áudio...</div>
-        </div>
-    </main>
-
-    <footer>
-        <div class="input-box" id="status-voz">Clique no mic e fale...</div>
-        <button class="btn-mic" id="mic"><i class="fa-solid fa-microphone"></i></button>
-    </footer>
-
-    <script>
-        const drawer = document.getElementById('drawer');
-        const seta = document.getElementById('seta');
-        const micBtn = document.getElementById('mic');
-        const statusTxt = document.getElementById('status-voz');
-
-        function toggleMenu() {
-            const isRec = drawer.classList.toggle('recolhido');
-            seta.style.transform = isRec ? 'rotate(180deg)' : 'rotate(0deg)';
+        .alca { 
+            position: absolute; bottom: -20px; left: 50%; transform: translateX(-50%);
+            height: 20px; width: 45px; background: var(--bg-h); 
+            display: flex; justify-content: center; align-items: center; 
+            border-radius: 0 0 10px 10px; border: 1px solid var(--borda); border-top: none;
+            cursor: pointer;
         }
 
-        window.onload = () => setTimeout(() => { drawer.classList.add('recolhido'); seta.style.transform = 'rotate(180deg)'; }, 2000);
-
-        function toggleTheme() {
-            document.body.classList.toggle('light-mode');
-            document.getElementById('theme-btn').className = document.body.classList.contains('light-mode') ? 'fa-solid fa-moon icon-btn' : 'fa-solid fa-sun icon-btn';
-        }
-
-        // --- LÓGICA DE VOZ REFORÇADA ---
-        const Recognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-
-        if (Recognition) {
-            const rec = new Recognition();
-            rec.lang = 'pt-BR';
-            rec.interimResults = false;
-
-            micBtn.addEventListener('pointerdown', () => {
-                try {
-                    rec.start();
-                } catch(e) { 
-                    rec.stop();
-                    setTimeout(() => rec.start(), 100);
-                }
-            });
-
-            rec.onstart = () => {
-                micBtn.classList.add('gravando');
-                statusTxt.innerText = "Escutando...";
-            };
-
-            rec.onresult = (e) => {
-                const txt = e.results[0][0].transcript;
-                statusTxt.innerText = txt;
-                document.getElementById('chat').insertAdjacentHTML('beforeend', `<div class="wrapper pergunta" style="display:flex; flex-direction:column; align-items:flex-end; margin-top:10px;"><div class="balao">${txt}</div></div>`);
-                document.getElementById('chat').scrollTop = document.getElementById('chat').scrollHeight;
-            };
-
-            rec.onerror = (e) => {
-                if(e.error === 'not-allowed') {
-                    statusTxt.innerText = "Clique no cadeado do navegador e ative o Mic.";
-                    alert("Por favor, ative o microfone nas configurações do Chrome.");
-                } else {
-                    statusTxt.innerText = "Erro: " + e.error;
-                }
-            };
-
-            rec.onend = () => {
-                micBtn.classList.remove('gravando');
-                if(statusTxt.innerText === "Escutando...") statusTxt.innerText = "Clique no mic e fale...";
-            };
-        } else {
-            statusTxt.innerText = "Este navegador não suporta voz.";
-        }
-    </script>
-</body>
-</html>
+        /* CHAT AREA */
+        #chat { flex: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; background: var(--chat-bg); }
+        
+        .balao { 
+            max-width: 85%; padding: 8px 12px; font-size: 14.5px; border-radius: 8px; 
+            color: var(--txt); box-shadow: 0 1px 1px rgba(0,0,0,
