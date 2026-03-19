@@ -11,11 +11,16 @@
             --wa-bg: #e5ddd5;
             --wa-header: #ffffff;
             --system-green: #25d366;
+            /* Cores dos Botões da Imagem */
+            --cor-falha: #d32f2f;
+            --cor-aviso: #fbc02d;
+            --cor-prog: #1976d2;
+            --cor-leds: #7b1fa2;
         }
 
-        body, html { margin: 0; padding: 0; height: 100%; font-family: 'Segoe UI', Helvetica, Arial, sans-serif; background: var(--wa-bg); }
+        body, html { margin: 0; padding: 0; height: 100%; font-family: 'Segoe UI', Helvetica, Arial, sans-serif; background: var(--wa-bg); overflow-x: hidden; }
 
-        /* HEADER ESTILO WHATSAPP */
+        /* HEADER */
         #header {
             background: var(--wa-header);
             padding: 10px 16px;
@@ -24,58 +29,92 @@
             box-shadow: 0 1px 3px rgba(0,0,0,0.1);
             position: sticky; top: 0; z-index: 100;
         }
-        .avatar { width: 40px; height: 40px; border-radius: 50%; background: #ccc; margin-right: 12px; }
+        .avatar { width: 40px; height: 40px; border-radius: 50%; background: #eee; margin-right: 12px; border: 1px solid #ddd; }
         .status-info h2 { margin: 0; font-size: 16px; color: #000; }
         .status-info span { font-size: 12px; color: #25d366; font-weight: bold; }
 
+        /* MENU DRAWER (BOTÕES DA IMAGEM) */
+        #drawer { 
+            background: #fff; 
+            display: grid; 
+            grid-template-columns: repeat(4, 1fr); 
+            gap: 8px; 
+            padding: 12px; 
+            border-bottom: 1px solid #ddd;
+        }
+        .drawer-btn { 
+            border: none; 
+            background: #f8f9fa; 
+            padding: 10px 5px; 
+            border-radius: 8px; 
+            font-size: 10px; 
+            font-weight: 800; 
+            color: #333; 
+            text-align: center;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+        }
+        .drawer-btn:active { transform: scale(0.95); }
+        .icon-circle { width: 12px; height: 12px; border-radius: 50%; }
+
         /* CHAT AREA */
-        #chat-container { padding: 15px; display: flex; flex-direction: column; gap: 10px; padding-bottom: 80px; }
-        .balao { max-width: 80%; padding: 8px 12px; border-radius: 8px; font-size: 14px; position: relative; line-height: 1.4; }
+        #chat-container { padding: 15px; display: flex; flex-direction: column; gap: 10px; padding-bottom: 100px; }
+        .balao { max-width: 85%; padding: 8px 12px; border-radius: 12px; font-size: 15px; position: relative; line-height: 1.4; box-shadow: 0 1px 1px rgba(0,0,0,0.1); }
         .balao.eu { align-self: flex-end; background: var(--wa-green); border-top-right-radius: 0; }
         .balao.sistema { align-self: flex-start; background: var(--wa-white); border-top-left-radius: 0; }
 
-        /* BOTÕES DINÂMICOS DENTRO DA MSG */
-        .opcoes-wrap { margin-top: 8px; display: flex; flex-direction: column; gap: 4px; }
-        .btn-op { background: #f0f0f0; border: 1px solid #ddd; padding: 6px; border-radius: 5px; cursor: pointer; font-size: 12px; text-align: center; }
+        .opcoes-wrap { margin-top: 10px; display: flex; flex-direction: column; gap: 6px; }
+        .btn-op { background: #fff; border: 1px solid #25d366; color: #25d366; padding: 8px; border-radius: 20px; cursor: pointer; font-size: 13px; font-weight: 600; }
 
-        /* INPUT AREA */
+        /* BARRA INFERIOR */
         .input-bar { position: fixed; bottom: 0; width: 100%; background: #f0f0f0; padding: 10px; display: flex; align-items: center; gap: 10px; box-sizing: border-box; }
-        #input-texto { flex: 1; border: none; padding: 10px; border-radius: 20px; outline: none; font-size: 15px; }
+        #input-texto { flex: 1; border: none; padding: 12px; border-radius: 25px; outline: none; font-size: 15px; }
         
-        /* MICROFONE BLINDADO */
         #btn-voz {
-            width: 45px; height: 45px; background: var(--system-green); border-radius: 50%;
+            width: 48px; height: 48px; background: var(--system-green); border-radius: 50%;
             border: none; color: white; display: flex; align-items: center; justify-content: center;
-            transition: transform 0.1s ease; touch-action: none;
+            transition: transform 0.1s ease; touch-action: none; box-shadow: 0 2px 5px rgba(0,0,0,0.2);
         }
-
-        /* DRAWER (GAVETA) */
-        #drawer { background: #fff; display: flex; justify-content: space-around; padding: 10px; border-bottom: 1px solid #ddd; }
-        .drawer-btn { border: none; background: none; font-size: 11px; font-weight: bold; color: #555; }
     </style>
 </head>
 <body>
 
 <div id="header">
-    <div class="avatar" style="background: url('https://via.placeholder.com/40') center/cover;"></div>
+    <div class="avatar"></div>
     <div class="status-info">
-        <h2>Suporte Técnico K30i</h2>
+        <h2>Consultor K30i</h2>
         <span>Online</span>
     </div>
 </div>
 
 <div id="drawer">
-    <button class="drawer-btn" onclick="processar('falha')">FALHA</button>
-    <button class="drawer-btn" onclick="processar('aviso')">AVISO</button>
-    <button class="drawer-btn" onclick="processar('programação')">PROG.</button>
-    <button class="drawer-btn" onclick="processar('leds')">LEDS</button>
+    <button class="drawer-btn" onclick="processar('FALHA')">
+        <div class="icon-circle" style="background: var(--cor-falha);"></div>
+        FALHA
+    </button>
+    <button class="drawer-btn" onclick="processar('AVISO')">
+        <div class="icon-circle" style="background: var(--cor-aviso);"></div>
+        AVISO
+    </button>
+    <button class="drawer-btn" onclick="processar('PROGRAMAÇÃO')">
+        <div class="icon-circle" style="background: var(--cor-prog);"></div>
+        PROG.
+    </button>
+    <button class="drawer-btn" onclick="processar('LEDS')">
+        <div class="icon-circle" style="background: var(--cor-leds);"></div>
+        LEDS
+    </button>
 </div>
 
 <div id="chat-container">
-    </div>
+    <div class="balao sistema">Olá! Selecione uma opção acima ou use o microfone para descrever o problema do K30i.</div>
+</div>
 
 <div class="input-bar">
-    <input type="text" id="input-texto" placeholder="Mensagem">
+    <input type="text" id="input-texto" placeholder="Escreva uma mensagem...">
     <button id="btn-voz">
         <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/><path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/></svg>
     </button>
@@ -86,16 +125,15 @@
     const input = document.getElementById('input-texto');
     const btnVoz = document.getElementById('btn-voz');
 
-    // FUNÇÃO EXIBIR MSG (A ponte para o novo frontend)
     function exibirMsg(texto, quem, botoesHtml = "") {
         const div = document.createElement('div');
         div.className = `balao ${quem}`;
-        div.innerHTML = `<div>${texto}</div><div class="opcoes-wrap">${botoesHtml}</div>`;
+        div.innerHTML = `<div>${texto}</div>${botoesHtml ? `<div class="opcoes-wrap">${botoesHtml}</div>` : ""}`;
         chat.appendChild(div);
         window.scrollTo(0, document.body.scrollHeight);
     }
 
-    // O CÉREBRO (Lógica original preservada)
+    // Função que aciona o seu "Cérebro" original
     function enviar() {
         const texto = input.value.trim();
         if(!texto) return;
@@ -103,19 +141,10 @@
         exibirMsg(texto, 'eu');
         input.value = "";
 
-        // Simulando a sua lógica de if/else original
+        // Aqui entra a sua lógica original de IF/ELSE que você já tem no index.html
         setTimeout(() => {
-            let resposta = "Não entendi o comando.";
-            let botoes = "";
-
-            if(texto.toLowerCase().includes("falha")) {
-                resposta = "Verifiquei uma falha ativa no inversor.";
-                botoes = `<button class="btn-op" onclick="processar('causa')">Ver Causa</button>
-                          <button class="btn-op" onclick="processar('reset')">Reset</button>`;
-            }
-            
-            exibirMsg(resposta, 'sistema', botoes);
-        }, 600);
+            logicaCerebro(texto);
+        }, 500);
     }
 
     function processar(comando) {
@@ -123,26 +152,36 @@
         enviar();
     }
 
+    // Exemplo da lógica preservada
+    function logicaCerebro(t) {
+        let txt = t.toLowerCase();
+        if(txt.includes("falha")) {
+            exibirMsg("Identifiquei uma falha. Escolha o código ou ação:", "sistema", 
+            `<button class="btn-op" onclick="processar('CAUSA FALHA')">VER CAUSA</button>
+             <button class="btn-op" onclick="processar('RESET')">RESETAR</button>`);
+        } else if(txt.includes("aviso")) {
+            exibirMsg("Existem avisos preventivos pendentes.", "sistema");
+        } else {
+            exibirMsg("Comando recebido. Como posso ajudar com " + t + "?", "sistema");
+        }
+    }
+
     // MICROFONE BLINDADO
     const Recognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     if (Recognition) {
         const recognition = new Recognition();
-        
         btnVoz.addEventListener('touchstart', (e) => {
             e.preventDefault();
             btnVoz.style.transform = "scale(1.5)";
             if (navigator.vibrate) navigator.vibrate(40);
             recognition.start();
         });
-
         btnVoz.addEventListener('touchend', (e) => {
             e.preventDefault();
             btnVoz.style.transform = "scale(1)";
             recognition.stop();
-            // BLINDAGEM CONTRA TECLADO
             if (document.activeElement) document.activeElement.blur();
         });
-
         recognition.onresult = (event) => {
             input.value = event.results[0][0].transcript;
             enviar();
