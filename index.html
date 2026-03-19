@@ -3,154 +3,168 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>K30i - Suporte V1</title>
+    <title>K30i Pro - V1</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root {
-            --topo: #ffffff; --fundo: #efeae2; --balao-eu: #d9fdd3; --balao-ele: #ffffff;
-            --texto: #111b21; --subtitulo: #667781; --accent: #25d366; --borda: #e9edef;
-            --danger: #ff3b30;
-        }
-        body.dark-mode {
-            --topo: #202c33; --fundo: #0b141a; --balao-eu: #005c4b; --balao-ele: #202c33;
-            --texto: #e9edef; --subtitulo: #8696a0; --accent: #00a884; --borda: rgba(255,255,255,0.1);
+            --topo: #ffffff; --fundo: #f0f2f5; --balao-eu: #d9fdd3; --balao-ele: #ffffff;
+            --texto: #111b21; --subtitulo: #667781; --accent: #1a7a35; --borda: #e9edef;
+            --danger: #ea0038;
         }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: sans-serif; }
-        html, body { height: 100dvh; width: 100vw; background-color: var(--fundo); display: flex; flex-direction: column; overflow: hidden; }
+        body { background-color: var(--fundo); height: 100dvh; display: flex; flex-direction: column; overflow: hidden; }
 
         /* HEADER */
-        header { height: 60px; background: var(--topo); display: flex; justify-content: space-between; align-items: center; padding: 0 15px; border-bottom: 1px solid var(--borda); z-index: 1000; flex-shrink: 0; }
+        header { height: 60px; background: var(--topo); display: flex; align-items: center; padding: 0 15px; border-bottom: 1px solid var(--borda); z-index: 1000; flex-shrink: 0; justify-content: space-between; }
         .perfil { display: flex; align-items: center; gap: 10px; }
-        .foto { width: 40px; height: 40px; border-radius: 50%; background: #1a7a35; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; }
-        .status-online { color: #4cff72; font-size: 10px; font-weight: bold; }
-        .versao-tag { color: var(--subtitulo); font-size: 10px; margin-left: 5px; font-family: monospace; border: 1px solid var(--borda); padding: 1px 4px; border-radius: 4px; }
+        .foto-perfil { width: 38px; height: 38px; border-radius: 50%; background: #6a7175; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; }
+        .status-header { font-size: 11px; color: #00a884; font-weight: bold; }
+        .v-tag { font-family: monospace; color: var(--subtitulo); font-size: 10px; margin-left: 5px; border: 1px solid #ddd; padding: 2px 4px; border-radius: 4px; }
 
-        /* GAVETA */
-        #drawer { position: fixed; top: 60px; left: 0; width: 100%; background: var(--topo); z-index: 900; transition: 0.4s; border-bottom: 1px solid var(--borda); transform: translateY(0); }
-        #drawer.recolhido { transform: translateY(-100%); }
-        .grid-atalhos { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding: 12px; }
-        .card { background: var(--balao-ele); padding: 12px; border-radius: 10px; text-align: center; font-size: 11px; border: 1.5px solid var(--borda); font-weight: bold; cursor: pointer; color: var(--texto); }
-        .card i { display: block; font-size: 18px; margin-bottom: 5px; color: var(--accent); }
-        .alca { position: absolute; bottom: -24px; left: 50%; transform: translateX(-50%); height: 24px; width: 50px; background: var(--topo); border-radius: 0 0 12px 12px; display: flex; justify-content: center; border: 1px solid var(--borda); border-top: none; cursor: pointer; }
+        /* GAVETA DE BOTÕES (ESTILO ATUALIZADO) */
+        #drawer { background: #d1d5db; border-bottom: 1px solid #bbb; transition: 0.4s ease-in-out; padding: 12px; }
+        #drawer.recolhido { margin-top: -240px; opacity: 0; pointer-events: none; }
+        
+        .grid-atalhos { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+        .grid-full { grid-column: span 2; }
 
-        /* CHAT */
-        #chat { flex: 1; padding: 20px 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; }
+        .btn-acao { 
+            background: #000; color: #fff; border: 1.5px solid #fff; border-radius: 20px; 
+            padding: 10px; display: flex; align-items: center; justify-content: center; 
+            gap: 8px; cursor: pointer; text-decoration: none; font-size: 14px; font-weight: 500;
+        }
+        /* Cores específicas conforme imagem */
+        .btn-falha { border-color: #ff4d4d; color: #ff4d4d; }
+        .btn-aviso { border-color: #ff9933; color: #ff9933; }
+
+        .alca-container { display: flex; justify-content: center; padding: 10px 0; cursor: pointer; background: #d1d5db; }
+        .alca-bolinha { width: 40px; height: 5px; background: #333; border-radius: 5px; }
+
+        /* CHAT AREA */
+        #chat { flex: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; }
+
+        /* MENSAGEM SISTEMA */
+        .header-sistema { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
+        .icon-k { width: 24px; height: 24px; background: #666; border-radius: 50%; color: white; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: bold; }
+        .label-sistema { font-size: 12px; font-weight: bold; color: #8696a0; text-transform: uppercase; }
         
-        .msg-sistema { align-self: center; background: var(--balao-ele); color: var(--texto); padding: 15px; border-radius: 12px; margin-bottom: 15px; font-size: 14px; border: 1px solid var(--borda); width: 95%; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
-        .msg-sistema b { color: #1a7a35; }
-        
-        .msg { max-width: 85%; padding: 10px 14px; border-radius: 10px; font-size: 15px; color: var(--texto); position: relative; }
+        .balao-sistema { 
+            background: white; border-radius: 18px; padding: 15px; width: 100%; max-width: 380px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1); line-height: 1.5; font-size: 14.5px; position: relative;
+        }
+        .balao-sistema b { color: #1a7a35; }
+        .balao-sistema .timestamp { position: absolute; bottom: 8px; right: 12px; font-size: 10px; color: #8696a0; }
+
+        /* MENSAGENS COMUNS */
+        .msg { max-width: 85%; padding: 10px 14px; border-radius: 10px; font-size: 15px; position: relative; box-shadow: 0 1px 1px rgba(0,0,0,0.1); }
         .eu { align-self: flex-end; background: var(--balao-eu); border-top-right-radius: 0; }
         .ele { align-self: flex-start; background: var(--balao-ele); border-top-left-radius: 0; }
-        .tempo { font-size: 10px; color: var(--subtitulo); text-align: right; margin-top: 5px; display: block; }
 
         /* FOOTER */
-        footer { padding: 10px; display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
-        .input-falso { flex: 1; background: var(--topo); border-radius: 25px; padding: 12px 18px; color: var(--subtitulo); display: flex; justify-content: space-between; align-items: center; border: 1px solid var(--borda); }
-        .btn-mic { width: 54px; height: 54px; border-radius: 50%; border: none; background: #25a244; color: white; font-size: 22px; display: flex; align-items: center; justify-content: center; cursor: pointer; }
-        .listening { background: var(--danger) !important; animation: pulse 1.5s infinite; }
-        @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(255, 59, 48, 0.7); } 70% { box-shadow: 0 0 0 15px rgba(255, 59, 48, 0); } 100% { box-shadow: 0 0 0 0 rgba(255, 59, 48, 0); } }
+        footer { padding: 10px; display: flex; align-items: center; gap: 8px; }
+        .input-box { flex: 1; background: white; border-radius: 25px; padding: 12px 18px; display: flex; justify-content: space-between; align-items: center; color: #8696a0; border: 1px solid #ddd; }
+        .btn-mic-circular { width: 50px; height: 50px; border-radius: 50%; background: #00a884; border: none; color: white; font-size: 20px; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+        .mic-active { background: var(--danger) !important; animation: pulse 1.5s infinite; }
+        @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(234, 0, 56, 0.4); } 70% { box-shadow: 0 0 0 15px rgba(234, 0, 56, 0); } 100% { box-shadow: 0 0 0 0 rgba(234, 0, 56, 0); } }
     </style>
 </head>
 <body>
 
     <header>
         <div class="perfil">
-            <div class="foto">K</div>
+            <div class="foto-perfil">K</div>
             <div>
                 <b style="color:var(--texto)">Suporte K30i</b><br>
-                <span class="status-online">● ONLINE</span>
-                <span class="versao-tag" id="v-label">V1=0.00</span>
+                <span class="status-header">● ONLINE <span class="v-tag" id="v-display">V1=0.00</span></span>
             </div>
         </div>
-        <i class="fa-solid fa-moon" id="theme-btn" style="color:var(--subtitulo); font-size: 20px;" onclick="alternarTema()"></i>
+        <i class="fa-solid fa-moon" style="color:var(--subtitulo); font-size: 20px;"></i>
     </header>
 
     <div id="drawer">
         <div class="grid-atalhos">
-            <div class="card" onclick="processarComando('FALHA')"><i class="fa-solid fa-bug"></i>FALHA</div>
-            <div class="card" onclick="processarComando('AVISO')"><i class="fa-solid fa-triangle-exclamation"></i>AVISO</div>
-            <div class="card" onclick="processarComando('PROG')"><i class="fa-solid fa-gear"></i>PROG.</div>
-            <div class="card" onclick="processarComando('LEDS')"><i class="fa-solid fa-lightbulb"></i>LEDS</div>
+            <div class="btn-acao btn-falha" onclick="comando('Falha Ativa')"><i class="fa-solid fa-bell"></i> Falha Ativa</div>
+            <div class="btn-acao btn-aviso" onclick="comando('Aviso Ativo')"><i class="fa-solid fa-bell"></i> Aviso Ativo</div>
+            
+            <div class="btn-acao" onclick="comando('LEDs do Painel')">💡 LEDs do Painel</div>
+            <div class="btn-acao" onclick="comando('Reset de Falha')">🔄 Reset de Falha</div>
+            
+            <div class="btn-acao" onclick="comando('Programação')">📋 Programação</div>
+            <div class="btn-acao" onclick="comando('Entradas/Saídas')">⚙️ Entradas/Saídas</div>
+            
+            <div class="btn-acao grid-full" onclick="comando('Guias de Instalação')">🔧 Guias de Instalação</div>
         </div>
-        <div class="alca" onclick="toggleGaveta()"><i id="seta-gaveta" class="fa-solid fa-chevron-up"></i></div>
     </div>
+    <div class="alca-container" onclick="toggleD()"><div class="alca-bolinha"></div></div>
 
     <main id="chat"></main>
 
     <footer>
-        <div class="input-falso"><span id="label-status">Mensagem</span><i class="fa-solid fa-paperclip"></i></div>
-        <button class="btn-mic" id="btn-voz"><i class="fa-solid fa-microphone"></i></button>
+        <div class="input-box">
+            <span id="txt-status">Mensagem</span>
+            <i class="fa-solid fa-paperclip"></i>
+        </div>
+        <button class="btn-mic-circular" id="mic-btn"><i class="fa-solid fa-microphone"></i></button>
     </footer>
 
     <script>
-        // --- CONFIGURAÇÃO ---
         const VERSAO = "V1=0.00";
 
-        function toggleGaveta() {
-            const d = document.getElementById('drawer');
-            d.classList.toggle('recolhido');
-            document.getElementById('seta-gaveta').className = d.classList.contains('recolhido') ? 'fa-solid fa-chevron-down' : 'fa-solid fa-chevron-up';
+        function toggleD() {
+            document.getElementById('drawer').classList.toggle('recolhido');
         }
 
-        function alternarTema() {
-            document.body.classList.toggle('dark-mode');
-        }
-
-        function adicionarMensagem(texto, tipo) {
+        function addMsg(txt, tipo) {
             const chat = document.getElementById('chat');
+            const agora = new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
             const div = document.createElement('div');
-            const agora = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
             div.className = `msg ${tipo}`;
-            div.innerHTML = `${texto}<span class="tempo">${agora}</span>`;
+            div.innerHTML = `${txt}<span style="display:block; font-size:10px; text-align:right; color:#8696a0; margin-top:4px">${agora}</span>`;
             chat.appendChild(div);
             chat.scrollTop = chat.scrollHeight;
         }
 
-        function exibirBoasVindas() {
+        function comando(t) {
+            addMsg(t, 'eu');
+            setTimeout(() => {
+                addMsg(`[MODO TESTE ${VERSAO}] Analisando pedido de: <b>${t}</b>`, 'ele');
+            }, 700);
+        }
+
+        function boasVindas() {
             const chat = document.getElementById('chat');
-            const agora = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-            const div = document.createElement('div');
-            div.className = "msg-sistema";
-            div.innerHTML = `
-                👋 Olá! Sou o <b>Consultor Técnico K30i</b> — consulta rápida de alarmes, parâmetros e procedimentos.<br><br>
-                ⚠️ <span style="color:var(--subtitulo)">Ferramenta de apoio — sempre confirme no manual K30i da KVA.</span><br>
-                📖 <span style="color:var(--subtitulo)">Toda resposta indica a seção e página correspondente.</span><br>
-                <div style="display:flex; justify-content:space-between; margin-top:10px; font-size:12px; color:var(--subtitulo)">
-                    <span>Digite sua dúvida abaixo.</span><span>${agora}</span>
+            const agora = new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
+            const wrap = document.createElement('div');
+            wrap.innerHTML = `
+                <div class="header-sistema"><div class="icon-k">K</div><span class="label-sistema">Sistema</span></div>
+                <div class="balao-sistema">
+                    👋 Olá! Sou o <b>Consultor Técnico K30i</b> — consulta rápida de alarmes, parâmetros e procedimentos.<br><br>
+                    ⚠️ Ferramenta de apoio — sempre confirme no manual K30i da KVA.<br>
+                    📖 Toda resposta indica a seção e página correspondente.<br><br>
+                    Digite sua dúvida ou use os atalhos abaixo.
+                    <span class="timestamp">${agora}</span>
                 </div>
             `;
-            chat.appendChild(div);
+            chat.appendChild(wrap);
         }
 
-        function processarComando(txt) {
-            adicionarMensagem(txt, 'eu');
-            setTimeout(() => {
-                let r = `[TESTE ${VERSAO}] Analisando seu pedido...`;
-                if(txt.toLowerCase().includes("falha")) r = "⚠️ **ALERTA**<br>Falha de sensor detectada. Verifique Pág 10.";
-                adicionarMensagem(r, 'ele');
-            }, 600);
-        }
-
-        // --- INICIALIZAÇÃO SEGURA ---
         window.onload = () => {
-            document.getElementById('v-label').innerText = VERSAO;
-            exibirBoasVindas();
-            setTimeout(toggleGaveta, 1000);
+            document.getElementById('v-display').innerText = VERSAO;
+            boasVindas();
+            
+            // Microfone
+            const Rec = window.SpeechRecognition || window.webkitSpeechRecognition;
+            if (Rec) {
+                const r = new Rec(); r.lang = 'pt-BR';
+                const b = document.getElementById('mic-btn');
+                const s = document.getElementById('txt-status');
 
-            // MICROFONE
-            const Speech = window.SpeechRecognition || window.webkitSpeechRecognition;
-            if (Speech) {
-                const rec = new Speech();
-                const btn = document.getElementById('btn-voz');
-                const lbl = document.getElementById('label-status');
+                b.onmousedown = b.ontouchstart = (e) => { e.preventDefault(); r.start(); };
+                b.onmouseup = b.ontouchend = (e) => { e.preventDefault(); r.stop(); };
 
-                btn.onmousedown = btn.ontouchstart = (e) => { e.preventDefault(); rec.start(); };
-                btn.onmouseup = btn.ontouchend = (e) => { e.preventDefault(); rec.stop(); };
-
-                rec.onstart = () => { btn.classList.add('listening'); lbl.innerText = "Ouvindo..."; };
-                rec.onend = () => { btn.classList.remove('listening'); lbl.innerText = "Mensagem"; };
-                rec.onresult = (e) => processarComando(e.results[0][0].transcript);
+                r.onstart = () => { b.classList.add('mic-active'); s.innerText = "Ouvindo..."; s.style.color = "red"; };
+                r.onend = () => { b.classList.remove('mic-active'); s.innerText = "Mensagem"; s.style.color = ""; };
+                r.onresult = (e) => comando(e.results[0][0].transcript);
             }
         };
     </script>
