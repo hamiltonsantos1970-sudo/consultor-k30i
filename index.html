@@ -3,10 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>K30i - Mobile Fixed</title>
+    <title>K30i - Dark Default</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <style>
+        /* TEMA ESCURO COMO PADRÃO */
         :root {
             --bg-principal: #0b111e;
             --bg-header: #0b111e;
@@ -21,6 +22,7 @@
             --borda: rgba(255,255,255,0.1);
         }
 
+        /* CLASSE PARA MODO CLARO (OPCIONAL NO BOTÃO) */
         .light-mode {
             --bg-principal: #f0f2f5;
             --bg-header: #ffffff;
@@ -55,20 +57,21 @@
         .header-center { text-align: center; }
         .fw-tag { font-size: 10px; color: var(--azul); background: rgba(79, 195, 247, 0.1); padding: 2px 6px; border-radius: 4px; font-weight: bold; margin-left: 5px; }
 
-        /* MENU DE ATALHOS (DRAWER) CORRIGIDO */
+        /* MENU DE ATALHOS (DRAWER) */
         .drawer { 
             position: fixed;
-            top: 65px; /* Começa logo abaixo do header */
+            top: 65px; 
             left: 0;
             width: 100%;
             background: var(--bg-header);
             z-index: 1000;
-            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
             border-bottom: 1px solid var(--borda);
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            /* Inicia aberto (sem transform) */
+            transform: translateY(0); 
         }
 
-        /* Estado fechado: sobe para trás do header */
         .drawer-fechado { transform: translateY(-100%); } 
 
         .grid-botoes { 
@@ -81,11 +84,9 @@
         .card { 
             background: var(--bg-card); border-radius: 15px; padding: 18px; text-align: center; 
             font-size: 11px; font-weight: bold; border: 1px solid var(--borda); color: var(--cor-texto);
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
         }
         .card i { display: block; font-size: 22px; margin-bottom: 8px; }
 
-        /* Alça do Menu */
         .alca-container {
             position: absolute;
             bottom: -25px;
@@ -101,16 +102,16 @@
             cursor: pointer;
         }
 
-        /* ÁREA DE CHAT */
+        /* CHAT */
         .chat-container { 
-            flex: 1; padding: 20px 15px; overflow-y: auto; 
+            flex: 1; padding: 25px 15px; overflow-y: auto; 
             display: flex; flex-direction: column; gap: 20px;
-            margin-top: 10px; /* Espaço para a alça do menu */
+            background: var(--bg-principal);
         }
 
         .balao {
             max-width: 85%; padding: 15px; font-size: 14px; border-radius: 15px;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.1); color: var(--cor-texto);
+            box-shadow: 0 3px 10px rgba(0,0,0,0.2); color: var(--cor-texto);
         }
         
         .pergunta .balao { background: var(--bg-pergunta); border-left: 5px solid var(--azul); align-self: flex-end; border-bottom-right-radius: 2px; }
@@ -127,24 +128,26 @@
         footer { padding: 15px; background: var(--bg-header); display: flex; align-items: center; gap: 10px; border-top: 1px solid var(--borda); }
         .input-box { flex: 1; background: var(--bg-tel); border-radius: 25px; padding: 12px 20px; color: var(--cor-texto-dim); font-size: 14px; border: 1px solid var(--borda); }
         .btn-mic { width: 50px; height: 50px; border-radius: 50%; border: none; background: var(--azul); color: white; font-size: 20px; display: flex; align-items: center; justify-content: center; }
-        .gravando { background: #ff5252 !important; box-shadow: 0 0 15px rgba(255, 82, 82, 0.4); }
+        .gravando { background: #ff5252 !important; }
 
         .icon-btn { cursor: pointer; padding: 8px; font-size: 18px; color: var(--cor-texto-dim); }
     </style>
 </head>
-<body class="light-mode"> <header>
+<body>
+
+    <header>
         <i class="fa-solid fa-bars icon-btn"></i>
         <div class="header-center">
-            <h1 style="font-size: 18px; color: var(--cor-texto);">K30i <span class="fw-tag">v1.0.6</span></h1>
+            <h1 style="font-size: 18px; color: var(--cor-texto);">K30i <span class="fw-tag">v1.0.7</span></h1>
             <div style="color: var(--verde); font-size: 10px; font-weight: bold;">● ONLINE</div>
         </div>
         <div style="display: flex; gap: 10px;">
-            <i class="fa-solid fa-sun icon-btn" id="theme-btn" onclick="toggleTheme()"></i>
+            <i class="fa-solid fa-moon icon-btn" id="theme-btn" onclick="toggleTheme()"></i>
             <i class="fa-solid fa-rotate icon-btn" onclick="location.reload()"></i>
         </div>
     </header>
 
-    <div id="drawer" class="drawer drawer-fechado">
+    <div id="drawer" class="drawer">
         <div class="grid-botoes">
             <div class="card" style="color: #ff5252;"><i class="fa-solid fa-circle-exclamation"></i> FALHA ATIVA</div>
             <div class="card" style="color: #ffa000;"><i class="fa-solid fa-triangle-exclamation"></i> AVISO ATIVO</div>
@@ -153,7 +156,7 @@
         </div>
         <div class="alca-container">
             <div class="alca" id="btn-drawer">
-                <i class="fa-solid fa-chevron-down" id="seta" style="color: var(--cor-texto-dim); transition: 0.3s;"></i>
+                <i class="fa-solid fa-chevron-up" id="seta" style="color: var(--cor-texto-dim); transition: 0.3s; transform: rotate(0deg);"></i>
             </div>
         </div>
     </div>
@@ -161,14 +164,14 @@
     <main class="chat-container" id="chat">
         <div class="wrapper resposta" style="display:flex; flex-direction:column;">
             <div class="balao">
-                Sistema K30i operacional. Todos os parâmetros em conformidade decimal.
+                Protocolo K30i Dark inicializado. Todos os valores em 0.00.
                 <div class="telemetria">
                     <div class="tel-item"><span>PRESSÃO</span><b>14.00 bar</b></div>
                     <div class="tel-item"><span>TEMP.</span><b>84.00°C</b></div>
                     <div class="tel-item"><span>FLUXO</span><b>2.40 L/m</b></div>
                     <div class="tel-item"><span>VIBRAÇÃO</span><b style="color:var(--verde)">0.00 mm/s</b></div>
                 </div>
-                <div style="font-size: 9px; color: var(--cor-texto-dim); margin-top: 10px; text-align: right;">10:20 AM</div>
+                <div style="font-size: 9px; color: var(--cor-texto-dim); margin-top: 10px; text-align: right;">10:30 AM</div>
             </div>
         </div>
     </main>
@@ -179,23 +182,28 @@
     </footer>
 
     <script>
-        // Passo 1: Lógica do Menu (Drawer)
+        // 1. Lógica do Menu (Drawer)
         const drawer = document.getElementById('drawer');
         const btnDrawer = document.getElementById('btn-drawer');
         const seta = document.getElementById('seta');
 
-        btnDrawer.addEventListener('click', () => {
+        // Função para abrir/fechar
+        function toggleDrawer() {
             const isClosed = drawer.classList.toggle('drawer-fechado');
-            seta.style.transform = isClosed ? 'rotate(0deg)' : 'rotate(180deg)';
-        });
+            seta.style.transform = isClosed ? 'rotate(180deg)' : 'rotate(0deg)';
+        }
 
-        // Auto-fechar após 2 segundos na inicialização
-        setTimeout(() => {
-            drawer.classList.add('drawer-fechado');
-            seta.style.transform = 'rotate(0deg)';
-        }, 2000);
+        btnDrawer.addEventListener('click', toggleDrawer);
 
-        // Passo 2: Alternar Tema
+        // FECHAMENTO AUTOMÁTICO APÓS 2 SEGUNDOS
+        window.onload = () => {
+            setTimeout(() => {
+                drawer.classList.add('drawer-fechado');
+                seta.style.transform = 'rotate(180deg)';
+            }, 2000);
+        };
+
+        // 2. Alternar Tema
         function toggleTheme() {
             const body = document.body;
             const icon = document.getElementById('theme-btn');
@@ -208,43 +216,26 @@
             }
         }
 
-        // Passo 3: Reconhecimento de Voz
+        // 3. Voz
         const mic = document.getElementById('mic');
         const label = document.getElementById('label-voz');
         const chat = document.getElementById('chat');
-
         const Speech = window.SpeechRecognition || window.webkitSpeechRecognition;
+
         if (Speech) {
             const rec = new Speech();
             rec.lang = 'pt-BR';
-
-            mic.addEventListener('click', () => {
-                rec.start();
-                mic.classList.add('gravando');
-                label.innerText = "Ouvindo...";
-            });
-
+            mic.addEventListener('click', () => { rec.start(); mic.classList.add('gravando'); label.innerText = "Ouvindo..."; });
             rec.onresult = (e) => {
                 const texto = e.results[0][0].transcript;
                 label.innerText = texto;
-                
                 setTimeout(() => {
-                    const agora = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-                    const html = `
-                        <div class="wrapper pergunta" style="display:flex; flex-direction:column; align-items:flex-end; margin-top:15px;">
-                            <div class="balao">
-                                ${texto}
-                                <div style="font-size: 9px; color: var(--cor-texto-dim); margin-top: 8px; text-align: right;">
-                                    ${agora} <i class="fa-solid fa-check-double" style="color:var(--verde)"></i>
-                                </div>
-                            </div>
-                        </div>`;
+                    const html = `<div class="wrapper pergunta" style="display:flex; flex-direction:column; align-items:flex-end; margin-top:15px;"><div class="balao">${texto}<div style="font-size:9px; color:var(--cor-texto-dim); margin-top:8px; text-align:right;">Agora <i class="fa-solid fa-check-double" style="color:var(--verde)"></i></div></div></div>`;
                     chat.insertAdjacentHTML('beforeend', html);
                     chat.scrollTop = chat.scrollHeight;
                     label.innerText = "Toque no mic para falar...";
                 }, 600);
             };
-
             rec.onend = () => mic.classList.remove('gravando');
         }
     </script>
