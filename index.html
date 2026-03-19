@@ -3,36 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>K30i - Light Edition</title>
+    <title>K30i - Light FW</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <style>
         :root {
-            --bg-principal: #f0f2f5;     /* Fundo claro */
+            --bg-body: #f0f2f5;
             --bg-header: #ffffff;
-            --bg-cards: #ffffff;
-            --bg-balao-pergunta: #e3f2fd; /* Azul claro suave */
-            --bg-balao-resposta: #ffffff; /* Branco */
-            --bg-telemetria: #f8f9fa;     /* Cinza muito claro */
-            --verde-industrial: #2e7d32;  /* Verde mais escuro para leitura no claro */
-            --azul-msg: #1976d2;          /* Azul cobalto */
-            --texto: #1c1e21;             /* Texto quase preto */
-            --texto-dim: #606770;         /* Texto secundário */
-            --borda: rgba(0,0,0,0.08);
+            --bg-card: #ffffff;
+            --bg-pergunta: #e3f2fd;
+            --bg-resposta: #ffffff;
+            --bg-telemetria: #f8f9fa;
+            --cor-texto: #1c1e21;
+            --cor-texto-dim: #606770;
+            --azul-primario: #1976d2;
+            --verde-status: #2e7d32;
+            --borda: #e0e0e0;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
-        
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: sans-serif; }
+
         body { 
-            background-color: var(--bg-principal); 
-            color: var(--texto); 
+            background-color: var(--bg-body); 
+            color: var(--cor-texto); 
             height: 100vh; 
             display: flex; 
             flex-direction: column; 
             overflow: hidden; 
         }
 
-        /* 1. CABEÇALHO CONGELADO */
+        /* HEADER FIXO */
         header { 
             padding: 15px; 
             background: var(--bg-header);
@@ -41,25 +41,38 @@
             align-items: center;
             z-index: 1001; 
             position: relative;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            border-bottom: 1px solid var(--borda);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
         }
+
+        .fw-info {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
         .fw-tag { 
             font-size: 10px; 
-            color: var(--azul-msg); 
+            color: var(--azul-primario); 
             background: #e3f2fd;
             padding: 2px 8px;
             border-radius: 10px;
-            margin-left: 8px;
             font-weight: bold;
         }
-        .status-on { color: var(--verde-industrial); font-size: 10px; font-weight: bold; text-align: center; margin-top: 2px; }
 
-        /* 2. MENU RETRÁTIL (DRAWER) */
-        .drawer-container {
-            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        .btn-refresh {
+            color: var(--cor-texto-dim);
+            font-size: 16px;
+            cursor: pointer;
+            padding: 5px;
+        }
+
+        /* MENU RETRÁTIL */
+        .drawer {
+            transition: transform 0.4s ease-in-out;
             z-index: 1000;
             position: relative;
-            background: var(--bg-principal);
+            background: var(--bg-body);
         }
         .drawer-fechado { transform: translateY(-165px); } 
 
@@ -69,84 +82,161 @@
             gap: 10px; 
             padding: 15px; 
         }
+
         .card { 
-            background: var(--bg-cards); 
-            border-radius: 20px; 
-            padding: 18px; 
+            background: var(--bg-card); 
+            border-radius: 15px; 
+            padding: 15px; 
             text-align: center; 
             font-size: 10px; 
             font-weight: bold; 
             border: 1px solid var(--borda);
-            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
-            color: var(--texto);
         }
-        .card i { display: block; font-size: 22px; margin-bottom: 8px; }
+        .card i { display: block; font-size: 20px; margin-bottom: 8px; }
 
-        .alca-trigger {
-            height: 25px; background: var(--bg-cards); display: flex; justify-content: center;
+        .alca {
+            height: 25px; background: var(--bg-card); display: flex; justify-content: center;
             align-items: center; width: 60px; margin: 0 auto; border-radius: 0 0 15px 15px;
             cursor: pointer; border: 1px solid var(--borda); border-top: none;
         }
-        #seta { transition: 0.3s; color: var(--texto-dim); font-size: 10px; }
-        .seta-up { transform: rotate(180deg); }
 
-        /* 3. ÁREA DE CHAT */
-        .chat-content { flex: 1; padding: 10px 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 20px; }
+        /* CHAT */
+        .chat-area { flex: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; }
         .wrapper { display: flex; width: 100%; }
         .pergunta { justify-content: flex-end; }
         .resposta { justify-content: flex-start; }
 
         .balao {
-            max-width: 85%; padding: 15px; font-size: 14px; position: relative;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            max-width: 85%; padding: 12px; font-size: 14px; position: relative;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            border-radius: 12px;
         }
         
-        /* Borda lateral de profundidade (Estilo Light) */
+        /* Borda lateral de profundidade (Pedido anterior) */
         .pergunta .balao {
-            background-color: var(--bg-balao-pergunta); border-radius: 18px 4px 18px 18px;
-            border-left: 4px solid var(--azul-msg); 
+            background-color: var(--bg-pergunta); border-radius: 15px 4px 15px 15px;
+            border-left: 4px solid var(--azul-primario); 
         }
         .resposta .balao {
-            background-color: var(--bg-balao-resposta); border-radius: 4px 18px 18px 18px;
-            border-left: 4px solid #ced4da; 
+            background-color: var(--bg-resposta); border-radius: 4px 15px 15px 15px;
+            border-left: 4px solid #bdc3c7; 
         }
 
-        .tel-box {
-            background-color: var(--bg-telemetria); border-radius: 10px; padding: 15px;
-            margin-top: 12px; display: flex; justify-content: space-between;
+        .telemetria {
+            background-color: var(--bg-telemetria); border-radius: 8px; padding: 12px;
+            margin-top: 10px; display: flex; justify-content: space-between;
             border: 1px solid var(--borda);
         }
-        .label { color: var(--texto-dim); font-size: 9px; font-weight: bold; }
-        .val { color: var(--texto); font-size: 15px; font-weight: bold; display: block; margin-top: 3px; }
-        .hora { display: flex; justify-content: flex-end; font-size: 10px; color: var(--texto-dim); margin-top: 8px; gap: 4px; }
 
-        /* 4. RODAPÉ E BOTÃO DE VOZ */
-        footer { padding: 15px; display: flex; align-items: center; gap: 10px; background: var(--bg-header); border-top: 1px solid var(--borda); }
-        .input-simulado {
-            flex: 1; background: #f0f2f5; border-radius: 25px; padding: 12px 18px;
-            color: var(--texto-dim); font-size: 14px; display: flex; justify-content: space-between; align-items: center;
-        }
+        .hora { font-size: 10px; color: var(--cor-texto-dim); margin-top: 5px; text-align: right; }
+
+        /* RODAPÉ */
+        footer { padding: 12px; background: var(--bg-header); display: flex; align-items: center; gap: 10px; border-top: 1px solid var(--borda); }
+        .input-box { flex: 1; background: #f0f2f5; border-radius: 20px; padding: 10px 15px; color: var(--cor-texto-dim); font-size: 14px; }
+        
         .btn-mic {
-            width: 50px; height: 50px; border-radius: 50%; border: none;
-            background: var(--azul-msg); color: white;
-            font-size: 20px; display: flex; align-items: center; justify-content: center;
-            box-shadow: 0 4px 10px rgba(25, 118, 210, 0.3);
+            width: 45px; height: 45px; border-radius: 50%; border: none;
+            background: var(--azul-primario); color: white; font-size: 18px;
+            display: flex; align-items: center; justify-content: center;
         }
-        .gravando { background: #d32f2f !important; box-shadow: 0 0 15px rgba(211, 47, 47, 0.4); }
+        .gravando { background: #d32f2f !important; }
 
-        nav { display: flex; justify-content: space-around; padding: 15px; background: #ffffff; border-top: 1px solid var(--borda); }
-        nav i { color: var(--texto-dim); font-size: 20px; }
-        nav i.active { color: var(--azul-msg); }
+        nav { display: flex; justify-content: space-around; padding: 15px; background: #fff; border-top: 1px solid var(--borda); }
+        nav i { color: var(--cor-texto-dim); font-size: 20px; }
     </style>
 </head>
 <body>
 
     <header>
-        <i class="fa-solid fa-bars" style="color: var(--texto-dim);"></i>
+        <i class="fa-solid fa-bars" style="color: var(--cor-texto-dim);"></i>
         <div style="text-align: center;">
-            <h1 style="font-size: 18px; color: var(--texto);">
-                K30i <span class="fw-tag">FW: 1.0.4-L</span>
-            </h1>
-            <div class="status-on">● SISTEMA OPERACIONAL</div>
+            <div class="fw-info">
+                <h1 style="font-size: 18px;">K30i</h1>
+                <span class="fw-tag">v1.0.4-L</span>
+                <i class="fa-solid fa-rotate btn-refresh" onclick="location.reload();"></i>
+            </div>
+            <div style="color: var(--verde-status); font-size: 10px; font-weight: bold;">● ONLINE</div>
         </div>
-        <i class="fa-solid fa-ellipsis-vertical" style
+        <i class="fa-solid fa-ellipsis-vertical" style="color: var(--cor-texto-dim);"></i>
+    </header>
+
+    <div id="menu" class="drawer">
+        <div class="grid-botoes">
+            <div class="card" style="color: #d32f2f;"><i class="fa-solid fa-circle-exclamation"></i> FALHA</div>
+            <div class="card" style="color: #ed6c02;"><i class="fa-solid fa-triangle-exclamation"></i> AVISO</div>
+            <div class="card"><i class="fa-solid fa-calendar"></i> AGENDA</div>
+            <div class="card"><i class="fa-solid fa-microchip"></i> I/O</div>
+        </div>
+        <div class="alca" id="gatilho">
+            <i class="fa-solid fa-chevron-up" id="seta"></i>
+        </div>
+    </div>
+
+    <main class="chat-area" id="chat">
+        <div class="wrapper resposta">
+            <div class="balao">
+                Sistema em modo claro iniciado com sucesso. Versão de controle FW: 1.0.4-L disponível.
+                <div class="telemetria">
+                    <div><span style="font-size:9px; font-weight:bold; color:var(--cor-texto-dim)">TEMP.</span><br><b>24°C</b></div>
+                    <div><span style="font-size:9px; font-weight:bold; color:var(--cor-texto-dim)">STATUS</span><br><b style="color:var(--verde-status)">OK</b></div>
+                </div>
+                <div class="hora">10:00 AM</div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="input-box" id="label-voz">Pressione o mic para falar...</div>
+        <button class="btn-mic" id="btn-mic"><i class="fa-solid fa-microphone"></i></button>
+    </footer>
+
+    <nav>
+        <i class="fa-solid fa-message" style="color: var(--azul-primario);"></i>
+        <i class="fa-solid fa-chart-line"></i>
+        <i class="fa-solid fa-gear"></i>
+    </nav>
+
+    <script>
+        // Lógica do Drawer
+        const menu = document.getElementById('menu');
+        const gatilho = document.getElementById('gatilho');
+        const seta = document.getElementById('seta');
+
+        gatilho.addEventListener('click', () => {
+            menu.classList.toggle('drawer-fechado');
+            seta.style.transform = menu.classList.contains('drawer-fechado') ? 'rotate(180deg)' : 'rotate(0deg)';
+        });
+
+        setTimeout(() => { menu.classList.add('drawer-fechado'); seta.style.transform = 'rotate(180deg)'; }, 2000);
+
+        // Lógica de Voz Real
+        const btnMic = document.getElementById('btn-mic');
+        const labelVoz = document.getElementById('label-voz');
+        const chat = document.getElementById('chat');
+
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        if (SpeechRecognition) {
+            const rec = new SpeechRecognition();
+            rec.lang = 'pt-BR';
+
+            btnMic.addEventListener('click', () => {
+                rec.start();
+                btnMic.classList.add('gravando');
+                labelVoz.innerText = "Ouvindo...";
+            });
+
+            rec.onresult = (e) => {
+                const fala = e.results[0][0].transcript;
+                labelVoz.innerText = fala;
+                setTimeout(() => {
+                    const html = `<div class="wrapper pergunta"><div class="balao">${fala}<div class="hora">Agora <i class="fa-solid fa-check-double" style="color:var(--verde-status)"></i></div></div></div>`;
+                    chat.insertAdjacentHTML('beforeend', html);
+                    chat.scrollTop = chat.scrollHeight;
+                    labelVoz.innerText = "Pressione o mic para falar...";
+                }, 500);
+            };
+            rec.onend = () => btnMic.classList.remove('gravando');
+        }
+    </script>
+</body>
+</html>
