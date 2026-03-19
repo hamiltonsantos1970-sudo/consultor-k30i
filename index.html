@@ -3,104 +3,83 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>K30i Stable</title>
+    <title>K30i v1.1.1</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <style>
-        /* TEMA ESCURO (PADRÃO) */
         :root {
-            --bg-p: #0b111e;
-            --bg-h: #0b111e;
-            --bg-c: #161c2b;
-            --bg-b-p: #2b3344;
-            --bg-b-r: #1a2235;
-            --txt: #e0e6ed;
-            --txt-d: #8696a0;
-            --azul: #4fc3f7;
-            --verde: #39d353;
+            --bg-p: #0b111e; --bg-h: #0b111e; --bg-c: #161c2b;
+            --bg-b-p: #2b3344; --bg-b-r: #1a2235; --txt: #e0e6ed;
+            --txt-d: #8696a0; --azul: #4fc3f7; --verde: #39d353;
             --borda: rgba(255,255,255,0.1);
         }
 
-        /* MODO CLARO */
         body.light-mode {
-            --bg-p: #f0f2f5;
-            --bg-h: #ffffff;
-            --bg-c: #ffffff;
-            --bg-b-p: #e3f2fd;
-            --bg-b-r: #ffffff;
-            --txt: #1c1e21;
-            --txt-d: #606770;
-            --azul: #1976d2;
-            --verde: #2e7d32;
-            --borda: #e0e0e0;
+            --bg-p: #f0f2f5; --bg-h: #ffffff; --bg-c: #ffffff;
+            --bg-b-p: #e3f2fd; --bg-b-r: #ffffff; --txt: #1c1e21;
+            --txt-d: #606770; --azul: #1976d2; --verde: #2e7d32;
+            --borda: #ced4da;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: sans-serif; -webkit-tap-highlight-color: transparent; }
-
-        html, body { 
-            height: 100dvh; 
-            width: 100vw; 
-            background-color: var(--bg-p); 
-            overflow: hidden; 
-            display: flex; 
-            flex-direction: column; 
-        }
+        html, body { height: 100dvh; width: 100vw; background-color: var(--bg-p); overflow: hidden; display: flex; flex-direction: column; }
 
         header { 
-            height: 60px; 
-            padding: 0 15px; 
-            background: var(--bg-h); 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            z-index: 2000; 
-            border-bottom: 1px solid var(--borda);
+            height: 60px; padding: 0 15px; background: var(--bg-h); 
+            display: flex; justify-content: space-between; align-items: center; 
+            z-index: 2000; border-bottom: 1px solid var(--borda);
         }
 
         .fw-tag { font-size: 10px; color: var(--azul); background: rgba(79,195,247,0.1); padding: 2px 6px; border-radius: 4px; font-weight: bold; }
 
-        /* MENU DRAWER (FIXO E SEGURO) */
+        /* MENU DRAWER */
         #drawer { 
-            position: fixed; 
-            top: 60px; 
-            left: 0; 
-            width: 100%; 
-            background: var(--bg-h); 
-            z-index: 1000; 
-            transition: transform 0.4s ease-out; 
+            position: fixed; top: 60px; left: 0; width: 100%; 
+            background: var(--bg-h); z-index: 1000; 
+            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1); 
             border-bottom: 1px solid var(--borda);
-            transform: translateY(0); /* Inicia Aberto */
+            transform: translateY(0);
         }
-        #drawer.fechado { transform: translateY(-100%); }
+        #drawer.recolhido { transform: translateY(-100%); }
 
         .grid-botoes { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 15px; }
         .card { background: var(--bg-c); border-radius: 12px; padding: 15px; text-align: center; border: 1px solid var(--borda); color: var(--txt); font-size: 11px; font-weight: bold; }
         .card i { display: block; font-size: 20px; margin-bottom: 5px; }
 
         .alca { 
-            position: absolute; bottom: -22px; left: 50%; transform: translateX(-50%);
-            height: 22px; width: 50px; background: var(--bg-h); 
+            position: absolute; bottom: -24px; left: 50%; transform: translateX(-50%);
+            height: 24px; width: 55px; background: var(--bg-h); 
             display: flex; justify-content: center; align-items: center; 
-            border-radius: 0 0 10px 10px; border: 1px solid var(--borda); border-top: none;
+            border-radius: 0 0 12px 12px; border: 1px solid var(--borda); border-top: none;
+            cursor: pointer;
         }
 
-        /* ÁREA DE CONVERSA */
+        /* CHAT */
         #chat { flex: 1; padding: 20px 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; background: var(--bg-p); }
-        .balao { max-width: 85%; padding: 12px; font-size: 14px; border-radius: 12px; color: var(--txt); box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .balao { max-width: 85%; padding: 15px; font-size: 14px; border-radius: 15px; color: var(--txt); box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
         .pergunta .balao { background: var(--bg-b-p); border-left: 4px solid var(--azul); align-self: flex-end; }
         .resposta .balao { background: var(--bg-b-r); border-left: 4px solid #546e7a; align-self: flex-start; }
 
-        .telemetria { background: rgba(0,0,0,0.05); border-radius: 8px; padding: 10px; margin-top: 10px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        .tel-item b { font-size: 14px; display: block; }
-        .tel-item span { font-size: 9px; color: var(--txt-d); font-weight: bold; }
+        .telemetria { background: rgba(0,0,0,0.1); border-radius: 10px; padding: 12px; margin-top: 10px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; border: 1px solid var(--borda); }
+        .tel-item b { font-size: 15px; display: block; }
 
         /* RODAPÉ */
         footer { padding: 12px; background: var(--bg-h); display: flex; align-items: center; gap: 10px; border-top: 1px solid var(--borda); }
-        .input-box { flex: 1; background: var(--bg-c); border-radius: 20px; padding: 10px 15px; color: var(--txt-d); font-size: 13px; border: 1px solid var(--borda); }
-        .btn-mic { width: 45px; height: 45px; border-radius: 50%; border: none; background: var(--azul); color: #fff; font-size: 18px; display: flex; align-items: center; justify-content: center; }
-        .gravando { background: #f44336 !important; }
+        .input-box { flex: 1; background: var(--bg-c); border-radius: 20px; padding: 12px 15px; color: var(--txt-d); font-size: 14px; border: 1px solid var(--borda); }
+        .btn-mic { width: 50px; height: 50px; border-radius: 50%; border: none; background: var(--azul); color: #fff; font-size: 20px; display: flex; align-items: center; justify-content: center; transition: 0.3s; }
+        
+        .gravando { 
+            background: #f44336 !important; 
+            animation: pulse 1.5s infinite;
+        }
 
-        .icon-btn { cursor: pointer; padding: 5px; font-size: 18px; color: var(--txt-d); }
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(244, 67, 54, 0.7); }
+            70% { box-shadow: 0 0 0 15px rgba(244, 67, 54, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(244, 67, 54, 0); }
+        }
+
+        .icon-btn { cursor: pointer; padding: 10px; font-size: 18px; color: var(--txt-d); }
     </style>
 </head>
 <body>
@@ -108,10 +87,10 @@
     <header>
         <i class="fa-solid fa-bars icon-btn"></i>
         <div style="text-align: center;">
-            <h1 style="font-size: 16px; color: var(--txt);">K30i <span class="fw-tag">v1.0.9</span></h1>
-            <div style="color: var(--verde); font-size: 9px; font-weight: bold;">● ONLINE</div>
+            <h1 style="font-size: 18px; color: var(--txt);">K30i <span class="fw-tag">v1.1.1</span></h1>
+            <div style="color: var(--verde); font-size: 10px; font-weight: bold;">● ONLINE</div>
         </div>
-        <div style="display: flex; gap: 8px;">
+        <div style="display: flex; gap: 5px;">
             <i class="fa-solid fa-sun icon-btn" id="theme-btn" onclick="toggleTheme()"></i>
             <i class="fa-solid fa-rotate icon-btn" onclick="location.reload()"></i>
         </div>
@@ -125,14 +104,14 @@
             <div class="card"><i class="fa-solid fa-microchip"></i>I/O</div>
         </div>
         <div class="alca" onclick="toggleMenu()">
-            <i class="fa-solid fa-chevron-up" id="seta" style="color: var(--txt-d); transition: 0.3s;"></i>
+            <i class="fa-solid fa-chevron-up" id="seta" style="color: var(--txt-d); transition: 0.3s; transform: rotate(0deg);"></i>
         </div>
     </div>
 
     <main id="chat">
         <div class="wrapper resposta" style="display:flex; flex-direction:column;">
             <div class="balao">
-                Sistema estabilizado v1.0.9.
+                Correção de Microfone v1.1.1 aplicada.
                 <div class="telemetria">
                     <div class="tel-item"><span>PRESSÃO</span><b>14.00 bar</b></div>
                     <div class="tel-item"><span>TEMP.</span><b>84.00°C</b></div>
@@ -147,60 +126,81 @@
     </footer>
 
     <script>
-        // Função do Menu (Drawer)
+        // 1. Menu Drawer
         const drawer = document.getElementById('drawer');
         const seta = document.getElementById('seta');
 
         function toggleMenu() {
-            drawer.classList.toggle('fechado');
-            seta.style.transform = drawer.classList.contains('fechado') ? 'rotate(180deg)' : 'rotate(0deg)';
+            const isRecolhido = drawer.classList.toggle('recolhido');
+            seta.style.transform = isRecolhido ? 'rotate(180deg)' : 'rotate(0deg)';
         }
 
-        // Fechar automático após 2s
-        window.addEventListener('load', () => {
+        window.onload = () => {
             setTimeout(() => {
-                drawer.classList.add('fechado');
+                drawer.classList.add('recolhido');
                 seta.style.transform = 'rotate(180deg)';
             }, 2000);
-        });
+        };
 
-        // Alternar Tema (Ícones Invertidos)
+        // 2. Tema
         function toggleTheme() {
             const body = document.body;
             const btn = document.getElementById('theme-btn');
-            
             body.classList.toggle('light-mode');
-            
-            if (body.classList.contains('light-mode')) {
-                btn.className = 'fa-solid fa-moon icon-btn';
-            } else {
-                btn.className = 'fa-solid fa-sun icon-btn';
-            }
+            btn.className = body.classList.contains('light-mode') ? 'fa-solid fa-moon icon-btn' : 'fa-solid fa-sun icon-btn';
         }
 
-        // Voz Simples (Evita travar)
-        const mic = document.getElementById('mic');
-        const statusVoz = document.getElementById('status-voz');
-        const chat = document.getElementById('chat');
+        // 3. Lógica do Microfone Corrigida
+        const micBtn = document.getElementById('mic');
+        const statusTxt = document.getElementById('status-voz');
+        const chatBox = document.getElementById('chat');
 
         const Recognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
         if (Recognition) {
             const rec = new Recognition();
             rec.lang = 'pt-BR';
-            
-            mic.onclick = () => { rec.start(); mic.classList.add('gravando'); statusVoz.innerText = "Ouvindo..."; };
-            
-            rec.onresult = (e) => {
-                const txt = e.results[0][0].transcript;
-                statusVoz.innerText = txt;
-                setTimeout(() => {
-                    const box = `<div class="wrapper pergunta" style="display:flex; flex-direction:column; align-items:flex-end; margin-top:10px;"><div class="balao">${txt}</div></div>`;
-                    chat.insertAdjacentHTML('beforeend', box);
-                    chat.scrollTop = chat.scrollHeight;
-                    statusVoz.innerText = "Toque para falar...";
-                }, 500);
+            rec.continuous = false;
+            rec.interimResults = false;
+
+            micBtn.addEventListener('click', () => {
+                try {
+                    rec.start();
+                } catch (e) {
+                    rec.stop(); // Se já estiver rodando, para e tenta de novo no próximo clique
+                }
+            });
+
+            rec.onstart = () => {
+                micBtn.classList.add('gravando');
+                statusTxt.innerText = "Ouvindo...";
             };
-            rec.onend = () => mic.classList.remove('gravando');
+
+            rec.onresult = (e) => {
+                const resultado = e.results[0][0].transcript;
+                statusTxt.innerText = resultado;
+                
+                const msg = `
+                    <div class="wrapper pergunta" style="display:flex; flex-direction:column; align-items:flex-end; margin-top:10px;">
+                        <div class="balao">${resultado}</div>
+                    </div>`;
+                chatBox.insertAdjacentHTML('beforeend', msg);
+                chatBox.scrollTop = chatBox.scrollHeight;
+            };
+
+            rec.onerror = (e) => {
+                console.error("Erro no mic: ", e.error);
+                statusTxt.innerText = "Erro no mic. Tente de novo.";
+            };
+
+            rec.onend = () => {
+                micBtn.classList.remove('gravando');
+                if(statusTxt.innerText === "Ouvindo...") {
+                    statusTxt.innerText = "Toque para falar...";
+                }
+            };
+        } else {
+            statusTxt.innerText = "Mic não suportado neste navegador.";
         }
     </script>
 </body>
