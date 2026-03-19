@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>K30i - Interface Industrial</title>
+    <title>K30i - Monitoramento</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <style>
@@ -30,29 +30,28 @@
             overflow: hidden; 
         }
 
-        /* 1. CABEÇALHO CONGELADO */
+        /* 1. CABEÇALHO CONGELADO (FIXO) */
         header { 
             padding: 15px; 
             background: var(--bg-principal);
             display: flex; 
             justify-content: space-between; 
             align-items: center;
-            z-index: 1001; /* Fica acima de tudo */
+            z-index: 1001; 
             position: relative;
             border-bottom: 1px solid rgba(255,255,255,0.05);
         }
         .status-on { color: var(--verde-neon); font-size: 10px; font-weight: bold; text-align: center; }
 
-        /* 2. MENU RETRÁTIL (APENAS BOTÕES) */
+        /* 2. MENU RETRÁTIL (ESTA PARTE SOBE E DESCE) */
         .drawer-container {
-            transition: transform 0.4s ease-in-out;
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             z-index: 1000;
             position: relative;
             background: var(--bg-principal);
         }
         
-        /* Estado fechado: Sobe apenas a altura do grid */
-        .drawer-fechado { transform: translateY(-165px); }
+        .drawer-fechado { transform: translateY(-165px); } /* Sobe o grid */
 
         .grid-botoes { 
             display: grid; 
@@ -72,7 +71,6 @@
         }
         .card i { display: block; font-size: 22px; margin-bottom: 8px; }
 
-        /* Alça do Menu */
         .alca-trigger {
             height: 25px; 
             background: var(--bg-cards); 
@@ -103,7 +101,6 @@
         .pergunta { justify-content: flex-end; }
         .resposta { justify-content: flex-start; }
 
-        /* Balões com efeito de profundidade lateral solicitado */
         .balao {
             max-width: 85%; 
             padding: 15px; 
@@ -112,19 +109,19 @@
             box-shadow: 4px 4px 15px rgba(0,0,0,0.4);
         }
         
+        /* Borda lateral maior para profundidade */
         .pergunta .balao {
             background-color: var(--bg-balao-pergunta); 
             border-radius: 18px 4px 18px 18px;
-            border-left: 4px solid rgba(79, 195, 247, 0.5); /* Linha maior lateral */
+            border-left: 4px solid rgba(79, 195, 247, 0.5); 
         }
         
         .resposta .balao {
             background-color: var(--bg-balao-resposta); 
             border-radius: 4px 18px 18px 18px;
-            border-left: 4px solid rgba(255, 255, 255, 0.2); /* Linha maior lateral */
+            border-left: 4px solid rgba(255, 255, 255, 0.2); 
         }
 
-        /* Card de Telemetria */
         .tel-box {
             background-color: var(--bg-telemetria); 
             border-radius: 10px; 
@@ -139,16 +136,27 @@
 
         .hora { display: flex; justify-content: flex-end; font-size: 10px; color: var(--texto-dim); margin-top: 8px; gap: 4px; }
 
-        /* 4. RODAPÉ */
-        footer { padding: 15px; display: flex; align-items: center; gap: 10px; }
-        .input-simulado {
+        /* 4. RODAPÉ E BOTÃO DE GRAVAR (CORRIGIDO) */
+        footer { padding: 15px; display: flex; align-items: center; gap: 10px; background: var(--bg-principal); }
+        .input-area {
             flex: 1; background: #1d263a; border-radius: 25px; padding: 12px 18px;
             color: var(--texto-dim); font-size: 14px; display: flex; justify-content: space-between;
+            align-items: center;
         }
+        
         .btn-mic {
             width: 50px; height: 50px; border-radius: 50%; border: none;
             background: linear-gradient(145deg, #3a5ba0, #1e335a); color: white;
             font-size: 20px;
+            cursor: pointer;
+            transition: background 0.3s; /* Removido o transform scale */
+            display: flex; align-items: center; justify-content: center;
+        }
+
+        /* Efeito visual de quando está gravando (sem expandir) */
+        .gravando {
+            background: linear-gradient(145deg, #f85149, #b91d1d) !important;
+            box-shadow: 0 0 15px rgba(248, 81, 73, 0.5);
         }
 
         nav { display: flex; justify-content: space-around; padding: 15px; background: #0d1424; border-top: 1px solid rgba(255,255,255,0.05); }
@@ -181,7 +189,7 @@
     <main class="chat-content">
         <div class="wrapper resposta">
             <div class="balao">
-                Protocolo aceito. Status de telemetria atualizado:
+                Protocolo aceito. Status de telemetria:
                 <div class="tel-box">
                     <div>
                         <span class="label">PRESSÃO</span><span class="val">14.2 bar</span>
@@ -198,14 +206,14 @@
 
         <div class="wrapper pergunta">
             <div class="balao">
-                Válvula de alívio verificada. Iniciando protocolo de limpeza manual.
-                <div class="hora">09:45 AM <i class="fa-solid fa-check-double" style="color: var(--verde-neon);"></i></div>
+                Iniciando protocolo de limpeza manual na válvula secundária.
+                <div class="hora">09:48 AM <i class="fa-solid fa-check-double" style="color: var(--verde-neon);"></i></div>
             </div>
         </div>
     </main>
 
     <footer>
-        <div class="input-simulado">
+        <div class="input-area">
             <span id="texto-voz">Digite uma mensagem...</span>
             <i class="fa-solid fa-paperclip"></i>
         </div>
@@ -220,7 +228,7 @@
     </nav>
 
     <script>
-        // Lógica do Drawer (Menu que sobe)
+        // Lógica do Menu (Drawer)
         const drawer = document.getElementById('drawer');
         const btnDrawer = document.getElementById('btn-drawer');
         const seta = document.getElementById('seta');
@@ -230,22 +238,26 @@
             seta.classList.toggle('seta-up');
         });
 
-        // Auto-fechar após carregar para mostrar o chat
         setTimeout(() => {
             drawer.classList.add('drawer-fechado');
             seta.classList.add('seta-up');
         }, 2000);
 
-        // Simulação de voz baseada no seu código JS
+        // Lógica de Voz Corrigida (Sem expansão de tamanho)
         const mic = document.getElementById('mic');
         const txt = document.getElementById('texto-voz');
 
         mic.addEventListener('click', () => {
+            // Adiciona classe de cor sem mudar o tamanho
+            mic.classList.add('gravando');
             txt.innerText = "Ouvindo...";
+            
+            // Simula o onresult
             setTimeout(() => {
-                txt.innerText = "Verificar módulo C-4";
-                console.log("Enviando comando de voz: Verificar módulo C-4");
-            }, 1500);
+                mic.classList.remove('gravando');
+                txt.innerText = "Limpeza de válvula concluída";
+                console.log("Enviando: Limpeza de válvula concluída");
+            }, 2000);
         });
     </script>
 </body>
