@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>K30i - Ver 0.00</title>
+    <title>K30i - Ver 0.01</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root {
@@ -18,53 +18,46 @@
         header { height: 60px; background: var(--topo); display: flex; align-items: center; padding: 0 15px; border-bottom: 1px solid var(--borda); z-index: 1000; flex-shrink: 0; justify-content: space-between; }
         .perfil { display: flex; align-items: center; gap: 10px; }
         .foto-perfil { width: 38px; height: 38px; border-radius: 50%; background: #6a7175; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; }
-        .status-header { font-size: 11px; color: #00a884; font-weight: bold; }
-        .v-tag { font-family: monospace; color: #ea0038; font-size: 11px; margin-left: 5px; font-weight: bold; }
+        .v-tag { font-family: monospace; color: #ea0038; font-size: 11px; margin-left: 5px; font-weight: bold; border: 1px solid #ddd; padding: 1px 4px; border-radius: 4px; }
 
-        /* GAVETA DE BOTÕES (ESTILO CARD BRANCO) */
-        #drawer { background: var(--topo); border-bottom: 1px solid var(--borda); transition: 0.4s ease-in-out; }
-        #drawer.recolhido { margin-top: -260px; opacity: 0; pointer-events: none; }
+        /* GAVETA PADRÃO ORIGINAL */
+        #drawer { background: var(--topo); border-bottom: 1px solid var(--borda); transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1); position: relative; z-index: 900; }
+        #drawer.recolhido { margin-top: -265px; } 
         
         .grid-atalhos { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding: 12px; }
         .grid-full { grid-column: span 2; }
 
+        /* ESTILO CARD BRANCO */
         .card-btn { 
             background: #fff; border: 1px solid var(--borda); border-radius: 8px; 
             padding: 12px; display: flex; flex-direction: column; align-items: center; 
-            justify-content: center; cursor: pointer; transition: 0.2s; box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+            justify-content: center; cursor: pointer; transition: 0.2s;
         }
         .card-btn i { color: var(--accent); font-size: 20px; margin-bottom: 5px; }
         .card-btn span { font-size: 10px; font-weight: bold; color: var(--texto); text-transform: uppercase; }
         
-        .alca-container { display: flex; justify-content: center; height: 20px; cursor: pointer; background: var(--topo); border-bottom: 1px solid var(--borda); }
-        .alca-bolinha { width: 40px; height: 4px; background: #ccd0d5; border-radius: 2px; margin-top: 8px; }
+        .alca { 
+            height: 24px; width: 50px; background: var(--topo); border: 1px solid var(--borda); border-top: none;
+            border-radius: 0 0 12px 12px; position: absolute; bottom: -24px; left: 50%; transform: translateX(-50%);
+            display: flex; justify-content: center; align-items: center; cursor: pointer;
+        }
 
         /* CHAT */
-        #chat { flex: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; }
+        #chat { flex: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; padding-top: 35px; }
 
-        /* BOAS VINDAS (CONFORME IMAGEM) */
+        /* BOAS VINDAS SISTEMA */
         .header-sistema { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
         .icon-k { width: 24px; height: 24px; background: #666; border-radius: 50%; color: white; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: bold; }
         .label-sistema { font-size: 12px; font-weight: bold; color: #8696a0; text-transform: uppercase; }
-        
-        .balao-sistema { 
-            background: white; border-radius: 18px; padding: 15px; width: 100%; max-width: 380px;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.1); line-height: 1.5; font-size: 14.5px; position: relative;
-        }
-        .balao-sistema b { color: #1a7a35; }
-        .balao-sistema .timestamp { position: absolute; bottom: 8px; right: 12px; font-size: 10px; color: #8696a0; }
+        .balao-sistema { background: white; border-radius: 18px; padding: 15px; width: 100%; max-width: 380px; box-shadow: 0 1px 2px rgba(0,0,0,0.1); line-height: 1.5; font-size: 14.5px; position: relative; }
 
-        /* BALÕES DE MENSAGEM */
-        .msg { max-width: 85%; padding: 10px 14px; border-radius: 10px; font-size: 15px; position: relative; box-shadow: 0 1px 1px rgba(0,0,0,0.1); }
+        .msg { max-width: 85%; padding: 10px 14px; border-radius: 10px; font-size: 15px; position: relative; }
         .eu { align-self: flex-end; background: var(--balao-eu); border-top-right-radius: 0; }
         .ele { align-self: flex-start; background: var(--balao-ele); border-top-left-radius: 0; }
 
-        /* FOOTER */
         footer { padding: 10px; display: flex; align-items: center; gap: 8px; }
-        .input-box { flex: 1; background: white; border-radius: 25px; padding: 12px 18px; display: flex; justify-content: space-between; align-items: center; color: #8696a0; border: 1px solid #ddd; }
-        .btn-mic-circular { width: 50px; height: 50px; border-radius: 50%; background: #00a884; border: none; color: white; font-size: 20px; display: flex; align-items: center; justify-content: center; cursor: pointer; }
-        .mic-active { background: var(--danger) !important; animation: pulse 1.5s infinite; }
-        @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(234, 0, 56, 0.4); } 70% { box-shadow: 0 0 0 15px rgba(234, 0, 56, 0); } 100% { box-shadow: 0 0 0 0 rgba(234, 0, 56, 0); } }
+        .input-box { flex: 1; background: white; border-radius: 25px; padding: 12px 18px; border: 1px solid #ddd; }
+        .btn-mic-circular { width: 50px; height: 50px; border-radius: 50%; background: #00a884; border: none; color: white; display: flex; align-items: center; justify-content: center; }
     </style>
 </head>
 <body>
@@ -74,10 +67,9 @@
             <div class="foto-perfil">K</div>
             <div>
                 <b style="color:var(--texto)">Suporte K30i</b><br>
-                <span class="status-header">● ONLINE <span class="v-tag" id="v-label">Ver 0.00</span></span>
+                <span style="color:#00a884; font-size:11px; font-weight:bold">● ONLINE <span class="v-tag" id="v-tag">Ver 0.01</span></span>
             </div>
         </div>
-        <i class="fa-solid fa-moon" style="color:var(--subtitulo); font-size: 20px;"></i>
     </header>
 
     <div id="drawer">
@@ -90,80 +82,60 @@
             <div class="card-btn" onclick="comando('Entradas/Saídas')"><i class="fa-solid fa-gears"></i><span>Entradas/Saídas</span></div>
             <div class="card-btn grid-full" onclick="comando('Guias de Instalação')"><i class="fa-solid fa-wrench"></i><span>Guias de Instalação</span></div>
         </div>
+        <div class="alca" onclick="toggleD()"><i id="seta" class="fa-solid fa-chevron-up"></i></div>
     </div>
-    <div class="alca-container" onclick="toggleD()"><div class="alca-bolinha"></div></div>
 
     <main id="chat"></main>
 
     <footer>
-        <div class="input-box"><span id="txt-status">Mensagem</span><i class="fa-solid fa-paperclip"></i></div>
-        <button class="btn-mic-circular" id="mic-btn"><i class="fa-solid fa-microphone"></i></button>
+        <div class="input-box"><span id="txt-status" style="color:#8696a0">Mensagem</span></div>
+        <button class="btn-mic-circular"><i class="fa-solid fa-microphone"></i></button>
     </footer>
 
     <script>
-        // --- CONFIGURAÇÃO DA VERSÃO DE TESTE ---
-        const VERSAO_TESTE = "Ver 0.00";
+        const VERSAO_ATUAL = "Ver 0.01"; //
 
         function toggleD() {
-            document.getElementById('drawer').classList.toggle('recolhido');
+            const d = document.getElementById('drawer');
+            const s = document.getElementById('seta');
+            d.classList.toggle('recolhido');
+            s.className = d.classList.contains('recolhido') ? 'fa-solid fa-chevron-down' : 'fa-solid fa-chevron-up';
         }
 
         function addMsg(txt, tipo) {
             const chat = document.getElementById('chat');
-            const agora = new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
             const div = document.createElement('div');
+            const agora = new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
             div.className = `msg ${tipo}`;
             div.innerHTML = `${txt}<span style="display:block; font-size:10px; text-align:right; color:#8696a0; margin-top:4px">${agora}</span>`;
             chat.appendChild(div);
             chat.scrollTop = chat.scrollHeight;
         }
 
-        // Lógica que gera a resposta de teste simulada
         function comando(t) {
             addMsg(t, 'eu');
             setTimeout(() => {
-                const resposta = `<b>[Teste ${VERSAO_TESTE}]</b><br>Você selecionou: ${t}.<br>Esta é uma resposta simulada da versão de testes.`;
-                addMsg(resposta, 'ele');
+                // LOG DE TESTE INTERNO
+                addMsg(`<b>[LOG DE TESTE ${VERSAO_ATUAL}]</b><br>Processando: ${t}.`, 'ele');
             }, 600);
         }
 
-        function exibirBoasVindas() {
+        function boasVindas() {
             const chat = document.getElementById('chat');
             const agora = new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
             const wrap = document.createElement('div');
             wrap.innerHTML = `
-                <div class="header-sistema"><div class="icon-k">K</div><span class="label-sistema">Sistema</span></div>
+                <div class="header-sistema"><div class="icon-k">K</div><span class="label-sistema">SISTEMA</span></div>
                 <div class="balao-sistema">
                     👋 Olá! Sou o <b>Consultor Técnico K30i</b> — consulta rápida de alarmes, parâmetros e procedimentos.<br><br>
                     ⚠️ Ferramenta de apoio — sempre confirme no manual K30i da KVA.<br>
                     📖 Toda resposta indica a seção e página correspondente.<br><br>
                     Digite sua dúvida ou use os atalhos abaixo.
-                    <span class="timestamp">${agora}</span>
+                    <span style="position:absolute; bottom:8px; right:12px; font-size:10px; color:#8696a0">${agora}</span>
                 </div>
             `;
             chat.appendChild(wrap);
         }
 
         window.onload = () => {
-            // Garante que o rótulo da versão seja aplicado no HTML
-            document.getElementById('v-label').innerText = VERSAO_TESTE;
-            exibirBoasVindas();
-            
-            // Inicializa Microfone se disponível
-            const Speech = window.SpeechRecognition || window.webkitSpeechRecognition;
-            if (Speech) {
-                const r = new Speech(); r.lang = 'pt-BR';
-                const b = document.getElementById('mic-btn');
-                const s = document.getElementById('txt-status');
-
-                b.onmousedown = b.ontouchstart = (e) => { e.preventDefault(); r.start(); };
-                b.onmouseup = b.ontouchend = (e) => { e.preventDefault(); r.stop(); };
-
-                r.onstart = () => { b.classList.add('mic-active'); s.innerText = "Ouvindo..."; };
-                r.onend = () => { b.classList.remove('mic-active'); s.innerText = "Mensagem"; };
-                r.onresult = (e) => comando(e.results[0][0].transcript);
-            }
-        };
-    </script>
-</body>
-</html>
+            document.getElementById('v-tag').innerText
