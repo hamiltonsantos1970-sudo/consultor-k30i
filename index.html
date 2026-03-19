@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>K30i - Final UI</title>
+    <title>K30i - Efeito Profundidade</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <style>
@@ -20,45 +20,47 @@
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: sans-serif; }
-
         body { background-color: var(--bg-principal); color: var(--texto); height: 100vh; display: flex; flex-direction: column; }
 
+        /* Header e Grid */
         header { padding: 15px; border-bottom: 1px solid rgba(255,255,255,0.05); display: flex; justify-content: space-between; align-items: center; }
-        .on { color: var(--verde-status); font-size: 10px; font-weight: bold; text-align: center; }
-
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 15px; }
         .card { background: var(--bg-cards); border-radius: 18px; padding: 15px; text-align: center; font-size: 10px; font-weight: bold; border: 1px solid rgba(255,255,255,0.03); }
         .card i { display: block; font-size: 20px; margin-bottom: 8px; }
 
-        .chat { flex: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; }
-
+        /* Chat */
+        .chat { flex: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 20px; }
         .wrapper { display: flex; width: 100%; }
         .pergunta { justify-content: flex-end; }
         .resposta { justify-content: flex-start; }
 
         .balao {
             max-width: 85%;
-            padding: 12px 15px;
+            padding: 15px;
             font-size: 14px;
             line-height: 1.4;
             position: relative;
+            box-shadow: 4px 4px 15px rgba(0,0,0,0.5);
         }
 
-        /* Aplicação do detalhe lateral e sombra (Pedido do Usuário) */
+        /* EFEITO DE PROFUNDIDADE: LINHA LATERAL (PEDIDO DO USUÁRIO) */
+        
+        /* Pergunta: Linha na lateral ESQUERDA */
         .pergunta .balao {
             background-color: var(--bg-balao-pergunta);
             border-radius: 18px 4px 18px 18px;
-            border: 1px solid rgba(255, 255, 255, 0.12); /* Borda lateral sutil */
-            box-shadow: 2px 2px 8px rgba(0,0,0,0.4); /* Sombreado lateral */
+            border-left: 3px solid rgba(79, 195, 247, 0.4); /* Linha maior azul */
         }
 
+        /* Resposta: Linha na lateral ESQUERDA (ou Direita se preferir inverter) */
+        /* Aqui coloquei na esquerda também para seguir o padrão da sua seta na foto */
         .resposta .balao {
             background-color: var(--bg-balao-resposta);
             border-radius: 4px 18px 18px 18px;
-            border: 1px solid rgba(255, 255, 255, 0.08); /* Borda lateral sutil */
-            box-shadow: -2px 2px 8px rgba(0,0,0,0.4); /* Sombreado lateral */
+            border-left: 3px solid rgba(255, 255, 255, 0.2); /* Linha maior branca/vidro */
         }
 
+        /* Telemetria Card */
         .telemetria {
             background-color: var(--bg-telemetria);
             border-radius: 10px;
@@ -66,12 +68,14 @@
             margin-top: 10px;
             display: flex;
             justify-content: space-between;
+            border: 1px solid rgba(255,255,255,0.05);
         }
-        .label { color: var(--texto-dim); font-size: 9px; font-weight: bold; display: block; margin-bottom: 4px; }
-        .valor { font-size: 15px; font-weight: bold; }
+        .valor { font-size: 15px; font-weight: bold; display: block; margin-top: 2px; }
+        .label { color: var(--texto-dim); font-size: 9px; font-weight: bold; }
 
-        .hora { display: flex; justify-content: flex-end; font-size: 10px; color: var(--texto-dim); margin-top: 6px; gap: 4px; }
+        .hora { display: flex; justify-content: flex-end; font-size: 10px; color: var(--texto-dim); margin-top: 8px; gap: 4px; }
 
+        /* Footer */
         .footer { padding: 15px; display: flex; align-items: center; gap: 10px; }
         .input-sim { flex: 1; background: #1d263a; border-radius: 25px; padding: 12px 18px; color: var(--texto-dim); font-size: 14px; }
         .btn-mic { width: 50px; height: 50px; border-radius: 50%; background: linear-gradient(145deg, #3a5ba0, #1e335a); border: none; color: white; font-size: 20px; display: flex; align-items: center; justify-content: center; }
@@ -84,9 +88,9 @@
 
     <header>
         <i class="fa-solid fa-bars"></i>
-        <div>
+        <div style="text-align: center;">
             <h1 style="font-size: 18px; color: var(--azul-msg);">K30i</h1>
-            <div class="on">● ONLINE</div>
+            <div style="color: var(--verde-status); font-size: 10px; font-weight: bold;">● ONLINE</div>
         </div>
         <i class="fa-solid fa-ellipsis-vertical"></i>
     </header>
@@ -101,21 +105,21 @@
     <main class="chat">
         <div class="wrapper pergunta">
             <div class="balao">
-                Válvula de alívio verificada. Acúmulo de resíduos na vedação secundária.
+                Válvula de alívio verificada. Acúmulo de resíduos na vedação secundária. Iniciando protocolo de limpeza manual.
                 <div class="hora">09:45 AM <i class="fa-solid fa-check-double" style="color: var(--verde-status);"></i></div>
             </div>
         </div>
 
         <div class="wrapper resposta">
             <div class="balao">
-                Protocolo aceito. Status de telemetria:
+                Protocolo aceito. Status de telemetria atualizado:
                 <div class="telemetria">
                     <div>
-                        <span class="label">PRESSÃO</span><span class="valor">14.2 bar</span><br><br>
+                        <span class="label">PRESSÃO</span><span class="valor">14.2 bar</span><br>
                         <span class="label">FLUXO</span><span class="valor">2.4 L/m</span>
                     </div>
                     <div>
-                        <span class="label">TEMP.</span><span class="valor">84°C</span><br><br>
+                        <span class="label">TEMP.</span><span class="valor">84°C</span><br>
                         <span class="label">VIBRAÇÃO</span><span class="valor" style="color: var(--verde-status);">Estável</span>
                     </div>
                 </div>
