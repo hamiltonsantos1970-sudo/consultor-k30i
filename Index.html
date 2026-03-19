@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>K30i - Visual Test</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-deep: #0b111e;
+            --bg-card: #161c2b;
+            --bg-input: #1a2235;
+            --text-main: #e0e6ed;
+            --text-dim: #8696a0;
+            --accent-blue: #3a5ba0;
+            --accent-green: #39d353;
+            --alert-orange: #ff8c67;
+            --alert-red: #f85149;
+        }
+
+        * { margin: 0; padding: 0; box-box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+
+        body {
+            background-color: var(--bg-deep);
+            color: var(--text-main);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header */
+        header {
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .status-online { color: var(--accent-green); font-size: 10px; text-transform: uppercase; }
+
+        /* Grid de Cards */
+        .status-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            padding: 15px;
+        }
+
+        .card {
+            background: var(--bg-card);
+            border-radius: 20px;
+            padding: 20px;
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.03);
+            font-size: 11px;
+            font-weight: bold;
+            color: var(--text-dim);
+            transition: transform 0.1s;
+        }
+
+        .card i { display: block; font-size: 24px; margin-bottom: 10px; }
+        .card.falha i { color: var(--alert-red); }
+        .card.aviso i { color: var(--alert-orange); }
+
+        /* Chat Area */
+        .chat-container {
+            flex: 1;
+            padding: 15px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .bubble {
+            max-width: 85%;
+            padding: 15px;
+            border-radius: 18px;
+            font-size: 14px;
+            line-height: 1.4;
+            background: var(--bg-card);
+        }
+
+        .bubble.system {
+            border-left: 4px solid var(--alert-orange);
+            background: rgba(255, 140, 103, 0.05);
+        }
+
+        /* Input Area */
+        .input-wrapper {
+            padding: 20px;
+            background: var(--bg-deep);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .input-box {
+            flex: 1;
+            background: var(--bg-input);
+            border-radius: 25px;
+            display: flex;
+            align-items: center;
+            padding: 10px 15px;
+            color: var(--text-dim);
+        }
+
+        .mic-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(145deg, #3a5ba0, #203661);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+            transition: transform 0.1s;
+            border: none;
+        }
+
+        .mic-btn:active { transform: scale(1.4); }
+
+        /* Bottom Nav */
+        nav {
+            display: flex;
+            justify-content: space-around;
+            padding: 15px;
+            background: #0f172a;
+            border-top: 1px solid rgba(255,255,255,0.05);
+        }
+        nav i { color: var(--text-dim); font-size: 20px; }
+        nav i.active { color: var(--accent-blue); }
+    </style>
+</head>
+<body>
+
+<header>
+    <i class="fa-solid fa-bars"></i>
+    <div style="text-align: center;">
+        <div style="font-weight: bold; letter-spacing: 1px;">K30i</div>
+        <div class="status-online">● Online</div>
+    </div>
+    <i class="fa-solid fa-ellipsis-vertical"></i>
+</header>
+
+<div class="status-grid">
+    <div class="card falha"><i class="fa-solid fa-circle-exclamation"></i> FALHA ATIVA</div>
+    <div class="card aviso"><i class="fa-solid fa-triangle-exclamation"></i> AVISO ATIVO</div>
+    <div class="card"><i class="fa-solid fa-calendar-days"></i> PROGRAMAÇÃO</div>
+    <div class="card"><i class="fa-solid fa-sliders"></i> ENTRADAS/SAÍDAS</div>
+</div>
+
+<div class="chat-container">
+    <div class="bubble">
+        Iniciando diagnóstico da Unidade K30i. Sensores de pressão detectaram uma flutuação anormal...
+    </div>
+    <div class="bubble system">
+        <strong style="color: var(--alert-orange); font-size: 11px;">AVISO DE SISTEMA</strong><br>
+        Tempo de resposta do atuador excedeu 150ms. Recomenda-se calibração.
+    </div>
+</div>
+
+<div class="input-wrapper">
+    <i class="fa-solid fa-plus" style="color: var(--text-dim);"></i>
+    <div class="input-box">
+        Digite uma mensagem...
+        <i class="fa-solid fa-paperclip" style="margin-left: auto;"></i>
+    </div>
+    <button class="mic-btn">
+        <i class="fa-solid fa-microphone"></i>
+    </button>
+</div>
+
+<nav>
+    <i class="fa-solid fa-message active"></i>
+    <i class="fa-solid fa-microchip"></i>
+    <i class="fa-solid fa-tower-broadcast"></i>
+    <i class="fa-solid fa-gear"></i>
+</nav>
+
+</body>
+</html>
