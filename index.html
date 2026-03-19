@@ -3,78 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>K30i - Monitoramento</title>
+    <title>K30i - Final UI</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <style>
-        /* 1. CORES E VARIÁVEIS EXTRÁIDAS DAS IMAGENS */
         :root {
             --bg-principal: #0b111e;
-            --bg-cards-topo: #161c2b;
+            --bg-cards: #161c2b;
             --bg-balao-pergunta: #2b3344;
             --bg-balao-resposta: #1a2235;
             --bg-telemetria: #111723;
             --verde-status: #39d353;
-            --azul-destaque: #4fc3f7;
-            --texto-claro: #e0e6ed;
-            --texto-cinza: #8696a0;
-            --alerta-laranja: #ff8c67;
-            --alerta-vermelho: #f85149;
+            --azul-msg: #4fc3f7;
+            --texto: #e0e6ed;
+            --texto-dim: #8696a0;
         }
 
-        /* 2. RESET E ESTRUTURA GERAL */
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: sans-serif; }
 
-        body {
-            background-color: var(--bg-principal);
-            color: var(--texto-claro);
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-        }
+        body { background-color: var(--bg-principal); color: var(--texto); height: 100vh; display: flex; flex-direction: column; }
 
-        /* 3. HEADER */
-        header {
-            padding: 15px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid rgba(255,255,255,0.05);
-        }
-        .header-info { text-align: center; }
-        .header-info h1 { font-size: 18px; color: var(--azul-destaque); margin: 0; }
-        .status-on { color: var(--verde-status); font-size: 10px; font-weight: bold; text-transform: uppercase; }
+        header { padding: 15px; border-bottom: 1px solid rgba(255,255,255,0.05); display: flex; justify-content: space-between; align-items: center; }
+        .on { color: var(--verde-status); font-size: 10px; font-weight: bold; text-align: center; }
 
-        /* 4. GRID DE STATUS (4 BOTÕES) */
-        .grid-status {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-            padding: 15px;
-        }
-        .card-status {
-            background: var(--bg-cards-topo);
-            border-radius: 20px;
-            padding: 15px;
-            text-align: center;
-            border: 1px solid rgba(255,255,255,0.03);
-            font-size: 10px;
-            font-weight: bold;
-        }
-        .card-status i { display: block; font-size: 22px; margin-bottom: 8px; }
-        .falha i { color: var(--alerta-vermelho); }
-        .aviso i { color: var(--alerta-laranja); }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 15px; }
+        .card { background: var(--bg-cards); border-radius: 18px; padding: 15px; text-align: center; font-size: 10px; font-weight: bold; border: 1px solid rgba(255,255,255,0.03); }
+        .card i { display: block; font-size: 20px; margin-bottom: 8px; }
 
-        /* 5. ÁREA DE CHAT */
-        .chat-area {
-            flex: 1;
-            padding: 15px;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
+        .chat { flex: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; }
 
         .wrapper { display: flex; width: 100%; }
         .pergunta { justify-content: flex-end; }
@@ -88,20 +44,22 @@
             position: relative;
         }
 
-        /* Estilo Balão Pergunta (Direita) */
+        /* Aplicação do detalhe lateral e sombra (Pedido do Usuário) */
         .pergunta .balao {
             background-color: var(--bg-balao-pergunta);
             border-radius: 18px 4px 18px 18px;
+            border: 1px solid rgba(255, 255, 255, 0.12); /* Borda lateral sutil */
+            box-shadow: 2px 2px 8px rgba(0,0,0,0.4); /* Sombreado lateral */
         }
 
-        /* Estilo Balão Resposta (Esquerda) */
         .resposta .balao {
             background-color: var(--bg-balao-resposta);
             border-radius: 4px 18px 18px 18px;
+            border: 1px solid rgba(255, 255, 255, 0.08); /* Borda lateral sutil */
+            box-shadow: -2px 2px 8px rgba(0,0,0,0.4); /* Sombreado lateral */
         }
 
-        /* 6. CARD DE TELEMETRIA INTERNO */
-        .telemetria-card {
+        .telemetria {
             background-color: var(--bg-telemetria);
             border-radius: 10px;
             padding: 15px;
@@ -109,131 +67,70 @@
             display: flex;
             justify-content: space-between;
         }
-        .tel-col { display: flex; flex-direction: column; gap: 10px; }
-        .tel-label { color: var(--texto-cinza); font-size: 9px; font-weight: bold; }
-        .tel-valor { color: #fff; font-size: 15px; font-weight: bold; display: block; }
+        .label { color: var(--texto-dim); font-size: 9px; font-weight: bold; display: block; margin-bottom: 4px; }
+        .valor { font-size: 15px; font-weight: bold; }
 
-        .hora {
-            display: flex;
-            justify-content: flex-end;
-            align-items: center;
-            font-size: 10px;
-            color: var(--texto-cinza);
-            margin-top: 6px;
-            gap: 4px;
-        }
+        .hora { display: flex; justify-content: flex-end; font-size: 10px; color: var(--texto-dim); margin-top: 6px; gap: 4px; }
 
-        /* 7. BARRA DE INPUT E MIC */
-        .barra-input {
-            padding: 15px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            background: var(--bg-principal);
-        }
-        .campo-texto {
-            flex: 1;
-            background: #1d263a;
-            border-radius: 25px;
-            padding: 12px 20px;
-            font-size: 14px;
-            color: var(--texto-cinza);
-            display: flex;
-            justify-content: space-between;
-        }
-        .btn-mic {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            background: linear-gradient(145deg, #3a5ba0, #1e335a);
-            border: none;
-            color: white;
-            font-size: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-        }
+        .footer { padding: 15px; display: flex; align-items: center; gap: 10px; }
+        .input-sim { flex: 1; background: #1d263a; border-radius: 25px; padding: 12px 18px; color: var(--texto-dim); font-size: 14px; }
+        .btn-mic { width: 50px; height: 50px; border-radius: 50%; background: linear-gradient(145deg, #3a5ba0, #1e335a); border: none; color: white; font-size: 20px; display: flex; align-items: center; justify-content: center; }
 
-        /* 8. NAV INFERIOR */
-        nav {
-            display: flex;
-            justify-content: space-around;
-            padding: 15px;
-            background: #0d1424;
-            border-top: 1px solid rgba(255,255,255,0.05);
-        }
-        nav i { color: var(--texto-cinza); font-size: 20px; }
-        nav i.active { color: var(--azul-destaque); }
+        nav { display: flex; justify-content: space-around; padding: 15px; background: #0d1424; border-top: 1px solid rgba(255,255,255,0.05); }
+        nav i { color: var(--texto-dim); font-size: 20px; }
     </style>
 </head>
 <body>
 
     <header>
         <i class="fa-solid fa-bars"></i>
-        <div class="header-info">
-            <h1>K30i</h1>
-            <div class="status-on">● Online</div>
+        <div>
+            <h1 style="font-size: 18px; color: var(--azul-msg);">K30i</h1>
+            <div class="on">● ONLINE</div>
         </div>
         <i class="fa-solid fa-ellipsis-vertical"></i>
     </header>
 
-    <div class="grid-status">
-        <div class="card-status falha"><i class="fa-solid fa-circle-exclamation"></i> FALHA ATIVA</div>
-        <div class="card-status aviso"><i class="fa-solid fa-triangle-exclamation"></i> AVISO ATIVO</div>
-        <div class="card-status"><i class="fa-solid fa-calendar-days"></i> PROGRAMAÇÃO</div>
-        <div class="card-status"><i class="fa-solid fa-sliders"></i> ENTRADAS/SAÍDAS</div>
+    <div class="grid">
+        <div class="card" style="color: #f85149;"><i class="fa-solid fa-circle-exclamation"></i> FALHA ATIVA</div>
+        <div class="card" style="color: #ff8c67;"><i class="fa-solid fa-triangle-exclamation"></i> AVISO ATIVO</div>
+        <div class="card"><i class="fa-solid fa-calendar-day"></i> PROGRAMAÇÃO</div>
+        <div class="card"><i class="fa-solid fa-microchip"></i> ENTRADAS/SAÍDAS</div>
     </div>
 
-    <main class="chat-area">
-        
+    <main class="chat">
         <div class="wrapper pergunta">
             <div class="balao">
-                Válvula de alívio verificada. Parece haver um acúmulo de resíduos na vedação secundária. Iniciando protocolo de limpeza manual.
-                <div class="hora">
-                    09:45 AM <i class="fa-solid fa-check-double" style="color: var(--verde-status);"></i>
-                </div>
+                Válvula de alívio verificada. Acúmulo de resíduos na vedação secundária.
+                <div class="hora">09:45 AM <i class="fa-solid fa-check-double" style="color: var(--verde-status);"></i></div>
             </div>
         </div>
 
         <div class="wrapper resposta">
             <div class="balao">
-                Protocolo aceito. Status de telemetria atualizado:
-                
-                <div class="telemetria-card">
-                    <div class="tel-col">
-                        <span class="tel-label">PRESSÃO</span>
-                        <span class="tel-valor">14.2 bar</span>
-                        <span class="tel-label">FLUXO</span>
-                        <span class="tel-valor">2.4 L/m</span>
+                Protocolo aceito. Status de telemetria:
+                <div class="telemetria">
+                    <div>
+                        <span class="label">PRESSÃO</span><span class="valor">14.2 bar</span><br><br>
+                        <span class="label">FLUXO</span><span class="valor">2.4 L/m</span>
                     </div>
-                    <div class="tel-col">
-                        <span class="tel-label">TEMP.</span>
-                        <span class="tel-valor">84°C</span>
-                        <span class="tel-label">VIBRAÇÃO</span>
-                        <span class="tel-valor" style="color: var(--verde-status);">Estável</span>
+                    <div>
+                        <span class="label">TEMP.</span><span class="valor">84°C</span><br><br>
+                        <span class="label">VIBRAÇÃO</span><span class="valor" style="color: var(--verde-status);">Estável</span>
                     </div>
                 </div>
-                
                 <div class="hora">09:46 AM</div>
             </div>
         </div>
-
     </main>
 
-    <div class="barra-input">
-        <i class="fa-solid fa-circle-plus" style="color: var(--texto-cinza); font-size: 22px;"></i>
-        <div class="campo-texto">
-            Digite uma mensagem...
-            <i class="fa-solid fa-paperclip"></i>
-        </div>
-        <button class="btn-mic">
-            <i class="fa-solid fa-microphone"></i>
-        </button>
+    <div class="footer">
+        <div class="input-sim">Digite uma mensagem...</div>
+        <button class="btn-mic"><i class="fa-solid fa-microphone"></i></button>
     </div>
 
     <nav>
-        <i class="fa-solid fa-comment-dots active"></i>
+        <i class="fa-solid fa-message" style="color: var(--azul-msg);"></i>
         <i class="fa-solid fa-chart-line"></i>
         <i class="fa-solid fa-server"></i>
         <i class="fa-solid fa-gear"></i>
