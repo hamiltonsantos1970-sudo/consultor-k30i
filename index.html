@@ -3,131 +3,196 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>K30i - Interface Industrial v3</title>
+    <title>K30i - Interface Industrial</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <style>
         :root {
-            --bg-principal: #0b111e; /* Fundo conforme imagem 1 e 2 */
-            --bg-cards: #161c2b;    /* Fundo dos botões */
-            --bg-balao-pergunta: #2b3344; /* Cor extraída da imagem 4 */
-            --bg-balao-resposta: #1a2235; /* Cor extraída da imagem 3 */
-            --bg-telemetria: #111723;     /* Fundo interno do card de dados */
-            --verde-neon: #39d353;        /* Status e Visto */
-            --azul-msg: #4fc3f7;          /* Título e detalhes */
+            --bg-principal: #0b111e;
+            --bg-cards: #161c2b;
+            --bg-balao-pergunta: #2b3344;
+            --bg-balao-resposta: #1a2235;
+            --bg-telemetria: #111723;
+            --verde-neon: #39d353;
+            --azul-msg: #4fc3f7;
             --texto: #e0e6ed;
             --texto-dim: #8696a0;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
-        body { background-color: var(--bg-principal); color: var(--texto); height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
+        
+        body { 
+            background-color: var(--bg-principal); 
+            color: var(--texto); 
+            height: 100vh; 
+            display: flex; 
+            flex-direction: column; 
+            overflow: hidden; 
+        }
 
-        /* 1. MENU RETRÁTIL (ESTRUTURA DE TOPO) */
-        .menu-container {
+        /* 1. CABEÇALHO CONGELADO */
+        header { 
+            padding: 15px; 
             background: var(--bg-principal);
-            transition: transform 0.4s ease-in-out;
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center;
+            z-index: 1001; /* Fica acima de tudo */
             position: relative;
-            z-index: 100;
             border-bottom: 1px solid rgba(255,255,255,0.05);
         }
-        .menu-fechado { transform: translateY(-190px); } /* Sobe o menu para fora da tela */
+        .status-on { color: var(--verde-neon); font-size: 10px; font-weight: bold; text-align: center; }
 
-        header { padding: 15px; display: flex; justify-content: space-between; align-items: center; }
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 0 15px 15px 15px; }
+        /* 2. MENU RETRÁTIL (APENAS BOTÕES) */
+        .drawer-container {
+            transition: transform 0.4s ease-in-out;
+            z-index: 1000;
+            position: relative;
+            background: var(--bg-principal);
+        }
+        
+        /* Estado fechado: Sobe apenas a altura do grid */
+        .drawer-fechado { transform: translateY(-165px); }
+
+        .grid-botoes { 
+            display: grid; 
+            grid-template-columns: 1fr 1fr; 
+            gap: 10px; 
+            padding: 15px; 
+        }
+        
         .card { 
-            background: var(--bg-cards); border-radius: 20px; padding: 18px; text-align: center; 
-            font-size: 10px; font-weight: bold; border: 1px solid rgba(255,255,255,0.03); 
+            background: var(--bg-cards); 
+            border-radius: 20px; 
+            padding: 18px; 
+            text-align: center; 
+            font-size: 10px; 
+            font-weight: bold; 
+            border: 1px solid rgba(255,255,255,0.03); 
         }
         .card i { display: block; font-size: 22px; margin-bottom: 8px; }
 
         /* Alça do Menu */
-        .alca-container {
-            height: 25px; background: var(--bg-cards); display: flex; justify-content: center;
-            align-items: center; width: 60px; margin: 0 auto; border-radius: 0 0 15px 15px;
-            cursor: pointer; border: 1px solid rgba(255,255,255,0.05); border-top: none;
+        .alca-trigger {
+            height: 25px; 
+            background: var(--bg-cards); 
+            display: flex; 
+            justify-content: center;
+            align-items: center; 
+            width: 60px; 
+            margin: 0 auto; 
+            border-radius: 0 0 15px 15px;
+            cursor: pointer; 
+            border: 1px solid rgba(255,255,255,0.05); 
+            border-top: none;
         }
-        #seta-menu { transition: 0.3s; color: var(--texto-dim); font-size: 10px; }
-        .seta-invertida { transform: rotate(180deg); }
+        #seta { transition: 0.3s; color: var(--texto-dim); font-size: 10px; }
+        .seta-up { transform: rotate(180deg); }
 
-        /* 2. ÁREA DE CHAT E BALÕES */
-        .chat-scroll { flex: 1; padding: 20px 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 20px; }
+        /* 3. ÁREA DE CHAT */
+        .chat-content { 
+            flex: 1; 
+            padding: 10px 15px; 
+            overflow-y: auto; 
+            display: flex; 
+            flex-direction: column; 
+            gap: 20px; 
+        }
+
         .wrapper { display: flex; width: 100%; }
         .pergunta { justify-content: flex-end; }
         .resposta { justify-content: flex-start; }
 
+        /* Balões com efeito de profundidade lateral solicitado */
         .balao {
-            max-width: 85%; padding: 15px; font-size: 14px; line-height: 1.4;
-            position: relative; box-shadow: 4px 4px 15px rgba(0,0,0,0.4);
+            max-width: 85%; 
+            padding: 15px; 
+            font-size: 14px; 
+            position: relative;
+            box-shadow: 4px 4px 15px rgba(0,0,0,0.4);
         }
-
-        /* Efeito de profundidade lateral solicitado */
+        
         .pergunta .balao {
-            background-color: var(--bg-balao-pergunta); border-radius: 18px 4px 18px 18px;
-            border-left: 4px solid rgba(79, 195, 247, 0.5); /* Linha maior lateral direita */
+            background-color: var(--bg-balao-pergunta); 
+            border-radius: 18px 4px 18px 18px;
+            border-left: 4px solid rgba(79, 195, 247, 0.5); /* Linha maior lateral */
         }
+        
         .resposta .balao {
-            background-color: var(--bg-balao-resposta); border-radius: 4px 18px 18px 18px;
-            border-left: 4px solid rgba(255, 255, 255, 0.2); /* Linha maior lateral esquerda */
+            background-color: var(--bg-balao-resposta); 
+            border-radius: 4px 18px 18px 18px;
+            border-left: 4px solid rgba(255, 255, 255, 0.2); /* Linha maior lateral */
         }
 
-        /* 3. TELEMETRIA (DENTRO DO BALÃO) */
-        .tel-card {
-            background-color: var(--bg-telemetria); border-radius: 10px; padding: 15px;
-            margin-top: 12px; display: flex; justify-content: space-between;
+        /* Card de Telemetria */
+        .tel-box {
+            background-color: var(--bg-telemetria); 
+            border-radius: 10px; 
+            padding: 15px;
+            margin-top: 12px; 
+            display: flex; 
+            justify-content: space-between;
             border: 1px solid rgba(255,255,255,0.05);
         }
-        .tel-col { display: flex; flex-direction: column; gap: 10px; }
-        .tel-label { color: var(--texto-dim); font-size: 9px; font-weight: bold; letter-spacing: 0.5px; }
-        .tel-val { color: #fff; font-size: 15px; font-weight: bold; }
+        .label { color: var(--texto-dim); font-size: 9px; font-weight: bold; }
+        .val { color: #fff; font-size: 15px; font-weight: bold; display: block; margin-top: 3px; }
 
         .hora { display: flex; justify-content: flex-end; font-size: 10px; color: var(--texto-dim); margin-top: 8px; gap: 4px; }
 
-        /* 4. RODAPÉ E BOTÃO DE VOZ */
-        .footer { padding: 15px; display: flex; align-items: center; gap: 10px; background: var(--bg-principal); }
-        .input-box {
+        /* 4. RODAPÉ */
+        footer { padding: 15px; display: flex; align-items: center; gap: 10px; }
+        .input-simulado {
             flex: 1; background: #1d263a; border-radius: 25px; padding: 12px 18px;
             color: var(--texto-dim); font-size: 14px; display: flex; justify-content: space-between;
         }
         .btn-mic {
-            width: 52px; height: 52px; border-radius: 50%; border: none; color: white;
-            background: linear-gradient(145deg, #3a5ba0, #1e335a);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.5); font-size: 20px;
+            width: 50px; height: 50px; border-radius: 50%; border: none;
+            background: linear-gradient(145deg, #3a5ba0, #1e335a); color: white;
+            font-size: 20px;
         }
 
         nav { display: flex; justify-content: space-around; padding: 15px; background: #0d1424; border-top: 1px solid rgba(255,255,255,0.05); }
         nav i { color: var(--texto-dim); font-size: 20px; }
-        nav i.active { color: var(--azul-msg); }
     </style>
 </head>
 <body>
 
-    <div id="menu-area" class="menu-container">
-        <header>
-            <i class="fa-solid fa-bars"></i>
-            <div style="text-align: center;">
-                <h1 style="font-size: 18px; color: var(--azul-msg);">K30i</h1>
-                <div style="color: var(--verde-neon); font-size: 10px; font-weight: bold;">● ONLINE</div>
-            </div>
-            <i class="fa-solid fa-ellipsis-vertical"></i>
-        </header>
+    <header>
+        <i class="fa-solid fa-bars"></i>
+        <div style="text-align: center;">
+            <h1 style="font-size: 18px; color: var(--azul-msg);">K30i</h1>
+            <div class="status-on">● ONLINE</div>
+        </div>
+        <i class="fa-solid fa-ellipsis-vertical"></i>
+    </header>
 
-        <div class="grid">
+    <div id="drawer" class="drawer-container">
+        <div class="grid-botoes">
             <div class="card" style="color: #f85149;"><i class="fa-solid fa-circle-exclamation"></i> FALHA ATIVA</div>
             <div class="card" style="color: #ff8c67;"><i class="fa-solid fa-triangle-exclamation"></i> AVISO ATIVO</div>
-            <div class="card"><i class="fa-solid fa-calendar-days"></i> PROGRAMAÇÃO</div>
+            <div class="card"><i class="fa-solid fa-calendar-day"></i> PROGRAMAÇÃO</div>
             <div class="card"><i class="fa-solid fa-microchip"></i> ENTRADAS/SAÍDAS</div>
         </div>
-
-        <div class="alca-container" id="gatilho-menu">
-            <i class="fa-solid fa-chevron-up" id="seta-menu"></i>
+        <div class="alca-trigger" id="btn-drawer">
+            <i class="fa-solid fa-chevron-up" id="seta"></i>
         </div>
     </div>
 
-    <main class="chat-scroll">
+    <main class="chat-content">
         <div class="wrapper resposta">
             <div class="balao">
-                Iniciando diagnóstico da Unidade K30i. Sensores detectaram flutuação no módulo C-4.
-                <div class="hora">09:42 AM</div>
+                Protocolo aceito. Status de telemetria atualizado:
+                <div class="tel-box">
+                    <div>
+                        <span class="label">PRESSÃO</span><span class="val">14.2 bar</span>
+                        <span class="label" style="margin-top:10px; display:block;">FLUXO</span><span class="val">2.4 L/m</span>
+                    </div>
+                    <div>
+                        <span class="label">TEMP.</span><span class="val">84°C</span>
+                        <span class="label" style="margin-top:10px; display:block;">VIBRAÇÃO</span><span class="val" style="color: var(--verde-neon);">Estável</span>
+                    </div>
+                </div>
+                <div class="hora">09:46 AM</div>
             </div>
         </div>
 
@@ -137,75 +202,50 @@
                 <div class="hora">09:45 AM <i class="fa-solid fa-check-double" style="color: var(--verde-neon);"></i></div>
             </div>
         </div>
-
-        <div class="wrapper resposta">
-            <div class="balao">
-                Protocolo aceito. Status de telemetria:
-                <div class="tel-card">
-                    <div class="tel-col">
-                        <span class="tel-label">PRESSÃO</span><span class="tel-val">14.2 bar</span>
-                        <span class="tel-label">FLUXO</span><span class="tel-val">2.4 L/m</span>
-                    </div>
-                    <div class="tel-col">
-                        <span class="tel-label">TEMP.</span><span class="tel-val">84°C</span>
-                        <span class="tel-label">VIBRAÇÃO</span><span class="tel-val" style="color: var(--verde-neon);">Estável</span>
-                    </div>
-                </div>
-                <div class="hora">09:46 AM</div>
-            </div>
-        </div>
     </main>
 
-    <div class="footer">
-        <i class="fa-solid fa-circle-plus" style="color: var(--texto-dim); font-size: 22px;"></i>
-        <div class="input-box">
-            <span id="label-input">Digite uma mensagem...</span>
+    <footer>
+        <div class="input-simulado">
+            <span id="texto-voz">Digite uma mensagem...</span>
             <i class="fa-solid fa-paperclip"></i>
         </div>
-        <button class="btn-mic" id="btn-voz">
-            <i class="fa-solid fa-microphone"></i>
-        </button>
-    </div>
+        <button class="btn-mic" id="mic"><i class="fa-solid fa-microphone"></i></button>
+    </footer>
 
     <nav>
-        <i class="fa-solid fa-comment-dots active"></i>
+        <i class="fa-solid fa-comment-dots" style="color: var(--azul-msg);"></i>
         <i class="fa-solid fa-chart-line"></i>
         <i class="fa-solid fa-server"></i>
         <i class="fa-solid fa-gear"></i>
     </nav>
 
     <script>
-        // 1. Controle do Menu Retrátil
-        const menu = document.getElementById('menu-area');
-        const gatilho = document.getElementById('gatilho-menu');
-        const seta = document.getElementById('seta-menu');
+        // Lógica do Drawer (Menu que sobe)
+        const drawer = document.getElementById('drawer');
+        const btnDrawer = document.getElementById('btn-drawer');
+        const seta = document.getElementById('seta');
 
-        gatilho.addEventListener('click', () => {
-            menu.classList.toggle('menu-fechado');
-            seta.classList.toggle('seta-invertida');
+        btnDrawer.addEventListener('click', () => {
+            drawer.classList.toggle('drawer-fechado');
+            seta.classList.toggle('seta-up');
         });
 
-        // Fecha o menu automaticamente após 2.5 segundos para limpar a visão
+        // Auto-fechar após carregar para mostrar o chat
         setTimeout(() => {
-            menu.classList.add('menu-fechado');
-            seta.classList.add('seta-invertida');
-        }, 2500);
+            drawer.classList.add('drawer-fechado');
+            seta.classList.add('seta-up');
+        }, 2000);
 
-        // 2. Simulação da Lógica de Voz (Baseada na sua Imagem 1)
-        const btnVoz = document.getElementById('btn-voz');
-        const labelInput = document.getElementById('label-input');
+        // Simulação de voz baseada no seu código JS
+        const mic = document.getElementById('mic');
+        const txt = document.getElementById('texto-voz');
 
-        // Simulação do evento de resultado de voz
-        btnVoz.addEventListener('click', () => {
-            labelInput.innerText = "Ouvindo...";
-            btnVoz.style.transform = "scale(1.2)";
-            
+        mic.addEventListener('click', () => {
+            txt.innerText = "Ouvindo...";
             setTimeout(() => {
-                const resultadoFake = "Verificar pressão do sistema"; // Simulação
-                labelInput.innerText = resultadoFake;
-                console.log("Enviando comando de voz: " + resultadoFake);
-                btnVoz.style.transform = "scale(1)";
-            }, 2000);
+                txt.innerText = "Verificar módulo C-4";
+                console.log("Enviando comando de voz: Verificar módulo C-4");
+            }, 1500);
         });
     </script>
 </body>
