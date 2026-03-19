@@ -3,239 +3,241 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>K30i - Light FW</title>
+    <title>K30i Control</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <style>
+        /* Variáveis de Tema (Iniciando no Dark por padrão) */
         :root {
-            --bg-body: #f0f2f5;
+            --bg-principal: #0b111e;
+            --bg-header: #0b111e;
+            --bg-card: #161c2b;
+            --bg-pergunta: #2b3344;
+            --bg-resposta: #1a2235;
+            --bg-tel: #111723;
+            --cor-texto: #e0e6ed;
+            --cor-texto-dim: #8696a0;
+            --azul: #4fc3f7;
+            --verde: #39d353;
+            --borda: rgba(255,255,255,0.05);
+        }
+
+        /* Classe para Modo Claro */
+        .light-mode {
+            --bg-principal: #f0f2f5;
             --bg-header: #ffffff;
             --bg-card: #ffffff;
             --bg-pergunta: #e3f2fd;
             --bg-resposta: #ffffff;
-            --bg-telemetria: #f8f9fa;
+            --bg-tel: #f8f9fa;
             --cor-texto: #1c1e21;
             --cor-texto-dim: #606770;
-            --azul-primario: #1976d2;
-            --verde-status: #2e7d32;
+            --azul: #1976d2;
+            --verde: #2e7d32;
             --borda: #e0e0e0;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: sans-serif; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: sans-serif; -webkit-tap-highlight-color: transparent; }
 
-        body { 
-            background-color: var(--bg-body); 
-            color: var(--cor-texto); 
-            height: 100vh; 
-            display: flex; 
-            flex-direction: column; 
+        html, body { 
+            height: 100%; 
+            width: 100%; 
+            background-color: var(--bg-principal); 
             overflow: hidden; 
         }
 
-        /* HEADER FIXO */
+        body { display: flex; flex-direction: column; }
+
+        /* HEADER */
         header { 
-            padding: 15px; 
+            padding: 12px 15px; 
             background: var(--bg-header);
             display: flex; 
             justify-content: space-between; 
             align-items: center;
-            z-index: 1001; 
-            position: relative;
+            z-index: 1001;
             border-bottom: 1px solid var(--borda);
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
 
-        .fw-info {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
+        .header-center { text-align: center; flex: 1; }
+        .fw-tag { font-size: 9px; color: var(--azul); background: rgba(79, 195, 247, 0.1); padding: 2px 6px; border-radius: 4px; font-weight: bold; }
+        .light-mode .fw-tag { background: #e3f2fd; }
 
-        .fw-tag { 
-            font-size: 10px; 
-            color: var(--azul-primario); 
-            background: #e3f2fd;
-            padding: 2px 8px;
-            border-radius: 10px;
-            font-weight: bold;
-        }
+        .header-actions { display: flex; gap: 15px; align-items: center; color: var(--cor-texto-dim); }
+        .icon-btn { cursor: pointer; font-size: 18px; }
 
-        .btn-refresh {
-            color: var(--cor-texto-dim);
-            font-size: 16px;
-            cursor: pointer;
-            padding: 5px;
-        }
-
-        /* MENU RETRÁTIL */
-        .drawer {
-            transition: transform 0.4s ease-in-out;
-            z-index: 1000;
-            position: relative;
-            background: var(--bg-body);
-        }
-        .drawer-fechado { transform: translateY(-165px); } 
-
-        .grid-botoes { 
-            display: grid; 
-            grid-template-columns: 1fr 1fr; 
-            gap: 10px; 
-            padding: 15px; 
-        }
-
+        /* MENU DRAWER */
+        .drawer { transition: transform 0.4s ease; z-index: 1000; background: var(--bg-principal); border-bottom: 1px solid var(--borda); }
+        .drawer-fechado { transform: translateY(-170px); position: absolute; width: 100%; }
+        
+        .grid-botoes { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 15px; }
         .card { 
-            background: var(--bg-card); 
-            border-radius: 15px; 
-            padding: 15px; 
-            text-align: center; 
-            font-size: 10px; 
-            font-weight: bold; 
-            border: 1px solid var(--borda);
+            background: var(--bg-card); border-radius: 12px; padding: 15px; text-align: center; 
+            font-size: 10px; font-weight: bold; border: 1px solid var(--borda); color: var(--cor-texto);
         }
-        .card i { display: block; font-size: 20px; margin-bottom: 8px; }
+        .card i { display: block; font-size: 20px; margin-bottom: 5px; }
 
-        .alca {
-            height: 25px; background: var(--bg-card); display: flex; justify-content: center;
-            align-items: center; width: 60px; margin: 0 auto; border-radius: 0 0 15px 15px;
+        .alca { 
+            height: 20px; background: var(--bg-card); display: flex; justify-content: center;
+            align-items: center; width: 50px; margin: 0 auto; border-radius: 0 0 12px 12px;
             cursor: pointer; border: 1px solid var(--borda); border-top: none;
         }
 
         /* CHAT */
-        .chat-area { flex: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; }
+        .chat-container { 
+            flex: 1; 
+            padding: 15px; 
+            overflow-y: auto; 
+            display: flex; 
+            flex-direction: column; 
+            gap: 15px; 
+            background: var(--bg-principal);
+        }
+
         .wrapper { display: flex; width: 100%; }
         .pergunta { justify-content: flex-end; }
         .resposta { justify-content: flex-start; }
 
         .balao {
             max-width: 85%; padding: 12px; font-size: 14px; position: relative;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-            border-radius: 12px;
+            border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            color: var(--cor-texto);
         }
         
-        /* Borda lateral de profundidade (Pedido anterior) */
-        .pergunta .balao {
-            background-color: var(--bg-pergunta); border-radius: 15px 4px 15px 15px;
-            border-left: 4px solid var(--azul-primario); 
-        }
-        .resposta .balao {
-            background-color: var(--bg-resposta); border-radius: 4px 15px 15px 15px;
-            border-left: 4px solid #bdc3c7; 
-        }
+        .pergunta .balao { background: var(--bg-pergunta); border-left: 4px solid var(--azul); border-bottom-right-radius: 2px; }
+        .resposta .balao { background: var(--bg-resposta); border-left: 4px solid #607d8b; border-bottom-left-radius: 2px; }
 
         .telemetria {
-            background-color: var(--bg-telemetria); border-radius: 8px; padding: 12px;
-            margin-top: 10px; display: flex; justify-content: space-between;
-            border: 1px solid var(--borda);
+            background: var(--bg-tel); border-radius: 8px; padding: 10px; margin-top: 10px;
+            display: grid; grid-template-columns: 1fr 1fr; gap: 10px; border: 1px solid var(--borda);
         }
+        .tel-item span { font-size: 9px; font-weight: bold; color: var(--cor-texto-dim); text-transform: uppercase; }
+        .tel-item div { font-size: 14px; font-weight: bold; margin-top: 2px; }
 
-        .hora { font-size: 10px; color: var(--cor-texto-dim); margin-top: 5px; text-align: right; }
+        .hora { font-size: 9px; color: var(--cor-texto-dim); margin-top: 6px; text-align: right; }
 
-        /* RODAPÉ */
-        footer { padding: 12px; background: var(--bg-header); display: flex; align-items: center; gap: 10px; border-top: 1px solid var(--borda); }
-        .input-box { flex: 1; background: #f0f2f5; border-radius: 20px; padding: 10px 15px; color: var(--cor-texto-dim); font-size: 14px; }
+        /* FOOTER */
+        footer { padding: 15px; background: var(--bg-header); display: flex; align-items: center; gap: 10px; border-top: 1px solid var(--borda); }
+        .input-box { 
+            flex: 1; background: var(--bg-tel); border-radius: 25px; padding: 12px 18px; 
+            color: var(--cor-texto-dim); font-size: 14px; border: 1px solid var(--borda);
+        }
         
         .btn-mic {
-            width: 45px; height: 45px; border-radius: 50%; border: none;
-            background: var(--azul-primario); color: white; font-size: 18px;
-            display: flex; align-items: center; justify-content: center;
+            width: 50px; height: 50px; border-radius: 50%; border: none;
+            background: var(--azul); color: white; font-size: 20px;
+            display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(0,0,0,0.2);
         }
-        .gravando { background: #d32f2f !important; }
-
-        nav { display: flex; justify-content: space-around; padding: 15px; background: #fff; border-top: 1px solid var(--borda); }
-        nav i { color: var(--cor-texto-dim); font-size: 20px; }
+        .gravando { background: #f44336 !important; box-shadow: 0 0 15px rgba(244, 67, 54, 0.4); }
     </style>
 </head>
 <body>
 
     <header>
-        <i class="fa-solid fa-bars" style="color: var(--cor-texto-dim);"></i>
-        <div style="text-align: center;">
-            <div class="fw-info">
-                <h1 style="font-size: 18px;">K30i</h1>
-                <span class="fw-tag">v1.0.4-L</span>
-                <i class="fa-solid fa-rotate btn-refresh" onclick="location.reload();"></i>
-            </div>
-            <div style="color: var(--verde-status); font-size: 10px; font-weight: bold;">● ONLINE</div>
+        <i class="fa-solid fa-bars icon-btn"></i>
+        <div class="header-center">
+            <h1 style="font-size: 18px; color: var(--cor-texto);">K30i <span class="fw-tag">v1.0.5</span></h1>
+            <div style="color: var(--verde); font-size: 9px; font-weight: bold;">● ONLINE</div>
         </div>
-        <i class="fa-solid fa-ellipsis-vertical" style="color: var(--cor-texto-dim);"></i>
+        <div class="header-actions">
+            <i class="fa-solid fa-moon icon-btn" id="theme-toggle" onclick="toggleTheme()"></i>
+            <i class="fa-solid fa-rotate icon-btn" onclick="location.reload()"></i>
+        </div>
     </header>
 
-    <div id="menu" class="drawer">
+    <div id="drawer" class="drawer drawer-fechado">
         <div class="grid-botoes">
-            <div class="card" style="color: #d32f2f;"><i class="fa-solid fa-circle-exclamation"></i> FALHA</div>
-            <div class="card" style="color: #ed6c02;"><i class="fa-solid fa-triangle-exclamation"></i> AVISO</div>
-            <div class="card"><i class="fa-solid fa-calendar"></i> AGENDA</div>
-            <div class="card"><i class="fa-solid fa-microchip"></i> I/O</div>
+            <div class="card" style="color: #f44336;"><i class="fa-solid fa-circle-exclamation"></i> FALHA ATIVA</div>
+            <div class="card" style="color: #ff9800;"><i class="fa-solid fa-triangle-exclamation"></i> AVISO ATIVO</div>
+            <div class="card"><i class="fa-solid fa-calendar"></i> PROGRAMAÇÃO</div>
+            <div class="card"><i class="fa-solid fa-microchip"></i> ENTRADAS/SAÍDAS</div>
         </div>
-        <div class="alca" id="gatilho">
-            <i class="fa-solid fa-chevron-up" id="seta"></i>
+        <div class="alca" id="btn-drawer">
+            <i class="fa-solid fa-chevron-down" id="seta" style="transform: rotate(0deg); color: var(--cor-texto-dim);"></i>
         </div>
     </div>
 
-    <main class="chat-area" id="chat">
+    <main class="chat-container" id="chat">
         <div class="wrapper resposta">
             <div class="balao">
-                Sistema em modo claro iniciado com sucesso. Versão de controle FW: 1.0.4-L disponível.
+                Diagnóstico inicializado. Sensores operacionais.
                 <div class="telemetria">
-                    <div><span style="font-size:9px; font-weight:bold; color:var(--cor-texto-dim)">TEMP.</span><br><b>24°C</b></div>
-                    <div><span style="font-size:9px; font-weight:bold; color:var(--cor-texto-dim)">STATUS</span><br><b style="color:var(--verde-status)">OK</b></div>
+                    <div class="tel-item"><span>Pressão</span><div id="p-val">14.00 bar</div></div>
+                    <div class="tel-item"><span>Temp.</span><div id="t-val">84.00°C</div></div>
+                    <div class="tel-item"><span>Fluxo</span><div id="f-val">2.40 L/m</div></div>
+                    <div class="tel-item"><span>Vibração</span><div style="color:var(--verde)">0.01 mm/s</div></div>
                 </div>
-                <div class="hora">10:00 AM</div>
+                <div class="hora">09:42 AM</div>
             </div>
         </div>
     </main>
 
     <footer>
-        <div class="input-box" id="label-voz">Pressione o mic para falar...</div>
-        <button class="btn-mic" id="btn-mic"><i class="fa-solid fa-microphone"></i></button>
+        <div class="input-box" id="label-voz">Fale para comandar...</div>
+        <button class="btn-mic" id="mic"><i class="fa-solid fa-microphone"></i></button>
     </footer>
 
-    <nav>
-        <i class="fa-solid fa-message" style="color: var(--azul-primario);"></i>
-        <i class="fa-solid fa-chart-line"></i>
-        <i class="fa-solid fa-gear"></i>
-    </nav>
-
     <script>
-        // Lógica do Drawer
-        const menu = document.getElementById('menu');
-        const gatilho = document.getElementById('gatilho');
+        // Alternar Tema (Dark/Light)
+        function toggleTheme() {
+            const body = document.body;
+            const btn = document.getElementById('theme-toggle');
+            body.classList.toggle('light-mode');
+            
+            if(body.classList.contains('light-mode')) {
+                btn.classList.replace('fa-moon', 'fa-sun');
+            } else {
+                btn.classList.replace('fa-sun', 'fa-moon');
+            }
+        }
+
+        // Drawer (Menu)
+        const drawer = document.getElementById('drawer');
+        const btnDrawer = document.getElementById('btn-drawer');
         const seta = document.getElementById('seta');
 
-        gatilho.addEventListener('click', () => {
-            menu.classList.toggle('drawer-fechado');
-            seta.style.transform = menu.classList.contains('drawer-fechado') ? 'rotate(180deg)' : 'rotate(0deg)';
+        btnDrawer.addEventListener('click', () => {
+            drawer.classList.toggle('drawer-fechado');
+            seta.style.transform = drawer.classList.contains('drawer-fechado') ? 'rotate(0deg)' : 'rotate(180deg)';
         });
 
-        setTimeout(() => { menu.classList.add('drawer-fechado'); seta.style.transform = 'rotate(180deg)'; }, 2000);
-
-        // Lógica de Voz Real
-        const btnMic = document.getElementById('btn-mic');
-        const labelVoz = document.getElementById('label-voz');
+        // Voz e Chat
+        const mic = document.getElementById('mic');
+        const label = document.getElementById('label-voz');
         const chat = document.getElementById('chat');
 
-        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-        if (SpeechRecognition) {
-            const rec = new SpeechRecognition();
+        const Speech = window.SpeechRecognition || window.webkitSpeechRecognition;
+        if (Speech) {
+            const rec = new Speech();
             rec.lang = 'pt-BR';
 
-            btnMic.addEventListener('click', () => {
+            mic.addEventListener('click', () => {
                 rec.start();
-                btnMic.classList.add('gravando');
-                labelVoz.innerText = "Ouvindo...";
+                mic.classList.add('gravando');
+                label.innerText = "Ouvindo...";
             });
 
             rec.onresult = (e) => {
-                const fala = e.results[0][0].transcript;
-                labelVoz.innerText = fala;
+                const texto = e.results[0][0].transcript;
+                label.innerText = texto;
+                
                 setTimeout(() => {
-                    const html = `<div class="wrapper pergunta"><div class="balao">${fala}<div class="hora">Agora <i class="fa-solid fa-check-double" style="color:var(--verde-status)"></i></div></div></div>`;
+                    const agora = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+                    const html = `
+                        <div class="wrapper pergunta">
+                            <div class="balao">
+                                ${texto}
+                                <div class="hora">${agora} <i class="fa-solid fa-check-double" style="color:var(--verde)"></i></div>
+                            </div>
+                        </div>`;
                     chat.insertAdjacentHTML('beforeend', html);
                     chat.scrollTop = chat.scrollHeight;
-                    labelVoz.innerText = "Pressione o mic para falar...";
-                }, 500);
+                    label.innerText = "Fale para comandar...";
+                }, 600);
             };
-            rec.onend = () => btnMic.classList.remove('gravando');
+
+            rec.onend = () => mic.classList.remove('gravando');
         }
     </script>
 </body>
