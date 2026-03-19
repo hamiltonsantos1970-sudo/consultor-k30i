@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>K30i v1.2.1 - Fiel ao Original</title>
+    <title>K30i v1.2.2 - Programação</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         /* PADRÃO WHATSAPP CONGELADO */
@@ -23,8 +23,9 @@
 
         #drawer { position: fixed; top: 60px; left: 0; width: 100%; background: var(--topo); z-index: 900; transition: 0.5s; border-bottom: 1px solid var(--borda); transform: translateY(0); }
         #drawer.recolhido { transform: translateY(-100%); }
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding: 12px; }
-        .card { background: var(--balao-ele); padding: 12px; border-radius: 10px; text-align: center; color: var(--texto); font-size: 11px; border: 1.5px solid var(--borda); font-weight: bold; cursor: pointer; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding: 12px; max-height: 300px; overflow-y: auto; }
+        .card { background: var(--balao-ele); padding: 12px; border-radius: 10px; text-align: center; color: var(--texto); font-size: 10px; border: 1.5px solid var(--borda); font-weight: bold; cursor: pointer; }
+        .card i { display: block; font-size: 16px; margin-bottom: 4px; color: var(--accent); }
         .card.falha { border-color: #e74c3c; color: #ff6b6b; }
         .card.aviso { border-color: #e67e22; color: #ffaa55; }
         .alca { position: absolute; bottom: -24px; left: 50%; transform: translateX(-50%); height: 24px; width: 50px; background: var(--topo); border-radius: 0 0 12px 12px; display: flex; justify-content: center; align-items: center; border: 1px solid var(--borda); border-top: none; }
@@ -37,7 +38,7 @@
 
         footer { padding: 10px; display: flex; align-items: center; gap: 8px; }
         .input-bar { flex: 1; background: var(--topo); border-radius: 25px; padding: 12px 15px; color: var(--subtitulo); font-size: 15px; display: flex; justify-content: space-between; box-shadow: 0 1px 2px rgba(0,0,0,0.1); }
-        .btn-mic { width: 50px; height: 50px; border-radius: 50%; border: none; background: #25a244; color: white; font-size: 20px; display: flex; align-items: center; justify-content: center; transition: 0.1s; }
+        .btn-mic { width: 50px; height: 50px; border-radius: 50%; border: none; background: #25a244; color: white; font-size: 20px; display: flex; align-items: center; justify-content: center; }
     </style>
 </head>
 <body>
@@ -53,6 +54,7 @@
         <div class="grid">
             <div class="card falha" onclick="dispararComando('FALHA ATIVA')"><i class="fa-solid fa-bug"></i> FALHA ATIVA</div>
             <div class="card aviso" onclick="dispararComando('AVISO ATIVO')"><i class="fa-solid fa-triangle-exclamation"></i> AVISO ATIVO</div>
+            <div class="card" onclick="dispararComando('PROGRAMAÇÃO')"><i class="fa-solid fa-gear"></i> PROGRAMAÇÃO</div>
             <div class="card" onclick="dispararComando('LEDS PAINEL')"><i class="fa-solid fa-lightbulb"></i> LEDS PAINEL</div>
             <div class="card" onclick="dispararComando('AJUDA')"><i class="fa-solid fa-circle-question"></i> AJUDA</div>
         </div>
@@ -76,7 +78,7 @@
         }
         window.onload = () => {
             setTimeout(() => document.getElementById('drawer').classList.add('recolhido'), 2000);
-            exibirMsg("Iniciado Suporte Técnico K30i (v1.50). Como posso ajudar?", 'ele');
+            exibirMsg("Suporte K30i (v1.50) ativo. Como posso ajudar?", 'ele');
         };
 
         // --- MICROFONE (CONSERVADO/BLINDADO) ---
@@ -96,28 +98,31 @@
             recognition.onresult = (e) => dispararComando(e.results[0][0].transcript);
         }
 
-        // --- O "CÉREBRO" ORIGINAL (TRANSPLANTE DO SEU INDEX.HTML) ---
+        // --- CÉREBRO ORIGINAL RESTAURADO (COM PROGRAMAÇÃO) ---
         function dispararComando(texto) {
             exibirMsg(texto, 'eu');
             setTimeout(() => {
                 const comando = texto.toLowerCase();
                 let resposta = "";
 
-                // ESTA É A LÓGICA EXATA DO SEU INDEX ORIGINAL:
                 if (comando.includes("falha")) {
                     resposta = "⚠️ **CÓDIGO DE FALHA ATIVA:**\n\n❌ **Causa Provável:** Ausência ou queda de fase na rede elétrica, sobrecarga térmica no motor da bomba ou sensor de pressão 4-20mA desconectado.\n\n🛠️ **O que fazer:**\n1. Verifique a tensão nas fases R, S, T.\n2. Verifique se o disjuntor-motor disparou.\n3. Confira o cabo do sensor de pressão.\n\n🔄 **Para Resetar:** Pressione o botão RESET físico no painel por 5 segundos.";
                 } 
                 else if (comando.includes("aviso")) {
-                    resposta = "🔔 **AVISO DO SISTEMA:**\n\n⚠️ **Causa:** Nível do reservatório baixo ou necessidade de manutenção preventiva (troca de filtros/óleo).\n\n🛠️ **Ações Sugeridas:** Verifique o nível visual do tanque e o horímetro de manutenção no painel digital.\n\n✅ **Nota:** O sistema continua em operação, mas requer atenção.";
+                    resposta = "🔔 **AVISO DO SISTEMA:**\n\n⚠️ **Causa:** Nível do reservatório baixo ou necessidade de manutenção preventiva.\n\n🛠️ **Ações:** Verifique o nível visual e o horímetro.\n\n✅ **Nota:** Sistema continua em operação.";
                 } 
+                else if (comando.includes("programa")) {
+                    // RESPOSTA EXTRAÍDA DA SUA IMAGEM:
+                    resposta = "⚙️ **CONFIGURAÇÃO E PROGRAMAÇÃO:**\n\n🔹 **Modo Automático:** A bomba parte por queda de pressão e para por fluxo zero.\n\n🔹 **Modo Manual:** Partida e parada controlada pelo operador via botões I/O.\n\n🔹 **Retardo de Parada:** Tempo programado para evitar golpes de ariete (Padrão: 10s).\n\n🔹 **Set-Point:** Ajuste de pressão desejada via teclado frontal (Seta p/ Cima/Baixo).";
+                }
                 else if (comando.includes("led")) {
-                    resposta = "💡 **GUIA DOS LEDS DO PAINEL:**\n\n🟢 **Verde:** Sistema Operacional (Bomba Ligada).\n🟠 **Laranja:** Standby (Aguardando demanda).\n🔴 **Vermelho:** Falha bloqueante ou Emergência acionada.\n⚪ **Apagado:** Sem alimentação principal.";
+                    resposta = "💡 **GUIA DOS LEDS:**\n\n🟢 **Verde:** Bomba Ligada.\n🟠 **Laranja:** Standby.\n🔴 **Vermelho:** Falha bloqueante.";
                 } 
-                else if (comando.includes("ajuda") || comando.includes("oi") || comando.includes("bom")) {
-                    resposta = "❓ **MENU DE SUPORTE TÉCNICO:**\n\nVocê pode me perguntar sobre:\n- **FALHA:** Se o sistema parou.\n- **AVISO:** Para alertas preventivos.\n- **LEDS:** Para entender as luzes do painel.\n- **SENSORES:** Para ler a telemetria atual.\n\n*Status:* Conectado ao CLP via Wi-Fi.";
+                else if (comando.includes("ajuda")) {
+                    resposta = "❓ **MENU DE SUPORTE:**\n\nPergunte sobre:\n- **FALHA**\n- **AVISO**\n- **PROGRAMAÇÃO**\n- **LEDS**\n\n*Status:* CLP v1.50 Conectado.";
                 }
                 else {
-                    resposta = "Não identifiquei o comando '" + texto + "'.\nTente dizer: 'Falha', 'Aviso' ou 'Leds'.";
+                    resposta = "Não identifiquei o comando '" + texto + "'.\nTente os botões no menu superior.";
                 }
 
                 exibirMsg(resposta, 'ele');
