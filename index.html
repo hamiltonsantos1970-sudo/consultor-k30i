@@ -1,192 +1,123 @@
 <!DOCTYPE html>
-<html lang="pt-pt">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Suporte K30i - WhatsApp Style</title>
+    <title>K30i v1.1.6 - Standard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
+        /* PADRÃO WHATSAPP CONGELADO */
         :root {
-            --wa-green: #dcf8c6;
-            --wa-white: #ffffff;
-            --wa-bg: #e5ddd5;
-            --wa-header: #ffffff;
-            --system-green: #25d366;
-            /* Cores dos Botões da Imagem */
-            --cor-falha: #d32f2f;
-            --cor-aviso: #fbc02d;
-            --cor-prog: #1976d2;
-            --cor-leds: #7b1fa2;
+            --topo: #ffffff; --fundo: #efeae2; --balao-eu: #d9fdd3; --balao-ele: #ffffff;
+            --texto: #111b21; --subtitulo: #667781; --accent: #25d366; --borda: #e9edef;
         }
-
-        body, html { margin: 0; padding: 0; height: 100%; font-family: 'Segoe UI', Helvetica, Arial, sans-serif; background: var(--wa-bg); overflow-x: hidden; }
-
-        /* HEADER */
-        #header {
-            background: var(--wa-header);
-            padding: 10px 16px;
-            display: flex;
-            align-items: center;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-            position: sticky; top: 0; z-index: 100;
+        body.dark-mode {
+            --topo: #202c33; --fundo: #0b141a; --balao-eu: #005c4b; --balao-ele: #202c33;
+            --texto: #e9edef; --subtitulo: #8696a0; --accent: #00a884; --borda: rgba(255,255,255,0.1);
         }
-        .avatar { width: 40px; height: 40px; border-radius: 50%; background: #eee; margin-right: 12px; border: 1px solid #ddd; }
-        .status-info h2 { margin: 0; font-size: 16px; color: #000; }
-        .status-info span { font-size: 12px; color: #25d366; font-weight: bold; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: sans-serif; -webkit-tap-highlight-color: transparent; }
+        html, body { height: 100dvh; width: 100vw; background-color: var(--fundo); display: flex; flex-direction: column; overflow: hidden; }
 
-        /* MENU DRAWER (BOTÕES DA IMAGEM) */
-        #drawer { 
-            background: #fff; 
-            display: grid; 
-            grid-template-columns: repeat(4, 1fr); 
-            gap: 8px; 
-            padding: 12px; 
-            border-bottom: 1px solid #ddd;
-        }
-        .drawer-btn { 
-            border: none; 
-            background: #f8f9fa; 
-            padding: 10px 5px; 
-            border-radius: 8px; 
-            font-size: 10px; 
-            font-weight: 800; 
-            color: #333; 
-            text-align: center;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 4px;
-        }
-        .drawer-btn:active { transform: scale(0.95); }
-        .icon-circle { width: 12px; height: 12px; border-radius: 50%; }
+        header { height: 60px; background: var(--topo); display: flex; justify-content: space-between; align-items: center; padding: 0 15px; z-index: 1000; border-bottom: 1px solid var(--borda); }
+        .foto { width: 38px; height: 38px; border-radius: 50%; background: #1a7a35; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; }
 
-        /* CHAT AREA */
-        #chat-container { padding: 15px; display: flex; flex-direction: column; gap: 10px; padding-bottom: 100px; }
-        .balao { max-width: 85%; padding: 8px 12px; border-radius: 12px; font-size: 15px; position: relative; line-height: 1.4; box-shadow: 0 1px 1px rgba(0,0,0,0.1); }
-        .balao.eu { align-self: flex-end; background: var(--wa-green); border-top-right-radius: 0; }
-        .balao.sistema { align-self: flex-start; background: var(--wa-white); border-top-left-radius: 0; }
-
-        .opcoes-wrap { margin-top: 10px; display: flex; flex-direction: column; gap: 6px; }
-        .btn-op { background: #fff; border: 1px solid #25d366; color: #25d366; padding: 8px; border-radius: 20px; cursor: pointer; font-size: 13px; font-weight: 600; }
-
-        /* BARRA INFERIOR */
-        .input-bar { position: fixed; bottom: 0; width: 100%; background: #f0f0f0; padding: 10px; display: flex; align-items: center; gap: 10px; box-sizing: border-box; }
-        #input-texto { flex: 1; border: none; padding: 12px; border-radius: 25px; outline: none; font-size: 15px; }
+        #drawer { position: fixed; top: 60px; left: 0; width: 100%; background: var(--topo); z-index: 900; transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1); border-bottom: 1px solid var(--borda); transform: translateY(0); }
+        #drawer.recolhido { transform: translateY(-100%); }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding: 12px; }
+        .card { background: var(--balao-ele); padding: 12px; border-radius: 10px; text-align: center; color: var(--texto); font-size: 11px; border: 1.5px solid var(--borda); font-weight: bold; }
         
-        #btn-voz {
-            width: 48px; height: 48px; background: var(--system-green); border-radius: 50%;
-            border: none; color: white; display: flex; align-items: center; justify-content: center;
-            transition: transform 0.1s ease; touch-action: none; box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-        }
+        /* CORES DO TRANSPLANTE */
+        .card.falha { border-color: #e74c3c; color: #ff6b6b; }
+        .card.aviso { border-color: #e67e22; color: #ffaa55; }
+
+        .alca { position: absolute; bottom: -24px; left: 50%; transform: translateX(-50%); height: 24px; width: 50px; background: var(--topo); border-radius: 0 0 12px 12px; display: flex; justify-content: center; align-items: center; border: 1px solid var(--borda); border-top: none; }
+
+        #chat { flex: 1; padding: 20px 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
+        .msg { max-width: 85%; padding: 8px 12px; border-radius: 8px; font-size: 14.5px; color: var(--texto); box-shadow: 0 1px 1px rgba(0,0,0,0.1); position: relative; }
+        .eu { align-self: flex-end; background: var(--balao-eu); border-top-right-radius: 0; }
+        .ele { align-self: flex-start; background: var(--balao-ele); border-top-left-radius: 0; }
+        .tempo { font-size: 10px; color: var(--subtitulo); text-align: right; margin-top: 4px; display: block; }
+
+        footer { padding: 10px; display: flex; align-items: center; gap: 8px; }
+        .input-bar { flex: 1; background: var(--topo); border-radius: 25px; padding: 12px 15px; color: var(--subtitulo); font-size: 15px; display: flex; justify-content: space-between; box-shadow: 0 1px 2px rgba(0,0,0,0.1); }
+        .btn-mic { width: 50px; height: 50px; border-radius: 50%; border: none; background: #25a244; color: white; font-size: 20px; transition: 0.1s; }
     </style>
 </head>
 <body>
+    <header>
+        <div style="display:flex; align-items:center; gap:10px;">
+            <div class="foto">K</div>
+            <div>
+                <b style="color:var(--texto)">Suporte K30i</b><br>
+                <span style="color:#4cff72; font-size:10px; font-weight:bold;">● ONLINE v1.50</span>
+            </div>
+        </div>
+        <i class="fa-solid fa-moon" id="theme-btn" style="color:var(--subtitulo)" onclick="toggleTheme()"></i>
+    </header>
 
-<div id="header">
-    <div class="avatar"></div>
-    <div class="status-info">
-        <h2>Consultor K30i</h2>
-        <span>Online</span>
+    <div id="drawer">
+        <div class="grid">
+            <div class="card falha" onclick="processar('falha')"><i class="fa-solid fa-bug"></i><br>FALHA ATIVA</div>
+            <div class="card aviso" onclick="processar('aviso')"><i class="fa-solid fa-triangle-exclamation"></i><br>AVISO ATIVO</div>
+            <div class="card" onclick="processar('leds')"><i class="fa-solid fa-lightbulb"></i><br>LEDS PAINEL</div>
+            <div class="card" onclick="processar('reset')"><i class="fa-solid fa-rotate"></i><br>RESET FALHA</div>
+        </div>
+        <div class="alca" onclick="toggleMenu()"><i id="seta" class="fa-solid fa-chevron-up"></i></div>
     </div>
-</div>
 
-<div id="drawer">
-    <button class="drawer-btn" onclick="processar('FALHA')">
-        <div class="icon-circle" style="background: var(--cor-falha);"></div>
-        FALHA
-    </button>
-    <button class="drawer-btn" onclick="processar('AVISO')">
-        <div class="icon-circle" style="background: var(--cor-aviso);"></div>
-        AVISO
-    </button>
-    <button class="drawer-btn" onclick="processar('PROGRAMAÇÃO')">
-        <div class="icon-circle" style="background: var(--cor-prog);"></div>
-        PROG.
-    </button>
-    <button class="drawer-btn" onclick="processar('LEDS')">
-        <div class="icon-circle" style="background: var(--cor-leds);"></div>
-        LEDS
-    </button>
-</div>
+    <main id="chat"></main>
 
-<div id="chat-container">
-    <div class="balao sistema">Olá! Selecione uma opção acima ou use o microfone para descrever o problema do K30i.</div>
-</div>
+    <footer>
+        <div class="input-bar"><span id="status">Mensagem</span><i class="fa-solid fa-paperclip"></i></div>
+        <button class="btn-mic" id="btn-voz"><i class="fa-solid fa-microphone"></i></button>
+    </footer>
 
-<div class="input-bar">
-    <input type="text" id="input-texto" placeholder="Escreva uma mensagem...">
-    <button id="btn-voz">
-        <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/><path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/></svg>
-    </button>
-</div>
+    <script>
+        // LÓGICA DO FRONTEND
+        function toggleMenu() { document.getElementById('drawer').classList.toggle('recolhido'); }
+        window.onload = () => setTimeout(() => document.getElementById('drawer').classList.add('recolhido'), 2000);
+        function toggleTheme() { document.body.classList.toggle('dark-mode'); }
 
-<script>
-    const chat = document.getElementById('chat-container');
-    const input = document.getElementById('input-texto');
-    const btnVoz = document.getElementById('btn-voz');
+        // LÓGICA DO TRANSPLANTE (MICROFONE)
+        const Recognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        if (Recognition) {
+            const recognition = new Recognition();
+            recognition.lang = 'pt-BR';
+            const btnVoz = document.getElementById('btn-voz');
 
-    function exibirMsg(texto, quem, botoesHtml = "") {
-        const div = document.createElement('div');
-        div.className = `balao ${quem}`;
-        div.innerHTML = `<div>${texto}</div>${botoesHtml ? `<div class="opcoes-wrap">${botoesHtml}</div>` : ""}`;
-        chat.appendChild(div);
-        window.scrollTo(0, document.body.scrollHeight);
-    }
+            btnVoz.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                btnVoz.style.transform = "scale(1.5)"; 
+                recognition.start();
+                if (navigator.vibrate) navigator.vibrate(40);
+                document.getElementById('status').innerText = "Ouvindo...";
+            });
 
-    // Função que aciona o seu "Cérebro" original
-    function enviar() {
-        const texto = input.value.trim();
-        if(!texto) return;
-        
-        exibirMsg(texto, 'eu');
-        input.value = "";
+            btnVoz.addEventListener('touchend', (e) => {
+                btnVoz.style.transform = "scale(1)";
+                recognition.stop();
+            });
 
-        // Aqui entra a sua lógica original de IF/ELSE que você já tem no index.html
-        setTimeout(() => {
-            logicaCerebro(texto);
-        }, 500);
-    }
-
-    function processar(comando) {
-        input.value = comando;
-        enviar();
-    }
-
-    // Exemplo da lógica preservada
-    function logicaCerebro(t) {
-        let txt = t.toLowerCase();
-        if(txt.includes("falha")) {
-            exibirMsg("Identifiquei uma falha. Escolha o código ou ação:", "sistema", 
-            `<button class="btn-op" onclick="processar('CAUSA FALHA')">VER CAUSA</button>
-             <button class="btn-op" onclick="processar('RESET')">RESETAR</button>`);
-        } else if(txt.includes("aviso")) {
-            exibirMsg("Existem avisos preventivos pendentes.", "sistema");
-        } else {
-            exibirMsg("Comando recebido. Como posso ajudar com " + t + "?", "sistema");
+            recognition.onresult = (event) => {
+                const texto = event.results[0][0].transcript;
+                enviarMsg(texto, 'eu');
+                // Aqui você chamaria sua função processar(texto) do index antigo
+            };
         }
-    }
 
-    // MICROFONE BLINDADO
-    const Recognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-    if (Recognition) {
-        const recognition = new Recognition();
-        btnVoz.addEventListener('touchstart', (e) => {
-            e.preventDefault();
-            btnVoz.style.transform = "scale(1.5)";
-            if (navigator.vibrate) navigator.vibrate(40);
-            recognition.start();
-        });
-        btnVoz.addEventListener('touchend', (e) => {
-            e.preventDefault();
-            btnVoz.style.transform = "scale(1)";
-            recognition.stop();
-            if (document.activeElement) document.activeElement.blur();
-        });
-        recognition.onresult = (event) => {
-            input.value = event.results[0][0].transcript;
-            enviar();
-        };
-    }
-</script>
+        function enviarMsg(txt, tipo) {
+            const agora = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+            const check = tipo === 'eu' ? '<i class="fa-solid fa-check-double" style="color:#53bdeb; margin-left:3px;"></i>' : '';
+            const html = `<div class="msg ${tipo}">${txt}<span class="tempo">${agora} ${check}</span></div>`;
+            document.getElementById('chat').insertAdjacentHTML('beforeend', html);
+            document.getElementById('chat').scrollTop = document.getElementById('chat').scrollHeight;
+            document.getElementById('status').innerText = "Mensagem";
+        }
+
+        // SERVICE WORKER (CÉREBRO OFFLINE)
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js'); // Use o sw do seu index antigo aqui
+        }
+    </script>
 </body>
 </html>
