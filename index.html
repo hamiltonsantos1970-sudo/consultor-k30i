@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>K30i Pro - V1</title>
+    <title>K30i - Ver 0.00</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root {
             --topo: #ffffff; --fundo: #f0f2f5; --balao-eu: #d9fdd3; --balao-ele: #ffffff;
-            --texto: #111b21; --subtitulo: #667781; --accent: #1a7a35; --borda: #e9edef;
+            --texto: #111b21; --subtitulo: #667781; --accent: #25d366; --borda: #e9edef;
             --danger: #ea0038;
         }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: sans-serif; }
@@ -19,31 +19,30 @@
         .perfil { display: flex; align-items: center; gap: 10px; }
         .foto-perfil { width: 38px; height: 38px; border-radius: 50%; background: #6a7175; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; }
         .status-header { font-size: 11px; color: #00a884; font-weight: bold; }
-        .v-tag { font-family: monospace; color: var(--subtitulo); font-size: 10px; margin-left: 5px; border: 1px solid #ddd; padding: 2px 4px; border-radius: 4px; }
+        .v-tag { font-family: monospace; color: #ea0038; font-size: 11px; margin-left: 5px; font-weight: bold; }
 
-        /* GAVETA DE BOTÕES (ESTILO ATUALIZADO) */
-        #drawer { background: #d1d5db; border-bottom: 1px solid #bbb; transition: 0.4s ease-in-out; padding: 12px; }
-        #drawer.recolhido { margin-top: -240px; opacity: 0; pointer-events: none; }
+        /* GAVETA DE BOTÕES (ESTILO CARD BRANCO) */
+        #drawer { background: var(--topo); border-bottom: 1px solid var(--borda); transition: 0.4s ease-in-out; }
+        #drawer.recolhido { margin-top: -260px; opacity: 0; pointer-events: none; }
         
-        .grid-atalhos { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+        .grid-atalhos { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding: 12px; }
         .grid-full { grid-column: span 2; }
 
-        .btn-acao { 
-            background: #000; color: #fff; border: 1.5px solid #fff; border-radius: 20px; 
-            padding: 10px; display: flex; align-items: center; justify-content: center; 
-            gap: 8px; cursor: pointer; text-decoration: none; font-size: 14px; font-weight: 500;
+        .card-btn { 
+            background: #fff; border: 1px solid var(--borda); border-radius: 8px; 
+            padding: 12px; display: flex; flex-direction: column; align-items: center; 
+            justify-content: center; cursor: pointer; transition: 0.2s; box-shadow: 0 1px 2px rgba(0,0,0,0.05);
         }
-        /* Cores específicas conforme imagem */
-        .btn-falha { border-color: #ff4d4d; color: #ff4d4d; }
-        .btn-aviso { border-color: #ff9933; color: #ff9933; }
+        .card-btn i { color: var(--accent); font-size: 20px; margin-bottom: 5px; }
+        .card-btn span { font-size: 10px; font-weight: bold; color: var(--texto); text-transform: uppercase; }
+        
+        .alca-container { display: flex; justify-content: center; height: 20px; cursor: pointer; background: var(--topo); border-bottom: 1px solid var(--borda); }
+        .alca-bolinha { width: 40px; height: 4px; background: #ccd0d5; border-radius: 2px; margin-top: 8px; }
 
-        .alca-container { display: flex; justify-content: center; padding: 10px 0; cursor: pointer; background: #d1d5db; }
-        .alca-bolinha { width: 40px; height: 5px; background: #333; border-radius: 5px; }
-
-        /* CHAT AREA */
+        /* CHAT */
         #chat { flex: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; }
 
-        /* MENSAGEM SISTEMA */
+        /* BOAS VINDAS (CONFORME IMAGEM) */
         .header-sistema { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
         .icon-k { width: 24px; height: 24px; background: #666; border-radius: 50%; color: white; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: bold; }
         .label-sistema { font-size: 12px; font-weight: bold; color: #8696a0; text-transform: uppercase; }
@@ -55,7 +54,7 @@
         .balao-sistema b { color: #1a7a35; }
         .balao-sistema .timestamp { position: absolute; bottom: 8px; right: 12px; font-size: 10px; color: #8696a0; }
 
-        /* MENSAGENS COMUNS */
+        /* BALÕES DE MENSAGEM */
         .msg { max-width: 85%; padding: 10px 14px; border-radius: 10px; font-size: 15px; position: relative; box-shadow: 0 1px 1px rgba(0,0,0,0.1); }
         .eu { align-self: flex-end; background: var(--balao-eu); border-top-right-radius: 0; }
         .ele { align-self: flex-start; background: var(--balao-ele); border-top-left-radius: 0; }
@@ -75,7 +74,7 @@
             <div class="foto-perfil">K</div>
             <div>
                 <b style="color:var(--texto)">Suporte K30i</b><br>
-                <span class="status-header">● ONLINE <span class="v-tag" id="v-display">V1=0.00</span></span>
+                <span class="status-header">● ONLINE <span class="v-tag" id="v-label">Ver 0.00</span></span>
             </div>
         </div>
         <i class="fa-solid fa-moon" style="color:var(--subtitulo); font-size: 20px;"></i>
@@ -83,16 +82,13 @@
 
     <div id="drawer">
         <div class="grid-atalhos">
-            <div class="btn-acao btn-falha" onclick="comando('Falha Ativa')"><i class="fa-solid fa-bell"></i> Falha Ativa</div>
-            <div class="btn-acao btn-aviso" onclick="comando('Aviso Ativo')"><i class="fa-solid fa-bell"></i> Aviso Ativo</div>
-            
-            <div class="btn-acao" onclick="comando('LEDs do Painel')">💡 LEDs do Painel</div>
-            <div class="btn-acao" onclick="comando('Reset de Falha')">🔄 Reset de Falha</div>
-            
-            <div class="btn-acao" onclick="comando('Programação')">📋 Programação</div>
-            <div class="btn-acao" onclick="comando('Entradas/Saídas')">⚙️ Entradas/Saídas</div>
-            
-            <div class="btn-acao grid-full" onclick="comando('Guias de Instalação')">🔧 Guias de Instalação</div>
+            <div class="card-btn" onclick="comando('Falha Ativa')"><i class="fa-solid fa-bell"></i><span>Falha Ativa</span></div>
+            <div class="card-btn" onclick="comando('Aviso Ativo')"><i class="fa-solid fa-triangle-exclamation"></i><span>Aviso Ativo</span></div>
+            <div class="card-btn" onclick="comando('LEDs do Painel')"><i class="fa-solid fa-lightbulb"></i><span>LEDs do Painel</span></div>
+            <div class="card-btn" onclick="comando('Reset de Falha')"><i class="fa-solid fa-rotate"></i><span>Reset de Falha</span></div>
+            <div class="card-btn" onclick="comando('Programação')"><i class="fa-solid fa-file-lines"></i><span>Programação</span></div>
+            <div class="card-btn" onclick="comando('Entradas/Saídas')"><i class="fa-solid fa-gears"></i><span>Entradas/Saídas</span></div>
+            <div class="card-btn grid-full" onclick="comando('Guias de Instalação')"><i class="fa-solid fa-wrench"></i><span>Guias de Instalação</span></div>
         </div>
     </div>
     <div class="alca-container" onclick="toggleD()"><div class="alca-bolinha"></div></div>
@@ -100,15 +96,13 @@
     <main id="chat"></main>
 
     <footer>
-        <div class="input-box">
-            <span id="txt-status">Mensagem</span>
-            <i class="fa-solid fa-paperclip"></i>
-        </div>
+        <div class="input-box"><span id="txt-status">Mensagem</span><i class="fa-solid fa-paperclip"></i></div>
         <button class="btn-mic-circular" id="mic-btn"><i class="fa-solid fa-microphone"></i></button>
     </footer>
 
     <script>
-        const VERSAO = "V1=0.00";
+        // --- CONFIGURAÇÃO DA VERSÃO DE TESTE ---
+        const VERSAO_TESTE = "Ver 0.00";
 
         function toggleD() {
             document.getElementById('drawer').classList.toggle('recolhido');
@@ -124,14 +118,16 @@
             chat.scrollTop = chat.scrollHeight;
         }
 
+        // Lógica que gera a resposta de teste simulada
         function comando(t) {
             addMsg(t, 'eu');
             setTimeout(() => {
-                addMsg(`[MODO TESTE ${VERSAO}] Analisando pedido de: <b>${t}</b>`, 'ele');
-            }, 700);
+                const resposta = `<b>[Teste ${VERSAO_TESTE}]</b><br>Você selecionou: ${t}.<br>Esta é uma resposta simulada da versão de testes.`;
+                addMsg(resposta, 'ele');
+            }, 600);
         }
 
-        function boasVindas() {
+        function exibirBoasVindas() {
             const chat = document.getElementById('chat');
             const agora = new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
             const wrap = document.createElement('div');
@@ -149,21 +145,22 @@
         }
 
         window.onload = () => {
-            document.getElementById('v-display').innerText = VERSAO;
-            boasVindas();
+            // Garante que o rótulo da versão seja aplicado no HTML
+            document.getElementById('v-label').innerText = VERSAO_TESTE;
+            exibirBoasVindas();
             
-            // Microfone
-            const Rec = window.SpeechRecognition || window.webkitSpeechRecognition;
-            if (Rec) {
-                const r = new Rec(); r.lang = 'pt-BR';
+            // Inicializa Microfone se disponível
+            const Speech = window.SpeechRecognition || window.webkitSpeechRecognition;
+            if (Speech) {
+                const r = new Speech(); r.lang = 'pt-BR';
                 const b = document.getElementById('mic-btn');
                 const s = document.getElementById('txt-status');
 
                 b.onmousedown = b.ontouchstart = (e) => { e.preventDefault(); r.start(); };
                 b.onmouseup = b.ontouchend = (e) => { e.preventDefault(); r.stop(); };
 
-                r.onstart = () => { b.classList.add('mic-active'); s.innerText = "Ouvindo..."; s.style.color = "red"; };
-                r.onend = () => { b.classList.remove('mic-active'); s.innerText = "Mensagem"; s.style.color = ""; };
+                r.onstart = () => { b.classList.add('mic-active'); s.innerText = "Ouvindo..."; };
+                r.onend = () => { b.classList.remove('mic-active'); s.innerText = "Mensagem"; };
                 r.onresult = (e) => comando(e.results[0][0].transcript);
             }
         };
