@@ -3,34 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>K30i - Icon Fix</title>
+    <title>K30i Stable</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <style>
-        /* TEMA ESCURO PADRÃO */
+        /* TEMA ESCURO (PADRÃO) */
         :root {
-            --bg-principal: #0b111e;
-            --bg-header: #0b111e;
-            --bg-card: #161c2b;
-            --bg-pergunta: #2b3344;
-            --bg-resposta: #1a2235;
-            --bg-tel: #111723;
-            --cor-texto: #e0e6ed;
-            --cor-texto-dim: #8696a0;
+            --bg-p: #0b111e;
+            --bg-h: #0b111e;
+            --bg-c: #161c2b;
+            --bg-b-p: #2b3344;
+            --bg-b-r: #1a2235;
+            --txt: #e0e6ed;
+            --txt-d: #8696a0;
             --azul: #4fc3f7;
             --verde: #39d353;
             --borda: rgba(255,255,255,0.1);
         }
 
-        .light-mode {
-            --bg-principal: #f0f2f5;
-            --bg-header: #ffffff;
-            --bg-card: #ffffff;
-            --bg-pergunta: #e3f2fd;
-            --bg-resposta: #ffffff;
-            --bg-tel: #f8f9fa;
-            --cor-texto: #1c1e21;
-            --cor-texto-dim: #606770;
+        /* MODO CLARO */
+        body.light-mode {
+            --bg-p: #f0f2f5;
+            --bg-h: #ffffff;
+            --bg-c: #ffffff;
+            --bg-b-p: #e3f2fd;
+            --bg-b-r: #ffffff;
+            --txt: #1c1e21;
+            --txt-d: #606770;
             --azul: #1976d2;
             --verde: #2e7d32;
             --borda: #e0e0e0;
@@ -38,79 +37,171 @@
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: sans-serif; -webkit-tap-highlight-color: transparent; }
 
-        html, body { height: 100dvh; width: 100vw; background-color: var(--bg-principal); overflow: hidden; display: flex; flex-direction: column; }
+        html, body { 
+            height: 100dvh; 
+            width: 100vw; 
+            background-color: var(--bg-p); 
+            overflow: hidden; 
+            display: flex; 
+            flex-direction: column; 
+        }
 
         header { 
-            height: 65px;
+            height: 60px; 
             padding: 0 15px; 
-            background: var(--bg-header);
+            background: var(--bg-h); 
             display: flex; 
             justify-content: space-between; 
-            align-items: center;
+            align-items: center; 
             z-index: 2000; 
-            position: relative;
             border-bottom: 1px solid var(--borda);
         }
 
-        .header-center { text-align: center; }
-        .fw-tag { font-size: 10px; color: var(--azul); background: rgba(79, 195, 247, 0.1); padding: 2px 6px; border-radius: 4px; font-weight: bold; margin-left: 5px; }
+        .fw-tag { font-size: 10px; color: var(--azul); background: rgba(79,195,247,0.1); padding: 2px 6px; border-radius: 4px; font-weight: bold; }
 
-        /* MENU DRAWER */
-        .drawer { 
-            position: fixed;
-            top: 65px; 
-            left: 0;
-            width: 100%;
-            background: var(--bg-header);
-            z-index: 1000;
-            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        /* MENU DRAWER (FIXO E SEGURO) */
+        #drawer { 
+            position: fixed; 
+            top: 60px; 
+            left: 0; 
+            width: 100%; 
+            background: var(--bg-h); 
+            z-index: 1000; 
+            transition: transform 0.4s ease-out; 
             border-bottom: 1px solid var(--borda);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-            transform: translateY(0); 
+            transform: translateY(0); /* Inicia Aberto */
+        }
+        #drawer.fechado { transform: translateY(-100%); }
+
+        .grid-botoes { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 15px; }
+        .card { background: var(--bg-c); border-radius: 12px; padding: 15px; text-align: center; border: 1px solid var(--borda); color: var(--txt); font-size: 11px; font-weight: bold; }
+        .card i { display: block; font-size: 20px; margin-bottom: 5px; }
+
+        .alca { 
+            position: absolute; bottom: -22px; left: 50%; transform: translateX(-50%);
+            height: 22px; width: 50px; background: var(--bg-h); 
+            display: flex; justify-content: center; align-items: center; 
+            border-radius: 0 0 10px 10px; border: 1px solid var(--borda); border-top: none;
         }
 
-        .drawer-fechado { transform: translateY(-100%); } 
+        /* ÁREA DE CONVERSA */
+        #chat { flex: 1; padding: 20px 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; background: var(--bg-p); }
+        .balao { max-width: 85%; padding: 12px; font-size: 14px; border-radius: 12px; color: var(--txt); box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .pergunta .balao { background: var(--bg-b-p); border-left: 4px solid var(--azul); align-self: flex-end; }
+        .resposta .balao { background: var(--bg-b-r); border-left: 4px solid #546e7a; align-self: flex-start; }
 
-        .grid-botoes { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 20px; }
-        .card { background: var(--bg-card); border-radius: 15px; padding: 18px; text-align: center; font-size: 11px; font-weight: bold; border: 1px solid var(--borda); color: var(--cor-texto); }
-        .card i { display: block; font-size: 22px; margin-bottom: 8px; }
+        .telemetria { background: rgba(0,0,0,0.05); border-radius: 8px; padding: 10px; margin-top: 10px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .tel-item b { font-size: 14px; display: block; }
+        .tel-item span { font-size: 9px; color: var(--txt-d); font-weight: bold; }
 
-        .alca-container { position: absolute; bottom: -25px; left: 50%; transform: translateX(-50%); z-index: 1001; }
-        .alca { height: 25px; width: 60px; background: var(--bg-header); display: flex; justify-content: center; align-items: center; border-radius: 0 0 15px 15px; border: 1px solid var(--borda); border-top: none; cursor: pointer; }
+        /* RODAPÉ */
+        footer { padding: 12px; background: var(--bg-h); display: flex; align-items: center; gap: 10px; border-top: 1px solid var(--borda); }
+        .input-box { flex: 1; background: var(--bg-c); border-radius: 20px; padding: 10px 15px; color: var(--txt-d); font-size: 13px; border: 1px solid var(--borda); }
+        .btn-mic { width: 45px; height: 45px; border-radius: 50%; border: none; background: var(--azul); color: #fff; font-size: 18px; display: flex; align-items: center; justify-content: center; }
+        .gravando { background: #f44336 !important; }
 
-        /* CHAT */
-        .chat-container { flex: 1; padding: 25px 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 20px; background: var(--bg-principal); }
-        .balao { max-width: 85%; padding: 15px; font-size: 14px; border-radius: 15px; box-shadow: 0 3px 10px rgba(0,0,0,0.2); color: var(--cor-texto); }
-        .pergunta .balao { background: var(--bg-pergunta); border-left: 5px solid var(--azul); align-self: flex-end; border-bottom-right-radius: 2px; }
-        .resposta .balao { background: var(--bg-resposta); border-left: 5px solid #546e7a; align-self: flex-start; border-bottom-left-radius: 2px; }
-
-        .telemetria { background: var(--bg-tel); border-radius: 10px; padding: 15px; margin-top: 12px; display: grid; grid-template-columns: 1fr 1fr; gap: 15px; border: 1px solid var(--borda); }
-        .tel-item span { font-size: 10px; font-weight: bold; color: var(--cor-texto-dim); display: block; margin-bottom: 4px; }
-        .tel-item b { font-size: 16px; color: var(--cor-texto); }
-
-        /* FOOTER */
-        footer { padding: 15px; background: var(--bg-header); display: flex; align-items: center; gap: 10px; border-top: 1px solid var(--borda); }
-        .input-box { flex: 1; background: var(--bg-tel); border-radius: 25px; padding: 12px 20px; color: var(--cor-texto-dim); font-size: 14px; border: 1px solid var(--borda); }
-        .btn-mic { width: 50px; height: 50px; border-radius: 50%; border: none; background: var(--azul); color: white; font-size: 20px; display: flex; align-items: center; justify-content: center; }
-        .gravando { background: #ff5252 !important; }
-
-        .icon-btn { cursor: pointer; padding: 8px; font-size: 18px; color: var(--cor-texto-dim); }
+        .icon-btn { cursor: pointer; padding: 5px; font-size: 18px; color: var(--txt-d); }
     </style>
 </head>
 <body>
 
     <header>
         <i class="fa-solid fa-bars icon-btn"></i>
-        <div class="header-center">
-            <h1 style="font-size: 18px; color: var(--cor-texto);">K30i <span class="fw-tag">v1.0.8</span></h1>
-            <div style="color: var(--verde); font-size: 10px; font-weight: bold;">● ONLINE</div>
+        <div style="text-align: center;">
+            <h1 style="font-size: 16px; color: var(--txt);">K30i <span class="fw-tag">v1.0.9</span></h1>
+            <div style="color: var(--verde); font-size: 9px; font-weight: bold;">● ONLINE</div>
         </div>
-        <div style="display: flex; gap: 10px;">
+        <div style="display: flex; gap: 8px;">
             <i class="fa-solid fa-sun icon-btn" id="theme-btn" onclick="toggleTheme()"></i>
             <i class="fa-solid fa-rotate icon-btn" onclick="location.reload()"></i>
         </div>
     </header>
 
-    <div id="drawer" class="drawer">
+    <div id="drawer">
         <div class="grid-botoes">
-            <div class="card" style="color: #ff5252;"><i class="fa
+            <div class="card" style="color:#f44336"><i class="fa-solid fa-triangle-exclamation"></i>FALHA</div>
+            <div class="card" style="color:#ff9800"><i class="fa-solid fa-circle-exclamation"></i>AVISO</div>
+            <div class="card"><i class="fa-solid fa-calendar"></i>AGENDA</div>
+            <div class="card"><i class="fa-solid fa-microchip"></i>I/O</div>
+        </div>
+        <div class="alca" onclick="toggleMenu()">
+            <i class="fa-solid fa-chevron-up" id="seta" style="color: var(--txt-d); transition: 0.3s;"></i>
+        </div>
+    </div>
+
+    <main id="chat">
+        <div class="wrapper resposta" style="display:flex; flex-direction:column;">
+            <div class="balao">
+                Sistema estabilizado v1.0.9.
+                <div class="telemetria">
+                    <div class="tel-item"><span>PRESSÃO</span><b>14.00 bar</b></div>
+                    <div class="tel-item"><span>TEMP.</span><b>84.00°C</b></div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="input-box" id="status-voz">Toque para falar...</div>
+        <button class="btn-mic" id="mic"><i class="fa-solid fa-microphone"></i></button>
+    </footer>
+
+    <script>
+        // Função do Menu (Drawer)
+        const drawer = document.getElementById('drawer');
+        const seta = document.getElementById('seta');
+
+        function toggleMenu() {
+            drawer.classList.toggle('fechado');
+            seta.style.transform = drawer.classList.contains('fechado') ? 'rotate(180deg)' : 'rotate(0deg)';
+        }
+
+        // Fechar automático após 2s
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                drawer.classList.add('fechado');
+                seta.style.transform = 'rotate(180deg)';
+            }, 2000);
+        });
+
+        // Alternar Tema (Ícones Invertidos)
+        function toggleTheme() {
+            const body = document.body;
+            const btn = document.getElementById('theme-btn');
+            
+            body.classList.toggle('light-mode');
+            
+            if (body.classList.contains('light-mode')) {
+                btn.className = 'fa-solid fa-moon icon-btn';
+            } else {
+                btn.className = 'fa-solid fa-sun icon-btn';
+            }
+        }
+
+        // Voz Simples (Evita travar)
+        const mic = document.getElementById('mic');
+        const statusVoz = document.getElementById('status-voz');
+        const chat = document.getElementById('chat');
+
+        const Recognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        if (Recognition) {
+            const rec = new Recognition();
+            rec.lang = 'pt-BR';
+            
+            mic.onclick = () => { rec.start(); mic.classList.add('gravando'); statusVoz.innerText = "Ouvindo..."; };
+            
+            rec.onresult = (e) => {
+                const txt = e.results[0][0].transcript;
+                statusVoz.innerText = txt;
+                setTimeout(() => {
+                    const box = `<div class="wrapper pergunta" style="display:flex; flex-direction:column; align-items:flex-end; margin-top:10px;"><div class="balao">${txt}</div></div>`;
+                    chat.insertAdjacentHTML('beforeend', box);
+                    chat.scrollTop = chat.scrollHeight;
+                    statusVoz.innerText = "Toque para falar...";
+                }, 500);
+            };
+            rec.onend = () => mic.classList.remove('gravando');
+        }
+    </script>
+</body>
+</html>
