@@ -3,10 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>K30i v1.1.6 - Standard</title>
+    <title>K30i - Interface Pro</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        /* PADRÃO WHATSAPP CONGELADO */
         :root {
             --topo: #ffffff; --fundo: #efeae2; --balao-eu: #d9fdd3; --balao-ele: #ffffff;
             --texto: #111b21; --subtitulo: #667781; --accent: #25d366; --borda: #e9edef;
@@ -15,108 +14,164 @@
             --topo: #202c33; --fundo: #0b141a; --balao-eu: #005c4b; --balao-ele: #202c33;
             --texto: #e9edef; --subtitulo: #8696a0; --accent: #00a884; --borda: rgba(255,255,255,0.1);
         }
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: sans-serif; -webkit-tap-highlight-color: transparent; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; -webkit-tap-highlight-color: transparent; }
+        
         html, body { height: 100dvh; width: 100vw; background-color: var(--fundo); display: flex; flex-direction: column; overflow: hidden; }
 
-        header { height: 60px; background: var(--topo); display: flex; justify-content: space-between; align-items: center; padding: 0 15px; z-index: 1000; border-bottom: 1px solid var(--borda); }
-        .foto { width: 38px; height: 38px; border-radius: 50%; background: #1a7a35; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; }
+        /* HEADER */
+        header { height: 60px; background: var(--topo); display: flex; justify-content: space-between; align-items: center; padding: 0 15px; z-index: 1000; border-bottom: 1px solid var(--borda); flex-shrink: 0; }
+        .perfil { display: flex; align-items: center; gap: 10px; }
+        .foto { width: 40px; height: 40px; border-radius: 50%; background: #1a7a35; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 18px; }
+        .status-online { color: #4cff72; font-size: 10px; font-weight: bold; }
 
-        #drawer { position: fixed; top: 60px; left: 0; width: 100%; background: var(--topo); z-index: 900; transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1); border-bottom: 1px solid var(--borda); transform: translateY(0); }
+        /* DRAWER (GAVETA DE ATALHOS) */
+        #drawer { position: fixed; top: 60px; left: 0; width: 100%; background: var(--topo); z-index: 900; transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1); border-bottom: 1px solid var(--borda); transform: translateY(0); }
         #drawer.recolhido { transform: translateY(-100%); }
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding: 12px; }
-        .card { background: var(--balao-ele); padding: 12px; border-radius: 10px; text-align: center; color: var(--texto); font-size: 11px; border: 1.5px solid var(--borda); font-weight: bold; }
-        
-        /* CORES DO TRANSPLANTE */
-        .card.falha { border-color: #e74c3c; color: #ff6b6b; }
-        .card.aviso { border-color: #e67e22; color: #ffaa55; }
+        .grid-atalhos { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding: 12px; }
+        .card { background: var(--balao-ele); padding: 12px; border-radius: 10px; text-align: center; color: var(--texto); font-size: 11px; border: 1.5px solid var(--borda); font-weight: bold; cursor: pointer; }
+        .card i { display: block; font-size: 18px; margin-bottom: 5px; color: var(--accent); }
+        .alca { position: absolute; bottom: -24px; left: 50%; transform: translateX(-50%); height: 24px; width: 50px; background: var(--topo); border-radius: 0 0 12px 12px; display: flex; justify-content: center; align-items: center; border: 1px solid var(--borda); border-top: none; cursor: pointer; }
 
-        .alca { position: absolute; bottom: -24px; left: 50%; transform: translateX(-50%); height: 24px; width: 50px; background: var(--topo); border-radius: 0 0 12px 12px; display: flex; justify-content: center; align-items: center; border: 1px solid var(--borda); border-top: none; }
-
-        #chat { flex: 1; padding: 20px 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
-        .msg { max-width: 85%; padding: 8px 12px; border-radius: 8px; font-size: 14.5px; color: var(--texto); box-shadow: 0 1px 1px rgba(0,0,0,0.1); position: relative; }
+        /* ÁREA DE CHAT */
+        #chat { flex: 1; padding: 20px 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; scroll-behavior: smooth; }
+        .msg { max-width: 85%; padding: 8px 12px; border-radius: 8px; font-size: 15px; color: var(--texto); box-shadow: 0 1px 1px rgba(0,0,0,0.1); position: relative; line-height: 1.4; white-space: pre-wrap; }
         .eu { align-self: flex-end; background: var(--balao-eu); border-top-right-radius: 0; }
         .ele { align-self: flex-start; background: var(--balao-ele); border-top-left-radius: 0; }
         .tempo { font-size: 10px; color: var(--subtitulo); text-align: right; margin-top: 4px; display: block; }
+        
+        /* BOTÕES DENTRO DO CHAT */
+        .btn-inline { background: #e9edef; border: 1px solid #ced4da; padding: 6px 12px; border-radius: 15px; font-size: 13px; margin: 5px 5px 0 0; display: inline-block; cursor: pointer; color: #111b21; }
+        body.dark-mode .btn-inline { background: #374045; color: #e9edef; border-color: #4a555a; }
 
-        footer { padding: 10px; display: flex; align-items: center; gap: 8px; }
-        .input-bar { flex: 1; background: var(--topo); border-radius: 25px; padding: 12px 15px; color: var(--subtitulo); font-size: 15px; display: flex; justify-content: space-between; box-shadow: 0 1px 2px rgba(0,0,0,0.1); }
-        .btn-mic { width: 50px; height: 50px; border-radius: 50%; border: none; background: #25a244; color: white; font-size: 20px; transition: 0.1s; }
+        /* RODAPÉ */
+        footer { padding: 10px; display: flex; align-items: center; gap: 8px; background: transparent; flex-shrink: 0; }
+        .input-falso { flex: 1; background: var(--topo); border-radius: 25px; padding: 12px 18px; color: var(--subtitulo); font-size: 16px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 1px 2px rgba(0,0,0,0.1); }
+        .btn-mic { width: 52px; height: 52px; border-radius: 50%; border: none; background: #25a244; color: white; font-size: 22px; display: flex; align-items: center; justify-content: center; transition: transform 0.1s; cursor: pointer; }
     </style>
 </head>
 <body>
+
     <header>
-        <div style="display:flex; align-items:center; gap:10px;">
+        <div class="perfil">
             <div class="foto">K</div>
             <div>
                 <b style="color:var(--texto)">Suporte K30i</b><br>
-                <span style="color:#4cff72; font-size:10px; font-weight:bold;">● ONLINE v1.50</span>
+                <span class="status-online">● ONLINE v1.50</span>
             </div>
         </div>
-        <i class="fa-solid fa-moon" id="theme-btn" style="color:var(--subtitulo)" onclick="toggleTheme()"></i>
+        <i class="fa-solid fa-moon" id="theme-btn" style="color:var(--subtitulo); font-size: 20px;" onclick="alternarTema()"></i>
     </header>
 
     <div id="drawer">
-        <div class="grid">
-            <div class="card falha" onclick="processar('falha')"><i class="fa-solid fa-bug"></i><br>FALHA ATIVA</div>
-            <div class="card aviso" onclick="processar('aviso')"><i class="fa-solid fa-triangle-exclamation"></i><br>AVISO ATIVO</div>
-            <div class="card" onclick="processar('leds')"><i class="fa-solid fa-lightbulb"></i><br>LEDS PAINEL</div>
-            <div class="card" onclick="processar('reset')"><i class="fa-solid fa-rotate"></i><br>RESET FALHA</div>
+        <div class="grid-atalhos">
+            <div class="card" onclick="processarComando('FALHA ATIVA')"><i class="fa-solid fa-bug"></i>FALHA</div>
+            <div class="card" onclick="processarComando('AVISO ATIVO')"><i class="fa-solid fa-triangle-exclamation"></i>AVISO</div>
+            <div class="card" onclick="processarComando('PROGRAMAÇÃO')"><i class="fa-solid fa-gear"></i>PROG.</div>
+            <div class="card" onclick="processarComando('LEDS PAINEL')"><i class="fa-solid fa-lightbulb"></i>LEDS</div>
         </div>
-        <div class="alca" onclick="toggleMenu()"><i id="seta" class="fa-solid fa-chevron-up"></i></div>
+        <div class="alca" onclick="toggleGaveta()"><i id="seta-gaveta" class="fa-solid fa-chevron-up"></i></div>
     </div>
 
     <main id="chat"></main>
 
     <footer>
-        <div class="input-bar"><span id="status">Mensagem</span><i class="fa-solid fa-paperclip"></i></div>
-        <button class="btn-mic" id="btn-voz"><i class="fa-solid fa-microphone"></i></button>
+        <div class="input-falso">
+            <span id="label-status">Mensagem</span>
+            <i class="fa-solid fa-paperclip" style="transform: rotate(-45deg);"></i>
+        </div>
+        <button class="btn-mic" id="btn-voz">
+            <i class="fa-solid fa-microphone"></i>
+        </button>
     </footer>
 
     <script>
-        // LÓGICA DO FRONTEND
-        function toggleMenu() { document.getElementById('drawer').classList.toggle('recolhido'); }
-        window.onload = () => setTimeout(() => document.getElementById('drawer').classList.add('recolhido'), 2000);
-        function toggleTheme() { document.body.classList.toggle('dark-mode'); }
+        // --- FUNÇÕES DE INTERFACE ---
+        function toggleGaveta() {
+            const d = document.getElementById('drawer');
+            const s = document.getElementById('seta-gaveta');
+            d.classList.toggle('recolhido');
+            s.className = d.classList.contains('recolhido') ? 'fa-solid fa-chevron-down' : 'fa-solid fa-chevron-up';
+        }
 
-        // LÓGICA DO TRANSPLANTE (MICROFONE)
+        function alternarTema() {
+            document.body.classList.toggle('dark-mode');
+            const btn = document.getElementById('theme-btn');
+            btn.className = document.body.classList.contains('dark-mode') ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
+        }
+
+        // Fecha a gaveta automaticamente após 2 segundos no início
+        window.onload = () => {
+            setTimeout(toggleGaveta, 2000);
+            adicionarMensagem("Olá! Como posso ajudar com o K30i hoje?", 'ele');
+        };
+
+        // --- SISTEMA DE CHAT ---
+        function adicionarMensagem(texto, tipo) {
+            const chat = document.getElementById('chat');
+            const agora = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+            const check = tipo === 'eu' ? ' <i class="fa-solid fa-check-double" style="color:#53bdeb; font-size:12px"></i>' : '';
+            
+            const div = document.createElement('div');
+            div.className = `msg ${tipo}`;
+            div.innerHTML = `${texto}<span class="tempo">${agora}${check}</span>`;
+            
+            chat.appendChild(div);
+            chat.scrollTop = chat.scrollHeight;
+        }
+
+        // --- MICROFONE (BLINDADO) ---
         const Recognition = window.SpeechRecognition || window.webkitSpeechRecognition;
         if (Recognition) {
-            const recognition = new Recognition();
-            recognition.lang = 'pt-BR';
-            const btnVoz = document.getElementById('btn-voz');
+            const rec = new Recognition();
+            rec.lang = 'pt-BR';
+            const btn = document.getElementById('btn-voz');
 
-            btnVoz.addEventListener('touchstart', (e) => {
+            btn.addEventListener('touchstart', (e) => {
                 e.preventDefault();
-                btnVoz.style.transform = "scale(1.5)"; 
-                recognition.start();
+                btn.style.transform = "scale(1.5)";
                 if (navigator.vibrate) navigator.vibrate(40);
-                document.getElementById('status').innerText = "Ouvindo...";
+                document.getElementById('label-status').innerText = "Ouvindo...";
+                rec.start();
             });
 
-            btnVoz.addEventListener('touchend', (e) => {
-                btnVoz.style.transform = "scale(1)";
-                recognition.stop();
+            btn.addEventListener('touchend', (e) => {
+                e.preventDefault();
+                btn.style.transform = "scale(1)";
+                rec.stop();
+                document.getElementById('label-status').innerText = "Mensagem";
+                if (document.activeElement) document.activeElement.blur(); // Bloqueia teclado
             });
 
-            recognition.onresult = (event) => {
-                const texto = event.results[0][0].transcript;
-                enviarMsg(texto, 'eu');
-                // Aqui você chamaria sua função processar(texto) do index antigo
+            rec.onresult = (e) => {
+                const resultado = e.results[0][0].transcript;
+                processarComando(resultado);
             };
         }
 
-        function enviarMsg(txt, tipo) {
-            const agora = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-            const check = tipo === 'eu' ? '<i class="fa-solid fa-check-double" style="color:#53bdeb; margin-left:3px;"></i>' : '';
-            const html = `<div class="msg ${tipo}">${txt}<span class="tempo">${agora} ${check}</span></div>`;
-            document.getElementById('chat').insertAdjacentHTML('beforeend', html);
-            document.getElementById('chat').scrollTop = document.getElementById('chat').scrollHeight;
-            document.getElementById('status').innerText = "Mensagem";
-        }
+        // --- CÉREBRO (ONDE VOCÊ VAI PROGRAMAR TUDO NOVO) ---
+        function processarComando(txt) {
+            // 1. Mostra o que foi dito/clicado
+            adicionarMensagem(txt, 'eu');
 
-        // SERVICE WORKER (CÉREBRO OFFLINE)
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('sw.js'); // Use o sw do seu index antigo aqui
+            // 2. Lógica de Resposta (Inicie aqui sua nova programação)
+            setTimeout(() => {
+                let r = "";
+                const busca = txt.toLowerCase();
+
+                if(busca.includes("falha")) {
+                    r = "⚠️ **FALHA DETECTADA**\nO que deseja verificar?";
+                    r += `<br><div class="btn-inline" onclick="processarComando('Causa')">Causa</div>`;
+                    r += `<div class="btn-inline" onclick="processarComando('Reset')">Reset</div>`;
+                } 
+                else if(busca.includes("causa")) {
+                    r = "As causas comuns são:\n1. Falta de fase\n2. Sobrecarga.";
+                }
+                else {
+                    r = "Entendido. Buscando informações sobre: " + txt;
+                }
+
+                adicionarMensagem(r, 'ele');
+            }, 600);
         }
     </script>
 </body>
