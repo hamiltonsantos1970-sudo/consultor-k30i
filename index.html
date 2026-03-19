@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>K30i - Monitoramento</title>
+    <title>K30i - Sistema de Monitoramento</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <style>
@@ -43,7 +43,7 @@
         }
         .status-on { color: var(--verde-neon); font-size: 10px; font-weight: bold; text-align: center; }
 
-        /* 2. MENU RETRÁTIL (ESTA PARTE SOBE E DESCE) */
+        /* 2. MENU RETRÁTIL (APENAS BOTÕES SOBEM) */
         .drawer-container {
             transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             z-index: 1000;
@@ -51,7 +51,7 @@
             background: var(--bg-principal);
         }
         
-        .drawer-fechado { transform: translateY(-165px); } /* Sobe o grid */
+        .drawer-fechado { transform: translateY(-165px); } 
 
         .grid-botoes { 
             display: grid; 
@@ -87,7 +87,7 @@
         #seta { transition: 0.3s; color: var(--texto-dim); font-size: 10px; }
         .seta-up { transform: rotate(180deg); }
 
-        /* 3. ÁREA DE CHAT */
+        /* 3. ÁREA DE CHAT E BALÕES */
         .chat-content { 
             flex: 1; 
             padding: 10px 15px; 
@@ -101,6 +101,7 @@
         .pergunta { justify-content: flex-end; }
         .resposta { justify-content: flex-start; }
 
+        /* Efeito de profundidade lateral (Borda maior em um lado) */
         .balao {
             max-width: 85%; 
             padding: 15px; 
@@ -109,7 +110,6 @@
             box-shadow: 4px 4px 15px rgba(0,0,0,0.4);
         }
         
-        /* Borda lateral maior para profundidade */
         .pergunta .balao {
             background-color: var(--bg-balao-pergunta); 
             border-radius: 18px 4px 18px 18px;
@@ -122,6 +122,7 @@
             border-left: 4px solid rgba(255, 255, 255, 0.2); 
         }
 
+        /* Card de Telemetria */
         .tel-box {
             background-color: var(--bg-telemetria); 
             border-radius: 10px; 
@@ -136,9 +137,9 @@
 
         .hora { display: flex; justify-content: flex-end; font-size: 10px; color: var(--texto-dim); margin-top: 8px; gap: 4px; }
 
-        /* 4. RODAPÉ E BOTÃO DE GRAVAR (CORRIGIDO) */
+        /* 4. RODAPÉ E BOTÃO DE VOZ (TAMANHO FIXO) */
         footer { padding: 15px; display: flex; align-items: center; gap: 10px; background: var(--bg-principal); }
-        .input-area {
+        .input-simulado {
             flex: 1; background: #1d263a; border-radius: 25px; padding: 12px 18px;
             color: var(--texto-dim); font-size: 14px; display: flex; justify-content: space-between;
             align-items: center;
@@ -147,13 +148,11 @@
         .btn-mic {
             width: 50px; height: 50px; border-radius: 50%; border: none;
             background: linear-gradient(145deg, #3a5ba0, #1e335a); color: white;
-            font-size: 20px;
-            cursor: pointer;
-            transition: background 0.3s; /* Removido o transform scale */
+            font-size: 20px; transition: background 0.3s;
             display: flex; align-items: center; justify-content: center;
         }
 
-        /* Efeito visual de quando está gravando (sem expandir) */
+        /* Feedback visual sem expandir o botão */
         .gravando {
             background: linear-gradient(145deg, #f85149, #b91d1d) !important;
             box-shadow: 0 0 15px rgba(248, 81, 73, 0.5);
@@ -186,7 +185,7 @@
         </div>
     </div>
 
-    <main class="chat-content">
+    <main class="chat-content" id="chat">
         <div class="wrapper resposta">
             <div class="balao">
                 Protocolo aceito. Status de telemetria:
@@ -203,18 +202,11 @@
                 <div class="hora">09:46 AM</div>
             </div>
         </div>
-
-        <div class="wrapper pergunta">
-            <div class="balao">
-                Iniciando protocolo de limpeza manual na válvula secundária.
-                <div class="hora">09:48 AM <i class="fa-solid fa-check-double" style="color: var(--verde-neon);"></i></div>
-            </div>
-        </div>
     </main>
 
     <footer>
-        <div class="input-area">
-            <span id="texto-voz">Digite uma mensagem...</span>
+        <div class="input-simulado">
+            <span id="texto-label">Digite uma mensagem...</span>
             <i class="fa-solid fa-paperclip"></i>
         </div>
         <button class="btn-mic" id="mic"><i class="fa-solid fa-microphone"></i></button>
@@ -228,7 +220,51 @@
     </nav>
 
     <script>
-        // Lógica do Menu (Drawer)
+        // 1. Lógica do Reconhecimento de Voz Reais
+        const mic = document.getElementById('mic');
+        const txtLabel = document.getElementById('texto-label');
+        const chat = document.getElementById('chat');
+
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        if (SpeechRecognition) {
+            const recognition = new SpeechRecognition();
+            recognition.lang = 'pt-BR';
+
+            mic.addEventListener('click', () => {
+                recognition.start();
+                mic.classList.add('gravando');
+                txtLabel.innerText = "Ouvindo...";
+            });
+
+            recognition.onresult = (event) => {
+                const resultado = event.results[0][0].transcript;
+                txtLabel.innerText = resultado;
+                
+                setTimeout(() => {
+                    if (resultado.trim() !== "") {
+                        adicionarBalao(resultado);
+                        txtLabel.innerText = "Digite uma mensagem...";
+                    }
+                }, 500);
+            };
+
+            recognition.onend = () => mic.classList.remove('gravando');
+        }
+
+        function adicionarBalao(msg) {
+            const temp = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+            const html = `
+                <div class="wrapper pergunta">
+                    <div class="balao">
+                        ${msg}
+                        <div class="hora">${temp} <i class="fa-solid fa-check-double" style="color: var(--verde-neon);"></i></div>
+                    </div>
+                </div>`;
+            chat.insertAdjacentHTML('beforeend', html);
+            chat.scrollTop = chat.scrollHeight;
+        }
+
+        // 2. Lógica do Menu Retrátil
         const drawer = document.getElementById('drawer');
         const btnDrawer = document.getElementById('btn-drawer');
         const seta = document.getElementById('seta');
@@ -238,27 +274,11 @@
             seta.classList.toggle('seta-up');
         });
 
+        // Inicia aberto e fecha após 2s
         setTimeout(() => {
             drawer.classList.add('drawer-fechado');
             seta.classList.add('seta-up');
         }, 2000);
-
-        // Lógica de Voz Corrigida (Sem expansão de tamanho)
-        const mic = document.getElementById('mic');
-        const txt = document.getElementById('texto-voz');
-
-        mic.addEventListener('click', () => {
-            // Adiciona classe de cor sem mudar o tamanho
-            mic.classList.add('gravando');
-            txt.innerText = "Ouvindo...";
-            
-            // Simula o onresult
-            setTimeout(() => {
-                mic.classList.remove('gravando');
-                txt.innerText = "Limpeza de válvula concluída";
-                console.log("Enviando: Limpeza de válvula concluída");
-            }, 2000);
-        });
     </script>
 </body>
 </html>
