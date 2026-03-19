@@ -8,7 +8,145 @@
     <style>
         :root {
             --topo: #ffffff; --fundo: #efeae2; --balao-eu: #d9fdd3; --balao-ele: #ffffff;
+            --texto: #111b21; --subtitulo: #667781; --accen<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>K30i v1.1.9 - Original Logic</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* PADRÃO WHATSAPP MANTIDO */
+        :root {
+            --topo: #ffffff; --fundo: #efeae2; --balao-eu: #d9fdd3; --balao-ele: #ffffff;
             --texto: #111b21; --subtitulo: #667781; --accent: #25d366; --borda: #e9edef;
+        }
+        body.dark-mode {
+            --topo: #202c33; --fundo: #0b141a; --balao-eu: #005c4b; --balao-ele: #202c33;
+            --texto: #e9edef; --subtitulo: #8696a0; --accent: #00a884; --borda: rgba(255,255,255,0.1);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: sans-serif; -webkit-tap-highlight-color: transparent; }
+        html, body { height: 100dvh; width: 100vw; background-color: var(--fundo); display: flex; flex-direction: column; overflow: hidden; }
+
+        header { height: 60px; background: var(--topo); display: flex; justify-content: space-between; align-items: center; padding: 0 15px; z-index: 1000; border-bottom: 1px solid var(--borda); }
+        .foto { width: 38px; height: 38px; border-radius: 50%; background: #1a7a35; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; }
+
+        #drawer { position: fixed; top: 60px; left: 0; width: 100%; background: var(--topo); z-index: 900; transition: 0.5s; border-bottom: 1px solid var(--borda); transform: translateY(0); }
+        #drawer.recolhido { transform: translateY(-100%); }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding: 12px; }
+        .card { background: var(--balao-ele); padding: 12px; border-radius: 10px; text-align: center; color: var(--texto); font-size: 11px; border: 1.5px solid var(--borda); font-weight: bold; cursor: pointer; }
+        .card.falha { border-color: #e74c3c; color: #ff6b6b; }
+        .card.aviso { border-color: #e67e22; color: #ffaa55; }
+        .alca { position: absolute; bottom: -24px; left: 50%; transform: translateX(-50%); height: 24px; width: 50px; background: var(--topo); border-radius: 0 0 12px 12px; display: flex; justify-content: center; align-items: center; border: 1px solid var(--borda); border-top: none; }
+
+        #chat { flex: 1; padding: 20px 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
+        .msg { max-width: 85%; padding: 8px 12px; border-radius: 8px; font-size: 14.5px; color: var(--texto); box-shadow: 0 1px 1px rgba(0,0,0,0.1); position: relative; line-height: 1.5; white-space: pre-wrap; }
+        .eu { align-self: flex-end; background: var(--balao-eu); border-top-right-radius: 0; }
+        .ele { align-self: flex-start; background: var(--balao-ele); border-top-left-radius: 0; }
+        .tempo { font-size: 9px; color: var(--subtitulo); text-align: right; margin-top: 4px; display: block; }
+
+        footer { padding: 10px; display: flex; align-items: center; gap: 8px; }
+        .input-bar { flex: 1; background: var(--topo); border-radius: 25px; padding: 12px 15px; color: var(--subtitulo); font-size: 15px; display: flex; justify-content: space-between; box-shadow: 0 1px 2px rgba(0,0,0,0.1); }
+        .btn-mic { width: 50px; height: 50px; border-radius: 50%; border: none; background: #25a244; color: white; font-size: 20px; display: flex; align-items: center; justify-content: center; }
+    </style>
+</head>
+<body>
+    <header>
+        <div style="display:flex; align-items:center; gap:10px;">
+            <div class="foto">K</div>
+            <div><b style="color:var(--texto)">Suporte K30i</b><br><span style="color:#4cff72; font-size:10px; font-weight:bold;">● ONLINE v1.50</span></div>
+        </div>
+        <i class="fa-solid fa-moon" id="theme-btn" style="color:var(--subtitulo); padding:10px" onclick="toggleTheme()"></i>
+    </header>
+
+    <div id="drawer">
+        <div class="grid">
+            <div class="card falha" onclick="autoEnviar('FALHA ATIVA')"><i class="fa-solid fa-bug"></i> FALHA ATIVA</div>
+            <div class="card aviso" onclick="autoEnviar('AVISO ATIVO')"><i class="fa-solid fa-triangle-exclamation"></i> AVISO ATIVO</div>
+            <div class="card" onclick="autoEnviar('LEDS PAINEL')"><i class="fa-solid fa-lightbulb"></i> LEDS PAINEL</div>
+            <div class="card" onclick="autoEnviar('AJUDA')"><i class="fa-solid fa-circle-question"></i> AJUDA</div>
+        </div>
+        <div class="alca" onclick="toggleMenu()"><i id="seta" class="fa-solid fa-chevron-up"></i></div>
+    </div>
+
+    <main id="chat"></main>
+
+    <footer>
+        <div class="input-bar"><span id="status">Mensagem</span><i class="fa-solid fa-paperclip"></i></div>
+        <button class="btn-mic" id="btn-voz"><i class="fa-solid fa-microphone"></i></button>
+    </footer>
+
+    <script>
+        // --- RESPOSTAS ORIGINAIS DO SEU INDEX.HTML ---
+        const respostasOriginais = {
+            "FALHA ATIVA": "⚠️ *CÓDIGO DE FALHA ATIVA:*\n\n❌ *Causa Provável:* Falta de fase, sobrecarga no motor ou sensor de pressão desconectado.\n\n🛠️ *O que fazer:* \n1. Verifique a tensão nas fases R, S, T.\n2. Verifique se o disjuntor motor disparou.\n3. Confira o cabo do sensor 4-20mA.\n\n🔄 *Para Resetar:* Pressione o botão RESET físico por 5 segundos.",
+            
+            "AVISO ATIVO": "🔔 *AVISO DO SISTEMA:*\n\n⚠️ *Causa:* Nível baixo no tanque ou necessidade de troca de filtros (manutenção preventiva).\n\n🛠️ *O que fazer:*\n1. Verifique o nível do reservatório.\n2. Veja se a contagem de horas para manutenção excedeu.\n\n✅ *Ação:* O sistema continua operando, mas requer atenção imediata.",
+            
+            "LEDS PAINEL": "💡 *SIGNIFICADO DOS LEDS:*\n\n🟢 *Verde:* Sistema em operação (Bomba ligada).\n🟠 *Laranja:* Sistema em Standby (Aguardando demanda).\n🔴 *Vermelho:* Sistema bloqueado por Falha Crítica.\n⚪ *Apagado:* Sem alimentação ou em emergência.",
+            
+            "AJUDA": "❓ *DÚVIDAS FREQUENTES:*\n\n- Diga *'FALHA'* para erros críticos.\n- Diga *'AVISO'* para alertas leves.\n- Diga *'SENSORES'* para telemetria.\n- Diga *'RESET'* para limpar falhas.\n\n*Nota:* O sensor de pressão atual é: *14.00 bar*."
+        };
+
+        // --- LÓGICA DE INTERFACE ---
+        function toggleMenu() { document.getElementById('drawer').classList.toggle('recolhido'); }
+        function toggleTheme() {
+            document.body.classList.toggle('dark-mode');
+            const isDark = document.body.classList.contains('dark-mode');
+            document.getElementById('theme-btn').className = isDark ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
+        }
+        window.onload = () => {
+            setTimeout(() => document.getElementById('drawer').classList.add('recolhido'), 2000);
+            exibirMsg("Bem-vindo ao Suporte Técnico K30i. Como posso ajudar hoje?", 'ele');
+        };
+
+        // --- MICROFONE BLINDADO ---
+        const Rec = window.SpeechRecognition || window.webkitSpeechRecognition;
+        if (Rec) {
+            const recognition = new Rec(); recognition.lang = 'pt-BR';
+            const btn = document.getElementById('btn-voz');
+            btn.addEventListener('touchstart', (e) => {
+                e.preventDefault(); btn.style.transform = "scale(1.5)"; recognition.start();
+                if (navigator.vibrate) navigator.vibrate(40);
+                document.getElementById('status').innerText = "Ouvindo...";
+            });
+            btn.addEventListener('touchend', (e) => {
+                e.preventDefault(); btn.style.transform = "scale(1)"; recognition.stop();
+                if (document.activeElement) document.activeElement.blur();
+            });
+            recognition.onresult = (e) => autoEnviar(e.results[0][0].transcript);
+        }
+
+        // --- PROCESSAMENTO ---
+        function autoEnviar(txt) {
+            exibirMsg(txt, 'eu');
+            setTimeout(() => {
+                const busca = txt.toUpperCase();
+                let resposta = "Desculpe, não encontrei uma solução específica para '" + txt + "'. Tente os botões do menu acima.";
+                
+                // Busca exata/parcial no banco original
+                for (let chave in respostasOriginais) {
+                    if (busca.includes(chave) || chave.includes(busca)) {
+                        resposta = respostasOriginais[chave];
+                        break;
+                    }
+                }
+                exibirMsg(resposta, 'ele');
+            }, 600);
+        }
+
+        function exibirMsg(txt, tipo) {
+            const agora = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+            const check = tipo === 'eu' ? ' <i class="fa-solid fa-check-double" style="color:#53bdeb"></i>' : '';
+            const html = `<div class="msg ${tipo}">${txt}<span class="tempo">${agora}${check}</span></div>`;
+            const chat = document.getElementById('chat');
+            chat.insertAdjacentHTML('beforeend', html);
+            chat.scrollTop = chat.scrollHeight;
+            document.getElementById('status').innerText = "Mensagem";
+        }
+    </script>
+</body>
+</html>t: #25d366; --borda: #e9edef;
         }
         body.dark-mode {
             --topo: #202c33; --fundo: #0b141a; --balao-eu: #005c4b; --balao-ele: #202c33;
