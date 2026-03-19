@@ -3,10 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>K30i Ultimate v1.1.7</title>
+    <title>K30i v1.1.8 - Full</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        /* PADRÃO WHATSAPP CONGELADO */
         :root {
             --topo: #ffffff; --fundo: #efeae2; --balao-eu: #d9fdd3; --balao-ele: #ffffff;
             --texto: #111b21; --subtitulo: #667781; --accent: #25d366; --borda: #e9edef;
@@ -21,47 +20,40 @@
         header { height: 60px; background: var(--topo); display: flex; justify-content: space-between; align-items: center; padding: 0 15px; z-index: 1000; border-bottom: 1px solid var(--borda); }
         .foto { width: 38px; height: 38px; border-radius: 50%; background: #1a7a35; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; }
 
-        /* DRAWER */
-        #drawer { position: fixed; top: 60px; left: 0; width: 100%; background: var(--topo); z-index: 900; transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1); border-bottom: 1px solid var(--borda); transform: translateY(0); }
+        #drawer { position: fixed; top: 60px; left: 0; width: 100%; background: var(--topo); z-index: 900; transition: 0.5s; border-bottom: 1px solid var(--borda); transform: translateY(0); }
         #drawer.recolhido { transform: translateY(-100%); }
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding: 12px; }
-        .card { background: var(--balao-ele); padding: 12px; border-radius: 10px; text-align: center; color: var(--texto); font-size: 11px; border: 1.5px solid var(--borda); font-weight: bold; cursor: pointer; }
-        .card i { display: block; font-size: 18px; margin-bottom: 4px; color: var(--accent); }
+        .card { background: var(--balao-ele); padding: 12px; border-radius: 10px; text-align: center; color: var(--texto); font-size: 11px; border: 1.5px solid var(--borda); font-weight: bold; }
         .card.falha { border-color: #e74c3c; color: #ff6b6b; }
         .card.aviso { border-color: #e67e22; color: #ffaa55; }
         .alca { position: absolute; bottom: -24px; left: 50%; transform: translateX(-50%); height: 24px; width: 50px; background: var(--topo); border-radius: 0 0 12px 12px; display: flex; justify-content: center; align-items: center; border: 1px solid var(--borda); border-top: none; }
 
-        /* CHAT */
         #chat { flex: 1; padding: 20px 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
-        .msg { max-width: 85%; padding: 8px 12px; border-radius: 8px; font-size: 14.5px; color: var(--texto); box-shadow: 0 1px 1px rgba(0,0,0,0.1); position: relative; line-height: 1.4; }
+        .msg { max-width: 85%; padding: 8px 12px; border-radius: 8px; font-size: 14.5px; color: var(--texto); box-shadow: 0 1px 1px rgba(0,0,0,0.1); position: relative; line-height: 1.4; white-space: pre-wrap; }
         .eu { align-self: flex-end; background: var(--balao-eu); border-top-right-radius: 0; }
         .ele { align-self: flex-start; background: var(--balao-ele); border-top-left-radius: 0; }
         .tempo { font-size: 9px; color: var(--subtitulo); text-align: right; margin-top: 4px; display: block; }
 
-        /* FOOTER */
         footer { padding: 10px; display: flex; align-items: center; gap: 8px; }
         .input-bar { flex: 1; background: var(--topo); border-radius: 25px; padding: 12px 15px; color: var(--subtitulo); font-size: 15px; display: flex; justify-content: space-between; box-shadow: 0 1px 2px rgba(0,0,0,0.1); }
-        .btn-mic { width: 50px; height: 50px; border-radius: 50%; border: none; background: #25a244; color: white; font-size: 20px; transition: 0.1s; display: flex; align-items: center; justify-content: center; }
+        .btn-mic { width: 50px; height: 50px; border-radius: 50%; border: none; background: #25a244; color: white; font-size: 20px; display: flex; align-items: center; justify-content: center; transition: 0.1s; }
     </style>
 </head>
 <body>
     <header>
         <div style="display:flex; align-items:center; gap:10px;">
             <div class="foto">K</div>
-            <div>
-                <b style="color:var(--texto)">Suporte K30i</b><br>
-                <span style="color:#4cff72; font-size:10px; font-weight:bold;">● ONLINE v1.50</span>
-            </div>
+            <div><b style="color:var(--texto)">Suporte K30i</b><br><span style="color:#4cff72; font-size:10px; font-weight:bold;">● ONLINE v1.50</span></div>
         </div>
-        <i class="fa-solid fa-moon" id="theme-btn" style="color:var(--subtitulo); padding: 10px;" onclick="toggleTheme()"></i>
+        <i class="fa-solid fa-moon" id="theme-btn" style="color:var(--subtitulo); padding:10px" onclick="toggleTheme()"></i>
     </header>
 
     <div id="drawer">
         <div class="grid">
-            <div class="card falha" onclick="autoEnviar('FALHA ATIVA')"><i class="fa-solid fa-bug"></i>FALHA ATIVA</div>
-            <div class="card aviso" onclick="autoEnviar('AVISO ATIVO')"><i class="fa-solid fa-triangle-exclamation"></i>AVISO ATIVO</div>
-            <div class="card" onclick="autoEnviar('LEDS PAINEL')"><i class="fa-solid fa-lightbulb"></i>LEDS PAINEL</div>
-            <div class="card" onclick="autoEnviar('RESET FALHA')"><i class="fa-solid fa-rotate"></i>RESET FALHA</div>
+            <div class="card falha" onclick="autoEnviar('FALHA ATIVA')"><i class="fa-solid fa-bug"></i> FALHA ATIVA</div>
+            <div class="card aviso" onclick="autoEnviar('AVISO ATIVO')"><i class="fa-solid fa-triangle-exclamation"></i> AVISO ATIVO</div>
+            <div class="card" onclick="autoEnviar('SENSORES')"><i class="fa-solid fa-gauge"></i> SENSORES</div>
+            <div class="card" onclick="autoEnviar('AJUDA')"><i class="fa-solid fa-circle-question"></i> AJUDA</div>
         </div>
         <div class="alca" onclick="toggleMenu()"><i id="seta" class="fa-solid fa-chevron-up"></i></div>
     </div>
@@ -74,80 +66,71 @@
     </footer>
 
     <script>
-        // --- FUNÇÕES DE FRONTEND (CONGELADAS) ---
-        function toggleMenu() { document.getElementById('drawer').classList.toggle('recolhido'); }
-        window.onload = () => {
-            setTimeout(() => document.getElementById('drawer').classList.add('recolhido'), 2000);
-            exibirMsg("Bem-vindo ao Suporte K30i. Como posso ajudar?", 'ele');
+        // --- BASE DE DADOS DO TRANSPLANTE (Tudo o que tinha no seu index) ---
+        const bancoDados = {
+            "FALHA ATIVA": "⚠️ *CÓDIGO DE FALHA ATIVA:*\n\n1. *Falha de Pressão:* Verifique se a bomba está ligada.\n2. *Falha de Comunicação:* Verifique os cabos do sensor.\n3. *Sobrecarga:* O motor excedeu o limite de corrente.\n\n*Ação:* Pressione RESET por 5 segundos.",
+            "AVISO ATIVO": "🔔 *AVISOS DO SISTEMA:*\n\n- *Nível Baixo:* O reservatório está abaixo de 20%.\n- *Manutenção:* Restam 50h para a troca de filtro.\n- *Temperatura:* Sistema operando em 84.00°C.",
+            "SENSORES": "📊 *TELEMETRIA ATUAL:*\n\n- Pressão: *14.00 bar*\n- Temperatura: *84.00°C*\n- Nível: *0.00%*\n- Vazão: *0.00 L/min*",
+            "AJUDA": "❓ *MENU DE AJUDA:*\n\n- Diga *'Reset'* para limpar falhas.\n- Diga *'Status'* para ver os sensores.\n- Diga *'Leds'* para entender as luzes do painel.",
+            "LEDS": "💡 *LEDS DO PAINEL:*\n\n- *Verde:* Operação normal.\n- *Laranja:* Em modo standby.\n- *Vermelho:* Falha bloqueante.",
+            "RESET": "🔄 *PROCEDIMENTO DE RESET:*\n\n1. Verifique se o erro foi sanado.\n2. Pressione o botão RESET físico por 5s.\n3. A mensagem deve sumir do chat em seguida."
         };
+
+        // --- FUNÇÕES DE FRONTEND ---
+        function toggleMenu() { document.getElementById('drawer').classList.toggle('recolhido'); }
         function toggleTheme() {
             document.body.classList.toggle('dark-mode');
             const isDark = document.body.classList.contains('dark-mode');
             document.getElementById('theme-btn').className = isDark ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
         }
+        window.onload = () => {
+            setTimeout(() => document.getElementById('drawer').classList.add('recolhido'), 2000);
+            exibirMsg("Bem-vindo ao Suporte K30i. Como posso ajudar?", 'ele');
+        };
 
         // --- MICROFONE (BLINDADO) ---
         const Recognition = window.SpeechRecognition || window.webkitSpeechRecognition;
         if (Recognition) {
-            const recognition = new Recognition();
-            recognition.lang = 'pt-BR';
-            const btnVoz = document.getElementById('btn-voz');
-
-            btnVoz.addEventListener('touchstart', (e) => {
-                e.preventDefault();
-                btnVoz.style.transform = "scale(1.5)"; 
-                recognition.start();
+            const rec = new Recognition(); rec.lang = 'pt-BR';
+            const btn = document.getElementById('btn-voz');
+            btn.addEventListener('touchstart', (e) => {
+                e.preventDefault(); btn.style.transform = "scale(1.5)"; rec.start();
                 if (navigator.vibrate) navigator.vibrate(40);
                 document.getElementById('status').innerText = "Ouvindo...";
             });
-
-            btnVoz.addEventListener('touchend', (e) => {
-                e.preventDefault();
-                btnVoz.style.transform = "scale(1)";
-                recognition.stop();
+            btn.addEventListener('touchend', (e) => {
+                e.preventDefault(); btn.style.transform = "scale(1)"; rec.stop();
                 if (document.activeElement) document.activeElement.blur();
             });
-
-            recognition.onresult = (event) => {
-                const texto = event.results[0][0].transcript;
-                autoEnviar(texto);
-            };
+            rec.onresult = (e) => autoEnviar(e.results[0][0].transcript);
         }
 
-        // --- CÉREBRO TRANSPLANTADO (BASEADO NO SEU INDEX.HTML) ---
-        function autoEnviar(texto) {
-            exibirMsg(texto, 'eu');
-            setTimeout(() => processarResposta(texto.toUpperCase()), 600);
+        // --- LÓGICA DE RESPOSTA ---
+        function autoEnviar(txt) {
+            exibirMsg(txt, 'eu');
+            setTimeout(() => {
+                const busca = txt.toUpperCase();
+                let resposta = "Desculpe, não encontrei dados sobre '" + txt + "'. Tente os botões do menu.";
+                
+                // Busca inteligente no banco de dados
+                for (let chave in bancoDados) {
+                    if (busca.includes(chave) || chave.includes(busca)) {
+                        resposta = bancoDados[chave];
+                        break;
+                    }
+                }
+                exibirMsg(resposta, 'ele');
+            }, 600);
         }
 
         function exibirMsg(txt, tipo) {
             const agora = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-            const check = tipo === 'eu' ? '<i class="fa-solid fa-check-double" style="color:#53bdeb; margin-left:3px;"></i>' : '';
-            const html = `<div class="msg ${tipo}">${txt}<span class="tempo">${agora} ${check}</span></div>`;
+            const check = tipo === 'eu' ? ' <i class="fa-solid fa-check-double" style="color:#53bdeb"></i>' : '';
+            const html = `<div class="msg ${tipo}">${txt}<span class="tempo">${agora}${check}</span></div>`;
             const chat = document.getElementById('chat');
             chat.insertAdjacentHTML('beforeend', html);
             chat.scrollTop = chat.scrollHeight;
             document.getElementById('status').innerText = "Mensagem";
-        }
-
-        function processarResposta(pergunta) {
-            let r = "";
-            
-            if (pergunta.includes("FALHA ATIVA")) {
-                r = "⚠️ **FALHA ATIVA:**<br>Verifique o Código no Painel. Comum: Erro de Comunicação ou Pressão Crítica.";
-            } else if (pergunta.includes("AVISO ATIVO")) {
-                r = "⚠️ **AVISO ATIVO:**<br>Nível Baixo ou Manutenção Preventiva Pendente.";
-            } else if (pergunta.includes("LEDS PAINEL")) {
-                r = "💡 **LEDS:**<br>Verde: Operação<br>Laranja: Standby<br>Vermelho: Falha.";
-            } else if (pergunta.includes("RESET")) {
-                r = "🔄 **RESET:** Mantenha o botão 'Reset' pressionado por 5s até o led apagar.";
-            } else if (pergunta.includes("SENSOR")) {
-                r = "📡 **SENSOR:** O sensor de nível opera em 4-20mA. Valor atual: 0.00.";
-            } else {
-                r = "Desculpe, não encontrei uma solução específica para '" + pergunta + "'. Tente os botões de atalho.";
-            }
-            
-            exibirMsg(r, 'ele');
         }
     </script>
 </body>
