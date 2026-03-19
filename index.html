@@ -2,57 +2,185 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>K30i - Interface Industrial</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>K30i Interface</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <style>
-        /* 1. DEFINIÇÃO DE CORES (PALETA DA IMAGEM) */
-        :root {
-            --bg-deep: #0b111e;      /* Fundo principal azul marinho quase preto */
-            --bg-card: #161c2b;      /* Fundo dos botões de status */
-            --bg-bubble-left: #1a2235; /* Balão de quem recebe (Sistema) */
-            --bg-bubble-right: #2b3344; /* Balão de quem envia (Usuário) */
-            --bg-input: #1d263a;     /* Fundo da barra de digitação */
-            --text-main: #e0e6ed;    /* Texto claro */
-            --text-dim: #8696a0;     /* Texto cinza para horários */
-            --accent-blue: #3a5ba0;  /* Gradiente do microfone */
-            --accent-green: #39d353; /* Status Online */
-            --alert-orange: #ff8c67; /* Aviso de Sistema */
-            --alert-red: #f85149;    /* Falha Ativa */
-        }
-
-        /* 2. RESET E ESTRUTURA BÁSICA */
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
-
         body {
-            background-color: var(--bg-deep);
-            color: var(--text-main);
-            height: 100vh;
+            background-color: #0b111e;
+            color: #e0e6ed;
+            margin: 0;
+            padding: 0;
+            font-family: sans-serif;
             display: flex;
             flex-direction: column;
-            overflow: hidden;
+            min-height: 100vh;
         }
 
-        /* 3. HEADER (TOPO) */
+        /* Topo */
         header {
-            padding: 15px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid rgba(255,255,255,0.05);
+            padding: 20px;
+            text-align: center;
+            border-bottom: 1px solid #1a2235;
         }
-        .header-title { text-align: center; }
-        .header-title h1 { font-size: 18px; letter-spacing: 1px; color: #4fc3f7; }
-        .status-online { color: var(--accent-green); font-size: 10px; font-weight: bold; margin-top: 2px; }
+        header h1 { font-size: 20px; margin: 0; color: #4fc3f7; }
+        .online { color: #39d353; font-size: 10px; font-weight: bold; }
 
-        /* 4. GRID DE STATUS (CARD SUPERIORES) */
-        .status-grid {
+        /* Grid de Botões Superiores */
+        .grid-container {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 12px;
+            gap: 10px;
             padding: 15px;
         }
-        .card {
-            background: var(--bg-card);
-            border-radius: 20px;
+        .botao-card {
+            background: #161c2b;
+            border-radius: 15px;
+            padding: 20px 10px;
+            text-align: center;
+            font-size: 10px;
+            font-weight: bold;
+            color: #e0e6ed;
+            border: 1px solid #1d263a;
+        }
+        .botao-card i { display: block; font-size: 22px; margin-bottom: 8px; }
+        .vermelho i { color: #f85149; }
+        .laranja i { color: #ff8c67; }
+
+        /* Área do Chat */
+        .chat {
+            flex: 1;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .balao-wrapper { display: flex; width: 100%; }
+        .esquerda { justify-content: flex-start; }
+        .direita { justify-content: flex-end; }
+
+        .balao {
+            max-width: 80%;
+            padding: 12px;
+            font-size: 14px;
+            line-height: 1.4;
+            position: relative;
+        }
+
+        /* Balão Cinza (Sistema) */
+        .esquerda .balao {
+            background: #1a2235;
+            border-radius: 5px 15px 15px 15px;
+        }
+
+        /* Balão Azul Escuro (Usuário) */
+        .direita .balao {
+            background: #2b3344;
+            border-radius: 15px 5px 15px 15px;
+        }
+
+        .hora {
+            display: block;
+            font-size: 10px;
+            color: #8696a0;
+            margin-top: 5px;
+            text-align: right;
+        }
+
+        /* Barra de Baixo */
+        .barra-input {
+            background: #0b111e;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .caixa-texto {
+            flex: 1;
+            background: #1d263a;
+            border-radius: 25px;
+            padding: 12px 20px;
+            font-size: 14px;
+            color: #8696a0;
+            display: flex;
+            justify-content: space-between;
+        }
+        .btn-mic {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(145deg, #3a5ba0, #1e335a);
+            border: none;
+            color: white;
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: 0.1s;
+        }
+        .btn-mic:active { transform: scale(1.3); }
+
+        /* Menu Inferior */
+        nav {
+            background: #0d1424;
+            display: flex;
+            justify-content: space-around;
+            padding: 15px;
+            border-top: 1px solid #1a2235;
+        }
+        nav i { color: #8696a0; font-size: 20px; }
+        nav i.ativo { color: #4fc3f7; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>K30i</h1>
+        <div class="online">● ONLINE</div>
+    </header>
+
+    <div class="grid-container">
+        <div class="botao-card vermelho"><i class="fa-solid fa-circle-exclamation"></i> FALHA ATIVA</div>
+        <div class="botao-card laranja"><i class="fa-solid fa-triangle-exclamation"></i> AVISO ATIVO</div>
+        <div class="botao-card"><i class="fa-solid fa-calendar-check"></i> PROGRAMAÇÃO</div>
+        <div class="botao-card"><i class="fa-solid fa-microchip"></i> ENTRADAS/SAÍDAS</div>
+    </div>
+
+    <div class="chat">
+        <div class="balao-wrapper esquerda">
+            <div class="balao">
+                Iniciando diagnóstico da Unidade K30i. Sensores de pressão detectaram flutuação no módulo C-4.
+                <span class="hora">09:42 AM</span>
+            </div>
+        </div>
+
+        <div class="balao-wrapper direita">
+            <div class="balao">
+                Válvula de alívio verificada. Iniciando protocolo de limpeza manual.
+                <span class="hora">09:45 AM <i class="fa-solid fa-check-double" style="color: #4fc3f7;"></i></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="barra-input">
+        <i class="fa-solid fa-circle-plus" style="color: #8696a0; font-size: 22px;"></i>
+        <div class="caixa-texto">
+            Digite uma mensagem...
+            <i class="fa-solid fa-paperclip"></i>
+        </div>
+        <button class="btn-mic">
+            <i class="fa-solid fa-microphone"></i>
+        </button>
+    </div>
+
+    <nav>
+        <i class="fa-solid fa-comment-dots ativo"></i>
+        <i class="fa-solid fa-chart-line"></i>
+        <i class="fa-solid fa-server"></i>
+        <i class="fa-solid fa-gear"></i>
+    </nav>
+
+</body>
+</html>
