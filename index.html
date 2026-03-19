@@ -2,108 +2,142 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>K30i Interface</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>K30i - Monitoramento</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <style>
+        /* 1. CORES E VARIÁVEIS EXTRÁIDAS DAS IMAGENS */
+        :root {
+            --bg-principal: #0b111e;
+            --bg-cards-topo: #161c2b;
+            --bg-balao-pergunta: #2b3344;
+            --bg-balao-resposta: #1a2235;
+            --bg-telemetria: #111723;
+            --verde-status: #39d353;
+            --azul-destaque: #4fc3f7;
+            --texto-claro: #e0e6ed;
+            --texto-cinza: #8696a0;
+            --alerta-laranja: #ff8c67;
+            --alerta-vermelho: #f85149;
+        }
+
+        /* 2. RESET E ESTRUTURA GERAL */
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+
         body {
-            background-color: #0b111e;
-            color: #e0e6ed;
-            margin: 0;
-            padding: 0;
-            font-family: sans-serif;
+            background-color: var(--bg-principal);
+            color: var(--texto-claro);
+            height: 100vh;
             display: flex;
             flex-direction: column;
-            min-height: 100vh;
+            overflow: hidden;
         }
 
-        /* Topo */
+        /* 3. HEADER */
         header {
-            padding: 20px;
-            text-align: center;
-            border-bottom: 1px solid #1a2235;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
         }
-        header h1 { font-size: 20px; margin: 0; color: #4fc3f7; }
-        .online { color: #39d353; font-size: 10px; font-weight: bold; }
+        .header-info { text-align: center; }
+        .header-info h1 { font-size: 18px; color: var(--azul-destaque); margin: 0; }
+        .status-on { color: var(--verde-status); font-size: 10px; font-weight: bold; text-transform: uppercase; }
 
-        /* Grid de Botões Superiores */
-        .grid-container {
+        /* 4. GRID DE STATUS (4 BOTÕES) */
+        .grid-status {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 10px;
+            gap: 12px;
             padding: 15px;
         }
-        .botao-card {
-            background: #161c2b;
-            border-radius: 15px;
-            padding: 20px 10px;
+        .card-status {
+            background: var(--bg-cards-topo);
+            border-radius: 20px;
+            padding: 15px;
             text-align: center;
+            border: 1px solid rgba(255,255,255,0.03);
             font-size: 10px;
             font-weight: bold;
-            color: #e0e6ed;
-            border: 1px solid #1d263a;
         }
-        .botao-card i { display: block; font-size: 22px; margin-bottom: 8px; }
-        .vermelho i { color: #f85149; }
-        .laranja i { color: #ff8c67; }
+        .card-status i { display: block; font-size: 22px; margin-bottom: 8px; }
+        .falha i { color: var(--alerta-vermelho); }
+        .aviso i { color: var(--alerta-laranja); }
 
-        /* Área do Chat */
-        .chat {
+        /* 5. ÁREA DE CHAT */
+        .chat-area {
             flex: 1;
             padding: 15px;
+            overflow-y: auto;
             display: flex;
             flex-direction: column;
             gap: 15px;
         }
 
-        .balao-wrapper { display: flex; width: 100%; }
-        .esquerda { justify-content: flex-start; }
-        .direita { justify-content: flex-end; }
+        .wrapper { display: flex; width: 100%; }
+        .pergunta { justify-content: flex-end; }
+        .resposta { justify-content: flex-start; }
 
         .balao {
-            max-width: 80%;
-            padding: 12px;
+            max-width: 85%;
+            padding: 12px 15px;
             font-size: 14px;
             line-height: 1.4;
             position: relative;
         }
 
-        /* Balão Cinza (Sistema) */
-        .esquerda .balao {
-            background: #1a2235;
-            border-radius: 5px 15px 15px 15px;
+        /* Estilo Balão Pergunta (Direita) */
+        .pergunta .balao {
+            background-color: var(--bg-balao-pergunta);
+            border-radius: 18px 4px 18px 18px;
         }
 
-        /* Balão Azul Escuro (Usuário) */
-        .direita .balao {
-            background: #2b3344;
-            border-radius: 15px 5px 15px 15px;
+        /* Estilo Balão Resposta (Esquerda) */
+        .resposta .balao {
+            background-color: var(--bg-balao-resposta);
+            border-radius: 4px 18px 18px 18px;
         }
+
+        /* 6. CARD DE TELEMETRIA INTERNO */
+        .telemetria-card {
+            background-color: var(--bg-telemetria);
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 10px;
+            display: flex;
+            justify-content: space-between;
+        }
+        .tel-col { display: flex; flex-direction: column; gap: 10px; }
+        .tel-label { color: var(--texto-cinza); font-size: 9px; font-weight: bold; }
+        .tel-valor { color: #fff; font-size: 15px; font-weight: bold; display: block; }
 
         .hora {
-            display: block;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
             font-size: 10px;
-            color: #8696a0;
-            margin-top: 5px;
-            text-align: right;
+            color: var(--texto-cinza);
+            margin-top: 6px;
+            gap: 4px;
         }
 
-        /* Barra de Baixo */
+        /* 7. BARRA DE INPUT E MIC */
         .barra-input {
-            background: #0b111e;
             padding: 15px;
             display: flex;
             align-items: center;
             gap: 10px;
+            background: var(--bg-principal);
         }
-        .caixa-texto {
+        .campo-texto {
             flex: 1;
             background: #1d263a;
             border-radius: 25px;
             padding: 12px 20px;
             font-size: 14px;
-            color: #8696a0;
+            color: var(--texto-cinza);
             display: flex;
             justify-content: space-between;
         }
@@ -118,55 +152,78 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: 0.1s;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
         }
-        .btn-mic:active { transform: scale(1.3); }
 
-        /* Menu Inferior */
+        /* 8. NAV INFERIOR */
         nav {
-            background: #0d1424;
             display: flex;
             justify-content: space-around;
             padding: 15px;
-            border-top: 1px solid #1a2235;
+            background: #0d1424;
+            border-top: 1px solid rgba(255,255,255,0.05);
         }
-        nav i { color: #8696a0; font-size: 20px; }
-        nav i.ativo { color: #4fc3f7; }
+        nav i { color: var(--texto-cinza); font-size: 20px; }
+        nav i.active { color: var(--azul-destaque); }
     </style>
 </head>
 <body>
 
     <header>
-        <h1>K30i</h1>
-        <div class="online">● ONLINE</div>
+        <i class="fa-solid fa-bars"></i>
+        <div class="header-info">
+            <h1>K30i</h1>
+            <div class="status-on">● Online</div>
+        </div>
+        <i class="fa-solid fa-ellipsis-vertical"></i>
     </header>
 
-    <div class="grid-container">
-        <div class="botao-card vermelho"><i class="fa-solid fa-circle-exclamation"></i> FALHA ATIVA</div>
-        <div class="botao-card laranja"><i class="fa-solid fa-triangle-exclamation"></i> AVISO ATIVO</div>
-        <div class="botao-card"><i class="fa-solid fa-calendar-check"></i> PROGRAMAÇÃO</div>
-        <div class="botao-card"><i class="fa-solid fa-microchip"></i> ENTRADAS/SAÍDAS</div>
+    <div class="grid-status">
+        <div class="card-status falha"><i class="fa-solid fa-circle-exclamation"></i> FALHA ATIVA</div>
+        <div class="card-status aviso"><i class="fa-solid fa-triangle-exclamation"></i> AVISO ATIVO</div>
+        <div class="card-status"><i class="fa-solid fa-calendar-days"></i> PROGRAMAÇÃO</div>
+        <div class="card-status"><i class="fa-solid fa-sliders"></i> ENTRADAS/SAÍDAS</div>
     </div>
 
-    <div class="chat">
-        <div class="balao-wrapper esquerda">
+    <main class="chat-area">
+        
+        <div class="wrapper pergunta">
             <div class="balao">
-                Iniciando diagnóstico da Unidade K30i. Sensores de pressão detectaram flutuação no módulo C-4.
-                <span class="hora">09:42 AM</span>
+                Válvula de alívio verificada. Parece haver um acúmulo de resíduos na vedação secundária. Iniciando protocolo de limpeza manual.
+                <div class="hora">
+                    09:45 AM <i class="fa-solid fa-check-double" style="color: var(--verde-status);"></i>
+                </div>
             </div>
         </div>
 
-        <div class="balao-wrapper direita">
+        <div class="wrapper resposta">
             <div class="balao">
-                Válvula de alívio verificada. Iniciando protocolo de limpeza manual.
-                <span class="hora">09:45 AM <i class="fa-solid fa-check-double" style="color: #4fc3f7;"></i></span>
+                Protocolo aceito. Status de telemetria atualizado:
+                
+                <div class="telemetria-card">
+                    <div class="tel-col">
+                        <span class="tel-label">PRESSÃO</span>
+                        <span class="tel-valor">14.2 bar</span>
+                        <span class="tel-label">FLUXO</span>
+                        <span class="tel-valor">2.4 L/m</span>
+                    </div>
+                    <div class="tel-col">
+                        <span class="tel-label">TEMP.</span>
+                        <span class="tel-valor">84°C</span>
+                        <span class="tel-label">VIBRAÇÃO</span>
+                        <span class="tel-valor" style="color: var(--verde-status);">Estável</span>
+                    </div>
+                </div>
+                
+                <div class="hora">09:46 AM</div>
             </div>
         </div>
-    </div>
+
+    </main>
 
     <div class="barra-input">
-        <i class="fa-solid fa-circle-plus" style="color: #8696a0; font-size: 22px;"></i>
-        <div class="caixa-texto">
+        <i class="fa-solid fa-circle-plus" style="color: var(--texto-cinza); font-size: 22px;"></i>
+        <div class="campo-texto">
             Digite uma mensagem...
             <i class="fa-solid fa-paperclip"></i>
         </div>
@@ -176,7 +233,7 @@
     </div>
 
     <nav>
-        <i class="fa-solid fa-comment-dots ativo"></i>
+        <i class="fa-solid fa-comment-dots active"></i>
         <i class="fa-solid fa-chart-line"></i>
         <i class="fa-solid fa-server"></i>
         <i class="fa-solid fa-gear"></i>
