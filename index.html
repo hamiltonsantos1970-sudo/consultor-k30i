@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>K30i - Dark Default</title>
+    <title>K30i - Icon Fix</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <style>
-        /* TEMA ESCURO COMO PADRÃO */
+        /* TEMA ESCURO PADRÃO */
         :root {
             --bg-principal: #0b111e;
             --bg-header: #0b111e;
@@ -22,7 +22,6 @@
             --borda: rgba(255,255,255,0.1);
         }
 
-        /* CLASSE PARA MODO CLARO (OPCIONAL NO BOTÃO) */
         .light-mode {
             --bg-principal: #f0f2f5;
             --bg-header: #ffffff;
@@ -41,7 +40,6 @@
 
         html, body { height: 100dvh; width: 100vw; background-color: var(--bg-principal); overflow: hidden; display: flex; flex-direction: column; }
 
-        /* HEADER FIXO */
         header { 
             height: 65px;
             padding: 0 15px; 
@@ -57,7 +55,7 @@
         .header-center { text-align: center; }
         .fw-tag { font-size: 10px; color: var(--azul); background: rgba(79, 195, 247, 0.1); padding: 2px 6px; border-radius: 4px; font-weight: bold; margin-left: 5px; }
 
-        /* MENU DE ATALHOS (DRAWER) */
+        /* MENU DRAWER */
         .drawer { 
             position: fixed;
             top: 65px; 
@@ -68,59 +66,25 @@
             transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
             border-bottom: 1px solid var(--borda);
             box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-            /* Inicia aberto (sem transform) */
             transform: translateY(0); 
         }
 
         .drawer-fechado { transform: translateY(-100%); } 
 
-        .grid-botoes { 
-            display: grid; 
-            grid-template-columns: 1fr 1fr; 
-            gap: 12px; 
-            padding: 20px; 
-        }
-
-        .card { 
-            background: var(--bg-card); border-radius: 15px; padding: 18px; text-align: center; 
-            font-size: 11px; font-weight: bold; border: 1px solid var(--borda); color: var(--cor-texto);
-        }
+        .grid-botoes { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 20px; }
+        .card { background: var(--bg-card); border-radius: 15px; padding: 18px; text-align: center; font-size: 11px; font-weight: bold; border: 1px solid var(--borda); color: var(--cor-texto); }
         .card i { display: block; font-size: 22px; margin-bottom: 8px; }
 
-        .alca-container {
-            position: absolute;
-            bottom: -25px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 1001;
-        }
-
-        .alca {
-            height: 25px; width: 60px; background: var(--bg-header); 
-            display: flex; justify-content: center; align-items: center;
-            border-radius: 0 0 15px 15px; border: 1px solid var(--borda); border-top: none;
-            cursor: pointer;
-        }
+        .alca-container { position: absolute; bottom: -25px; left: 50%; transform: translateX(-50%); z-index: 1001; }
+        .alca { height: 25px; width: 60px; background: var(--bg-header); display: flex; justify-content: center; align-items: center; border-radius: 0 0 15px 15px; border: 1px solid var(--borda); border-top: none; cursor: pointer; }
 
         /* CHAT */
-        .chat-container { 
-            flex: 1; padding: 25px 15px; overflow-y: auto; 
-            display: flex; flex-direction: column; gap: 20px;
-            background: var(--bg-principal);
-        }
-
-        .balao {
-            max-width: 85%; padding: 15px; font-size: 14px; border-radius: 15px;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.2); color: var(--cor-texto);
-        }
-        
+        .chat-container { flex: 1; padding: 25px 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 20px; background: var(--bg-principal); }
+        .balao { max-width: 85%; padding: 15px; font-size: 14px; border-radius: 15px; box-shadow: 0 3px 10px rgba(0,0,0,0.2); color: var(--cor-texto); }
         .pergunta .balao { background: var(--bg-pergunta); border-left: 5px solid var(--azul); align-self: flex-end; border-bottom-right-radius: 2px; }
         .resposta .balao { background: var(--bg-resposta); border-left: 5px solid #546e7a; align-self: flex-start; border-bottom-left-radius: 2px; }
 
-        .telemetria {
-            background: var(--bg-tel); border-radius: 10px; padding: 15px; margin-top: 12px;
-            display: grid; grid-template-columns: 1fr 1fr; gap: 15px; border: 1px solid var(--borda);
-        }
+        .telemetria { background: var(--bg-tel); border-radius: 10px; padding: 15px; margin-top: 12px; display: grid; grid-template-columns: 1fr 1fr; gap: 15px; border: 1px solid var(--borda); }
         .tel-item span { font-size: 10px; font-weight: bold; color: var(--cor-texto-dim); display: block; margin-bottom: 4px; }
         .tel-item b { font-size: 16px; color: var(--cor-texto); }
 
@@ -138,106 +102,15 @@
     <header>
         <i class="fa-solid fa-bars icon-btn"></i>
         <div class="header-center">
-            <h1 style="font-size: 18px; color: var(--cor-texto);">K30i <span class="fw-tag">v1.0.7</span></h1>
+            <h1 style="font-size: 18px; color: var(--cor-texto);">K30i <span class="fw-tag">v1.0.8</span></h1>
             <div style="color: var(--verde); font-size: 10px; font-weight: bold;">● ONLINE</div>
         </div>
         <div style="display: flex; gap: 10px;">
-            <i class="fa-solid fa-moon icon-btn" id="theme-btn" onclick="toggleTheme()"></i>
+            <i class="fa-solid fa-sun icon-btn" id="theme-btn" onclick="toggleTheme()"></i>
             <i class="fa-solid fa-rotate icon-btn" onclick="location.reload()"></i>
         </div>
     </header>
 
     <div id="drawer" class="drawer">
         <div class="grid-botoes">
-            <div class="card" style="color: #ff5252;"><i class="fa-solid fa-circle-exclamation"></i> FALHA ATIVA</div>
-            <div class="card" style="color: #ffa000;"><i class="fa-solid fa-triangle-exclamation"></i> AVISO ATIVO</div>
-            <div class="card"><i class="fa-solid fa-calendar-days"></i> PROGRAMAÇÃO</div>
-            <div class="card"><i class="fa-solid fa-microchip"></i> ENTRADAS/SAÍDAS</div>
-        </div>
-        <div class="alca-container">
-            <div class="alca" id="btn-drawer">
-                <i class="fa-solid fa-chevron-up" id="seta" style="color: var(--cor-texto-dim); transition: 0.3s; transform: rotate(0deg);"></i>
-            </div>
-        </div>
-    </div>
-
-    <main class="chat-container" id="chat">
-        <div class="wrapper resposta" style="display:flex; flex-direction:column;">
-            <div class="balao">
-                Protocolo K30i Dark inicializado. Todos os valores em 0.00.
-                <div class="telemetria">
-                    <div class="tel-item"><span>PRESSÃO</span><b>14.00 bar</b></div>
-                    <div class="tel-item"><span>TEMP.</span><b>84.00°C</b></div>
-                    <div class="tel-item"><span>FLUXO</span><b>2.40 L/m</b></div>
-                    <div class="tel-item"><span>VIBRAÇÃO</span><b style="color:var(--verde)">0.00 mm/s</b></div>
-                </div>
-                <div style="font-size: 9px; color: var(--cor-texto-dim); margin-top: 10px; text-align: right;">10:30 AM</div>
-            </div>
-        </div>
-    </main>
-
-    <footer>
-        <div class="input-box" id="label-voz">Toque no mic para falar...</div>
-        <button class="btn-mic" id="mic"><i class="fa-solid fa-microphone"></i></button>
-    </footer>
-
-    <script>
-        // 1. Lógica do Menu (Drawer)
-        const drawer = document.getElementById('drawer');
-        const btnDrawer = document.getElementById('btn-drawer');
-        const seta = document.getElementById('seta');
-
-        // Função para abrir/fechar
-        function toggleDrawer() {
-            const isClosed = drawer.classList.toggle('drawer-fechado');
-            seta.style.transform = isClosed ? 'rotate(180deg)' : 'rotate(0deg)';
-        }
-
-        btnDrawer.addEventListener('click', toggleDrawer);
-
-        // FECHAMENTO AUTOMÁTICO APÓS 2 SEGUNDOS
-        window.onload = () => {
-            setTimeout(() => {
-                drawer.classList.add('drawer-fechado');
-                seta.style.transform = 'rotate(180deg)';
-            }, 2000);
-        };
-
-        // 2. Alternar Tema
-        function toggleTheme() {
-            const body = document.body;
-            const icon = document.getElementById('theme-btn');
-            body.classList.toggle('light-mode');
-            
-            if(body.classList.contains('light-mode')) {
-                icon.classList.replace('fa-moon', 'fa-sun');
-            } else {
-                icon.classList.replace('fa-sun', 'fa-moon');
-            }
-        }
-
-        // 3. Voz
-        const mic = document.getElementById('mic');
-        const label = document.getElementById('label-voz');
-        const chat = document.getElementById('chat');
-        const Speech = window.SpeechRecognition || window.webkitSpeechRecognition;
-
-        if (Speech) {
-            const rec = new Speech();
-            rec.lang = 'pt-BR';
-            mic.addEventListener('click', () => { rec.start(); mic.classList.add('gravando'); label.innerText = "Ouvindo..."; });
-            rec.onresult = (e) => {
-                const texto = e.results[0][0].transcript;
-                label.innerText = texto;
-                setTimeout(() => {
-                    const html = `<div class="wrapper pergunta" style="display:flex; flex-direction:column; align-items:flex-end; margin-top:15px;"><div class="balao">${texto}<div style="font-size:9px; color:var(--cor-texto-dim); margin-top:8px; text-align:right;">Agora <i class="fa-solid fa-check-double" style="color:var(--verde)"></i></div></div></div>`;
-                    chat.insertAdjacentHTML('beforeend', html);
-                    chat.scrollTop = chat.scrollHeight;
-                    label.innerText = "Toque no mic para falar...";
-                }, 600);
-            };
-            rec.onend = () => mic.classList.remove('gravando');
-        }
-    </script>
-</body>
-</html>
+            <div class="card" style="color: #ff5252;"><i class="fa
