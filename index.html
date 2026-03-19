@@ -3,22 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>K30i - Visual Test</title>
+    <title>K30i - Interface Industrial</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
     <style>
+        /* 1. DEFINIÇÃO DE CORES (PALETA DA IMAGEM) */
         :root {
-            --bg-deep: #0b111e;
-            --bg-card: #161c2b;
-            --bg-input: #1a2235;
-            --text-main: #e0e6ed;
-            --text-dim: #8696a0;
-            --accent-blue: #3a5ba0;
-            --accent-green: #39d353;
-            --alert-orange: #ff8c67;
-            --alert-red: #f85149;
+            --bg-deep: #0b111e;      /* Fundo principal azul marinho quase preto */
+            --bg-card: #161c2b;      /* Fundo dos botões de status */
+            --bg-bubble-left: #1a2235; /* Balão de quem recebe (Sistema) */
+            --bg-bubble-right: #2b3344; /* Balão de quem envia (Usuário) */
+            --bg-input: #1d263a;     /* Fundo da barra de digitação */
+            --text-main: #e0e6ed;    /* Texto claro */
+            --text-dim: #8696a0;     /* Texto cinza para horários */
+            --accent-blue: #3a5ba0;  /* Gradiente do microfone */
+            --accent-green: #39d353; /* Status Online */
+            --alert-orange: #ff8c67; /* Aviso de Sistema */
+            --alert-red: #f85149;    /* Falha Ativa */
         }
 
-        * { margin: 0; padding: 0; box-box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+        /* 2. RESET E ESTRUTURA BÁSICA */
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
 
         body {
             background-color: var(--bg-deep);
@@ -26,9 +31,10 @@
             height: 100vh;
             display: flex;
             flex-direction: column;
+            overflow: hidden;
         }
 
-        /* Header */
+        /* 3. HEADER (TOPO) */
         header {
             padding: 15px 20px;
             display: flex;
@@ -36,150 +42,17 @@
             align-items: center;
             border-bottom: 1px solid rgba(255,255,255,0.05);
         }
+        .header-title { text-align: center; }
+        .header-title h1 { font-size: 18px; letter-spacing: 1px; color: #4fc3f7; }
+        .status-online { color: var(--accent-green); font-size: 10px; font-weight: bold; margin-top: 2px; }
 
-        .status-online { color: var(--accent-green); font-size: 10px; text-transform: uppercase; }
-
-        /* Grid de Cards */
+        /* 4. GRID DE STATUS (CARD SUPERIORES) */
         .status-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 12px;
             padding: 15px;
         }
-
         .card {
             background: var(--bg-card);
             border-radius: 20px;
-            padding: 20px;
-            text-align: center;
-            border: 1px solid rgba(255,255,255,0.03);
-            font-size: 11px;
-            font-weight: bold;
-            color: var(--text-dim);
-            transition: transform 0.1s;
-        }
-
-        .card i { display: block; font-size: 24px; margin-bottom: 10px; }
-        .card.falha i { color: var(--alert-red); }
-        .card.aviso i { color: var(--alert-orange); }
-
-        /* Chat Area */
-        .chat-container {
-            flex: 1;
-            padding: 15px;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-
-        .bubble {
-            max-width: 85%;
-            padding: 15px;
-            border-radius: 18px;
-            font-size: 14px;
-            line-height: 1.4;
-            background: var(--bg-card);
-        }
-
-        .bubble.system {
-            border-left: 4px solid var(--alert-orange);
-            background: rgba(255, 140, 103, 0.05);
-        }
-
-        /* Input Area */
-        .input-wrapper {
-            padding: 20px;
-            background: var(--bg-deep);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .input-box {
-            flex: 1;
-            background: var(--bg-input);
-            border-radius: 25px;
-            display: flex;
-            align-items: center;
-            padding: 10px 15px;
-            color: var(--text-dim);
-        }
-
-        .mic-btn {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            background: linear-gradient(145deg, #3a5ba0, #203661);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 20px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.4);
-            transition: transform 0.1s;
-            border: none;
-        }
-
-        .mic-btn:active { transform: scale(1.4); }
-
-        /* Bottom Nav */
-        nav {
-            display: flex;
-            justify-content: space-around;
-            padding: 15px;
-            background: #0f172a;
-            border-top: 1px solid rgba(255,255,255,0.05);
-        }
-        nav i { color: var(--text-dim); font-size: 20px; }
-        nav i.active { color: var(--accent-blue); }
-    </style>
-</head>
-<body>
-
-<header>
-    <i class="fa-solid fa-bars"></i>
-    <div style="text-align: center;">
-        <div style="font-weight: bold; letter-spacing: 1px;">K30i</div>
-        <div class="status-online">● Online</div>
-    </div>
-    <i class="fa-solid fa-ellipsis-vertical"></i>
-</header>
-
-<div class="status-grid">
-    <div class="card falha"><i class="fa-solid fa-circle-exclamation"></i> FALHA ATIVA</div>
-    <div class="card aviso"><i class="fa-solid fa-triangle-exclamation"></i> AVISO ATIVO</div>
-    <div class="card"><i class="fa-solid fa-calendar-days"></i> PROGRAMAÇÃO</div>
-    <div class="card"><i class="fa-solid fa-sliders"></i> ENTRADAS/SAÍDAS</div>
-</div>
-
-<div class="chat-container">
-    <div class="bubble">
-        Iniciando diagnóstico da Unidade K30i. Sensores de pressão detectaram uma flutuação anormal...
-    </div>
-    <div class="bubble system">
-        <strong style="color: var(--alert-orange); font-size: 11px;">AVISO DE SISTEMA</strong><br>
-        Tempo de resposta do atuador excedeu 150ms. Recomenda-se calibração.
-    </div>
-</div>
-
-<div class="input-wrapper">
-    <i class="fa-solid fa-plus" style="color: var(--text-dim);"></i>
-    <div class="input-box">
-        Digite uma mensagem...
-        <i class="fa-solid fa-paperclip" style="margin-left: auto;"></i>
-    </div>
-    <button class="mic-btn">
-        <i class="fa-solid fa-microphone"></i>
-    </button>
-</div>
-
-<nav>
-    <i class="fa-solid fa-message active"></i>
-    <i class="fa-solid fa-microchip"></i>
-    <i class="fa-solid fa-tower-broadcast"></i>
-    <i class="fa-solid fa-gear"></i>
-</nav>
-
-</body>
-</html>
