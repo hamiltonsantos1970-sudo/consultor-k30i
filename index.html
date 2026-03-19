@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>K30i - Interface Pro V1</title>
+    <title>K30i - Suporte V1</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root {
@@ -15,27 +15,144 @@
             --topo: #202c33; --fundo: #0b141a; --balao-eu: #005c4b; --balao-ele: #202c33;
             --texto: #e9edef; --subtitulo: #8696a0; --accent: #00a884; --borda: rgba(255,255,255,0.1);
         }
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: sans-serif; -webkit-tap-highlight-color: transparent; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: sans-serif; }
         html, body { height: 100dvh; width: 100vw; background-color: var(--fundo); display: flex; flex-direction: column; overflow: hidden; }
 
-        /* CABEÇALHO */
+        /* HEADER */
         header { height: 60px; background: var(--topo); display: flex; justify-content: space-between; align-items: center; padding: 0 15px; border-bottom: 1px solid var(--borda); z-index: 1000; flex-shrink: 0; }
         .perfil { display: flex; align-items: center; gap: 10px; }
         .foto { width: 40px; height: 40px; border-radius: 50%; background: #1a7a35; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; }
-        .status-container { line-height: 1.2; }
         .status-online { color: #4cff72; font-size: 10px; font-weight: bold; }
-        .versao-texto { color: var(--subtitulo); font-size: 10px; margin-left: 5px; font-family: monospace; }
+        .versao-tag { color: var(--subtitulo); font-size: 10px; margin-left: 5px; font-family: monospace; border: 1px solid var(--borda); padding: 1px 4px; border-radius: 4px; }
 
-        /* GAVETA ATALHOS */
-        #drawer { position: fixed; top: 60px; left: 0; width: 100%; background: var(--topo); z-index: 900; transition: 0.4s; border-bottom: 1px solid var(--borda); }
+        /* GAVETA */
+        #drawer { position: fixed; top: 60px; left: 0; width: 100%; background: var(--topo); z-index: 900; transition: 0.4s; border-bottom: 1px solid var(--borda); transform: translateY(0); }
         #drawer.recolhido { transform: translateY(-100%); }
         .grid-atalhos { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding: 12px; }
-        .card { background: var(--balao-ele); padding: 12px; border-radius: 10px; text-align: center; color: var(--texto); font-size: 11px; border: 1.5px solid var(--borda); font-weight: bold; cursor: pointer; }
+        .card { background: var(--balao-ele); padding: 12px; border-radius: 10px; text-align: center; font-size: 11px; border: 1.5px solid var(--borda); font-weight: bold; cursor: pointer; color: var(--texto); }
         .card i { display: block; font-size: 18px; margin-bottom: 5px; color: var(--accent); }
         .alca { position: absolute; bottom: -24px; left: 50%; transform: translateX(-50%); height: 24px; width: 50px; background: var(--topo); border-radius: 0 0 12px 12px; display: flex; justify-content: center; border: 1px solid var(--borda); border-top: none; cursor: pointer; }
 
-        /* CHAT AREA */
+        /* CHAT */
         #chat { flex: 1; padding: 20px 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; }
         
-        /* CARD INICIAL (SISTEMA) */
-        .msg-sistema { align-self: center; background: var(--balao-ele); color: var(--texto); padding: 15px; border-radius: 12px; margin-bottom: 15px; font-size: 14px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        .msg-sistema { align-self: center; background: var(--balao-ele); color: var(--texto); padding: 15px; border-radius: 12px; margin-bottom: 15px; font-size: 14px; border: 1px solid var(--borda); width: 95%; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
+        .msg-sistema b { color: #1a7a35; }
+        
+        .msg { max-width: 85%; padding: 10px 14px; border-radius: 10px; font-size: 15px; color: var(--texto); position: relative; }
+        .eu { align-self: flex-end; background: var(--balao-eu); border-top-right-radius: 0; }
+        .ele { align-self: flex-start; background: var(--balao-ele); border-top-left-radius: 0; }
+        .tempo { font-size: 10px; color: var(--subtitulo); text-align: right; margin-top: 5px; display: block; }
+
+        /* FOOTER */
+        footer { padding: 10px; display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+        .input-falso { flex: 1; background: var(--topo); border-radius: 25px; padding: 12px 18px; color: var(--subtitulo); display: flex; justify-content: space-between; align-items: center; border: 1px solid var(--borda); }
+        .btn-mic { width: 54px; height: 54px; border-radius: 50%; border: none; background: #25a244; color: white; font-size: 22px; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+        .listening { background: var(--danger) !important; animation: pulse 1.5s infinite; }
+        @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(255, 59, 48, 0.7); } 70% { box-shadow: 0 0 0 15px rgba(255, 59, 48, 0); } 100% { box-shadow: 0 0 0 0 rgba(255, 59, 48, 0); } }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="perfil">
+            <div class="foto">K</div>
+            <div>
+                <b style="color:var(--texto)">Suporte K30i</b><br>
+                <span class="status-online">● ONLINE</span>
+                <span class="versao-tag" id="v-label">V1=0.00</span>
+            </div>
+        </div>
+        <i class="fa-solid fa-moon" id="theme-btn" style="color:var(--subtitulo); font-size: 20px;" onclick="alternarTema()"></i>
+    </header>
+
+    <div id="drawer">
+        <div class="grid-atalhos">
+            <div class="card" onclick="processarComando('FALHA')"><i class="fa-solid fa-bug"></i>FALHA</div>
+            <div class="card" onclick="processarComando('AVISO')"><i class="fa-solid fa-triangle-exclamation"></i>AVISO</div>
+            <div class="card" onclick="processarComando('PROG')"><i class="fa-solid fa-gear"></i>PROG.</div>
+            <div class="card" onclick="processarComando('LEDS')"><i class="fa-solid fa-lightbulb"></i>LEDS</div>
+        </div>
+        <div class="alca" onclick="toggleGaveta()"><i id="seta-gaveta" class="fa-solid fa-chevron-up"></i></div>
+    </div>
+
+    <main id="chat"></main>
+
+    <footer>
+        <div class="input-falso"><span id="label-status">Mensagem</span><i class="fa-solid fa-paperclip"></i></div>
+        <button class="btn-mic" id="btn-voz"><i class="fa-solid fa-microphone"></i></button>
+    </footer>
+
+    <script>
+        // --- CONFIGURAÇÃO ---
+        const VERSAO = "V1=0.00";
+
+        function toggleGaveta() {
+            const d = document.getElementById('drawer');
+            d.classList.toggle('recolhido');
+            document.getElementById('seta-gaveta').className = d.classList.contains('recolhido') ? 'fa-solid fa-chevron-down' : 'fa-solid fa-chevron-up';
+        }
+
+        function alternarTema() {
+            document.body.classList.toggle('dark-mode');
+        }
+
+        function adicionarMensagem(texto, tipo) {
+            const chat = document.getElementById('chat');
+            const div = document.createElement('div');
+            const agora = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+            div.className = `msg ${tipo}`;
+            div.innerHTML = `${texto}<span class="tempo">${agora}</span>`;
+            chat.appendChild(div);
+            chat.scrollTop = chat.scrollHeight;
+        }
+
+        function exibirBoasVindas() {
+            const chat = document.getElementById('chat');
+            const agora = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+            const div = document.createElement('div');
+            div.className = "msg-sistema";
+            div.innerHTML = `
+                👋 Olá! Sou o <b>Consultor Técnico K30i</b> — consulta rápida de alarmes, parâmetros e procedimentos.<br><br>
+                ⚠️ <span style="color:var(--subtitulo)">Ferramenta de apoio — sempre confirme no manual K30i da KVA.</span><br>
+                📖 <span style="color:var(--subtitulo)">Toda resposta indica a seção e página correspondente.</span><br>
+                <div style="display:flex; justify-content:space-between; margin-top:10px; font-size:12px; color:var(--subtitulo)">
+                    <span>Digite sua dúvida abaixo.</span><span>${agora}</span>
+                </div>
+            `;
+            chat.appendChild(div);
+        }
+
+        function processarComando(txt) {
+            adicionarMensagem(txt, 'eu');
+            setTimeout(() => {
+                let r = `[TESTE ${VERSAO}] Analisando seu pedido...`;
+                if(txt.toLowerCase().includes("falha")) r = "⚠️ **ALERTA**<br>Falha de sensor detectada. Verifique Pág 10.";
+                adicionarMensagem(r, 'ele');
+            }, 600);
+        }
+
+        // --- INICIALIZAÇÃO SEGURA ---
+        window.onload = () => {
+            document.getElementById('v-label').innerText = VERSAO;
+            exibirBoasVindas();
+            setTimeout(toggleGaveta, 1000);
+
+            // MICROFONE
+            const Speech = window.SpeechRecognition || window.webkitSpeechRecognition;
+            if (Speech) {
+                const rec = new Speech();
+                const btn = document.getElementById('btn-voz');
+                const lbl = document.getElementById('label-status');
+
+                btn.onmousedown = btn.ontouchstart = (e) => { e.preventDefault(); rec.start(); };
+                btn.onmouseup = btn.ontouchend = (e) => { e.preventDefault(); rec.stop(); };
+
+                rec.onstart = () => { btn.classList.add('listening'); lbl.innerText = "Ouvindo..."; };
+                rec.onend = () => { btn.classList.remove('listening'); lbl.innerText = "Mensagem"; };
+                rec.onresult = (e) => processarComando(e.results[0][0].transcript);
+            }
+        };
+    </script>
+</body>
+</html>
