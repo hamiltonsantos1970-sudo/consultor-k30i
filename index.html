@@ -3,56 +3,46 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>K30i - Ver 0.03 (Simulador)</title>
+    <title>K30i - Ver 0.04</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root {
             --topo: #ffffff; --fundo: #f0f2f5; --balao-eu: #d9fdd3; --balao-ele: #ffffff;
             --texto: #111b21; --subtitulo: #667781; --accent: #25d366; --borda: #e9edef;
-            --danger: #ea0038;
+            --danger: #ea0038; --card: #ffffff;
         }
 
-        /* SIMULADOR DE CELULAR NO NAVEGADOR */
-        body { 
-            background-color: #2c2c2c; 
-            height: 100vh; 
-            display: flex; 
-            justify-content: center; 
-            align-items: center; 
-            margin: 0; 
-            overflow: hidden; 
+        /* VARIAVEIS MODO ESCURO */
+        body.dark-mode {
+            --topo: #202c33; --fundo: #0b141a; --balao-eu: #005c4b; --balao-ele: #202c33;
+            --texto: #e9edef; --subtitulo: #8696a0; --borda: #222d34; --card: #233138;
         }
+
+        body { background-color: #2c2c2c; height: 100vh; display: flex; justify-content: center; align-items: center; margin: 0; overflow: hidden; }
 
         .mobile-wrapper { 
-            width: 360px; 
-            height: 740px; 
-            background: var(--fundo);
-            border: 10px solid #111; 
-            border-radius: 30px;
-            display: flex;
-            flex-direction: column;
-            position: relative;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.6);
-            overflow: hidden;
+            width: 360px; height: 740px; background: var(--fundo);
+            border: 10px solid #111; border-radius: 30px;
+            display: flex; flex-direction: column; position: relative;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.6); overflow: hidden; transition: 0.3s;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: sans-serif; }
 
-        /* HEADER */
-        header { height: 60px; background: var(--topo); display: flex; align-items: center; padding: 0 15px; border-bottom: 1px solid var(--borda); z-index: 1000; flex-shrink: 0; }
+        header { height: 60px; background: var(--topo); display: flex; align-items: center; padding: 0 15px; border-bottom: 1px solid var(--borda); z-index: 1000; justify-content: space-between; }
         .perfil { display: flex; align-items: center; gap: 10px; }
         .foto-perfil { width: 38px; height: 38px; border-radius: 50%; background: #6a7175; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; }
-        .v-tag { font-family: monospace; color: #ea0038; font-size: 11px; margin-left: 5px; font-weight: bold; border: 1px solid #ddd; padding: 1px 4px; border-radius: 4px; }
+        .v-tag { font-family: monospace; color: #ea0038; font-size: 11px; font-weight: bold; border: 1px solid #ddd; padding: 1px 4px; border-radius: 4px; }
+        
+        #btn-tema { cursor: pointer; color: var(--subtitulo); font-size: 18px; padding: 5px; }
 
-        /* GAVETA PADRÃO ORIGINAL */
         #drawer { background: var(--topo); border-bottom: 1px solid var(--borda); transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1); position: relative; z-index: 900; }
         #drawer.recolhido { margin-top: -190px; } 
         
-        /* GRID COM 6 BOTÕES */
         .grid-atalhos { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding: 12px; }
 
         .card-btn { 
-            background: #fff; border: 1px solid var(--borda); border-radius: 8px; 
+            background: var(--card); border: 1px solid var(--borda); border-radius: 8px; 
             padding: 12px; display: flex; flex-direction: column; align-items: center; 
             justify-content: center; cursor: pointer; transition: 0.2s;
         }
@@ -60,110 +50,4 @@
         .card-btn span { font-size: 10px; font-weight: bold; color: var(--texto); text-transform: uppercase; }
         
         .alca { 
-            height: 24px; width: 50px; background: var(--topo); border: 1px solid var(--borda); border-top: none;
-            border-radius: 0 0 12px 12px; position: absolute; bottom: -24px; left: 50%; transform: translateX(-50%);
-            display: flex; justify-content: center; align-items: center; cursor: pointer;
-        }
-
-        /* CHAT */
-        #chat { flex: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; padding-top: 35px; }
-
-        /* MENSAGEM SISTEMA */
-        .header-sistema { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
-        .icon-k { width: 22px; height: 22px; background: #666; border-radius: 50%; color: white; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: bold; }
-        .label-sistema { font-size: 11px; font-weight: bold; color: #8696a0; text-transform: uppercase; }
-        .balao-sistema { background: white; border-radius: 18px; padding: 12px; width: 100%; box-shadow: 0 1px 2px rgba(0,0,0,0.1); line-height: 1.4; font-size: 13.5px; position: relative; }
-
-        .msg { max-width: 85%; padding: 10px 14px; border-radius: 10px; font-size: 14px; position: relative; }
-        .eu { align-self: flex-end; background: var(--balao-eu); border-top-right-radius: 0; }
-        .ele { align-self: flex-start; background: var(--balao-ele); border-top-left-radius: 0; }
-
-        footer { padding: 10px; background: #f0f2f5; display: flex; align-items: center; gap: 8px; }
-        .input-box { flex: 1; background: white; border-radius: 25px; padding: 10px 15px; border: 1px solid #ddd; font-size: 14px; color: #8696a0; }
-        .btn-mic { width: 45px; height: 45px; border-radius: 50%; background: #00a884; border: none; color: white; display: flex; align-items: center; justify-content: center; }
-    </style>
-</head>
-<body>
-
-    <div class="mobile-wrapper">
-        <header>
-            <div class="perfil">
-                <div class="foto-perfil">K</div>
-                <div>
-                    <b style="color:var(--texto); font-size: 14px;">Suporte K30i</b><br>
-                    <span style="color:#00a884; font-size:10px; font-weight:bold">● ONLINE <span class="v-tag" id="v-tag">Ver 0.03</span></span>
-                </div>
-            </div>
-        </header>
-
-        <div id="drawer">
-            <div class="grid-atalhos">
-                <div class="card-btn" onclick="comando('Falha Ativa')"><i class="fa-solid fa-bell"></i><span>Falha Ativa</span></div>
-                <div class="card-btn" onclick="comando('Aviso Ativo')"><i class="fa-solid fa-triangle-exclamation"></i><span>Aviso Ativo</span></div>
-                <div class="card-btn" onclick="comando('LEDs do Painel')"><i class="fa-solid fa-lightbulb"></i><span>LEDs do Painel</span></div>
-                <div class="card-btn" onclick="comando('Reset de Falha')"><i class="fa-solid fa-rotate"></i><span>Reset de Falha</span></div>
-                <div class="card-btn" onclick="comando('Programação')"><i class="fa-solid fa-file-lines"></i><span>Programação</span></div>
-                <div class="card-btn" onclick="comando('Entradas/Saídas')"><i class="fa-solid fa-gears"></i><span>Entradas/Saídas</span></div>
-            </div>
-            <div class="alca" onclick="toggleD()"><i id="seta" class="fa-solid fa-chevron-up"></i></div>
-        </div>
-
-        <main id="chat"></main>
-
-        <footer>
-            <div class="input-box">Mensagem</div>
-            <button class="btn-mic"><i class="fa-solid fa-microphone"></i></button>
-        </footer>
-    </div>
-
-    <script>
-        const VERSAO_ATUAL = "Ver 0.03";
-
-        function toggleD() {
-            const d = document.getElementById('drawer');
-            const s = document.getElementById('seta');
-            d.classList.toggle('recolhido');
-            s.className = d.classList.contains('recolhido') ? 'fa-solid fa-chevron-down' : 'fa-solid fa-chevron-up';
-        }
-
-        function addMsg(txt, tipo) {
-            const chat = document.getElementById('chat');
-            const div = document.createElement('div');
-            const agora = new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
-            div.className = `msg ${tipo}`;
-            div.innerHTML = `${txt}<span style="display:block; font-size:9px; text-align:right; color:#8696a0; margin-top:4px">${agora}</span>`;
-            chat.appendChild(div);
-            chat.scrollTop = chat.scrollHeight;
-        }
-
-        function comando(t) {
-            addMsg(t, 'eu');
-            setTimeout(() => {
-                addMsg(`<b>[LOG DE TESTE ${VERSAO_ATUAL}]</b><br>Resposta para o comando: ${t}.`, 'ele');
-            }, 600);
-        }
-
-        function boasVindas() {
-            const chat = document.getElementById('chat');
-            const agora = new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
-            const wrap = document.createElement('div');
-            wrap.innerHTML = `
-                <div class="header-sistema"><div class="icon-k">K</div><span class="label-sistema">SISTEMA</span></div>
-                <div class="balao-sistema">
-                    👋 Olá! Sou o <b>Consultor Técnico K30i</b> — consulta rápida de alarmes, parâmetros e procedimentos.<br><br>
-                    ⚠️ Ferramenta de apoio — sempre confirme no manual K30i da KVA.<br><br>
-                    Digite sua dúvida ou use os atalhos abaixo.
-                    <span style="position:absolute; bottom:8px; right:12px; font-size:9px; color:#8696a0">${agora}</span>
-                </div>
-            `;
-            chat.appendChild(wrap);
-        }
-
-        window.onload = () => {
-            document.getElementById('v-tag').innerText = VERSAO_ATUAL;
-            boasVindas();
-            setTimeout(toggleD, 1500); 
-        };
-    </script>
-</body>
-</html>
+            height: 24px; width: 50px; background: var(--topo); border:
