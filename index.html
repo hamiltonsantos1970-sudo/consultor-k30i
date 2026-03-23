@@ -9,6 +9,27 @@
 <title>Suporte Técnico K30i</title>
 <link rel="manifest" href="manifest.json">
 <style>
+html, body {
+    /* Define a altura fixa inicial para evitar o erro do 100vh */
+    height: 100%;
+    height: calc(var(--vh, 1vh) * 100);	
+    margin: 0;
+    padding: 0;
+    overflow: hidden; /* Impede que a página inteira role */
+    position: fixed; /* Trava o fundo no lugar durante o refresh */
+    width: 100%;
+}
+
+#chat-container {
+    flex: 1;
+    overflow-y: auto; /* Só as mensagens podem rolar */
+    -webkit-overflow-scrolling: touch; /* Rolagem suave no Android antigo */
+}
+
+#input-area {
+    background: white;
+    padding-bottom: 10px; /* Garante que o campo não cole no final da tela */
+}
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 :root {
   --verde: #25a244;
@@ -2636,6 +2657,20 @@ window.onload = () => {
   }
 })();
 </script>
+<script>
+  function ajustarAltura() {
+    // Calcula a altura real da janela (sem as barras do navegador)
+    let vh = window.innerHeight * 0.01;
+    document.documentElement.style.setProperty('--vh', `${vh}px`);
+    
+    // Aplica a altura diretamente no corpo do site
+    document.body.style.height = window.innerHeight + 'px';
+  }
 
+  // Executa quando a página carrega e quando muda o tamanho (refresh/rotação)
+  window.addEventListener('resize', ajustarAltura);
+  window.addEventListener('load', ajustarAltura);
+  ajustarAltura();
+</script>
 </body>
 </html>
