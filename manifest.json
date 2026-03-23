@@ -1,20 +1,14 @@
 {
-  "name": "Suporte Técnico K30i",
+  "name": "Consultor K30i",
   "short_name": "K30i",
-  "description": "Consulta rápida de alarmes e procedimentos K30i",
-  "start_url": "index.html",
+  "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#ffffff",
-  "theme_color": "#075E54",
+  "theme_color": "#1a1a2e",
   "icons": [
     {
-      "src": "https://raw.githubusercontent.com/70-sudo/70-sudo.github.io/main/icon-192.png",
+      "src": "icon-192.png",
       "sizes": "192x192",
-      "type": "image/png"
-    },
-    {
-      "src": "https://raw.githubusercontent.com/70-sudo/70-sudo.github.io/main/icon-512.png",
-      "sizes": "512x512",
       "type": "image/png"
     }
   ]
