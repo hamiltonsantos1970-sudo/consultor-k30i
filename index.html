@@ -271,40 +271,6 @@ const ALARMES = [
   { id:"sobrecarga", tipo:"falha", tags:["sobrecarga","carga alta","corrente alta","sobrecorrente","excesso de carga","demanda excessiva","amperagem elevada","limite de carga excedido"], titulo:"⚡ SOBRECARGA", causa:"A carga em uma ou mais fases do gerador está acima da máxima programada.", verificar:["Grupo gerador subdimensionado para a carga","Verificar parametrização dos TCs e da sobrecarga"], protecao:"Resfriar e Parar ou Parada Imediata — conforme parâmetro.", reset:true, ref:"Seção 7.2 — Página 71" },
   { id:"sobrevelocidade", tipo:"falha", tags:["sobrevelocidade","sobre velocidade","rpm elevado","motor acelerado","excesso de rpm","velocidade acima do normal"], titulo:"⚡ SOBREVELOCIDADE", causa:"Rotação do motor está acima da máxima permitida.", verificar:["Regulador de velocidade com defeito ou descalibrado","Motor acelerado demasiadamente","Verificar parametrização"], protecao:"Resfriar e Parar ou Parada Imediata — conforme parâmetro.", reset:true, ref:"Seção 7.2 — Página 72" },
   { id:"sub_frequencia", tipo:"falha", tags:["sub frequência","sub frequencia","subfrequência","subfrequencia","frequência abaixo","frequencia abaixo","hertz baixo","gerador com baixa frequência","gerador com baixa frequencia"], titulo:"⚡ SUB FREQUÊNCIA", causa:"Frequência do gerador abaixo da mínima programada.", verificar:["Grupo não suporta a carga aplicada","Regulador de velocidade","Filtros de combustível","Erro de parametrização"], protecao:"Resfriar e Parar ou Parada Imediata — conforme parâmetro.", reset:true, ref:"Seção 7.2 — Página 72" }
-// Adicione ao array ALARMES (após linha ~50):
-{
-id:"wifi_desconectado",
-tipo:"aviso",
-tags:["wi-fi desconectado","wifi desconectado","sem wi-fi","rede wi-fi","icone wi-fi"],
-titulo:"📶 WI-FI DESCONECTADO",
-causa:"Wi-Fi ativo, mas não está conectado a nenhuma rede.",
-verificar:["Verifique se há redes disponíveis no local","Confirme se a senha está correta","Reinicie o controlador"],
-protecao:"Ícone Wi-Fi com ponto de interrogação no display.",
-reset:true,
-ref:"Seção 6.10 — Página 58"
-},
-{
-id:"wifi_sem_servidor",
-tipo:"aviso",
-tags:["conectado sem servidor","wi-fi sem servidor","kvanet desconectado","servidor kvanet"],
-titulo:"📶 CONECTADO (SEM SERVIDOR)",
-causa:"Wi-Fi ativo e conectado à rede, porém sem conexão com o servidor KvaNet+.",
-verificar:["Verifique se há internet no roteador","Confirme configuração de IP","Verifique se há licença atribuída"],
-protecao:"Ícone Wi-Fi com X vermelho no display.",
-reset:true,
-ref:"Seção 6.12 — Página 61"
-},
-{
-id:"falha_conexao_kvanet",
-tipo:"falha",
-tags:["falha kvanet","kvanet não conecta","falha plataforma","erro kvanet"],
-titulo:"☁️ FALHA DE CONEXÃO KvaNet+",
-causa:"Controlador cadastrado mas não consegue comunicar com servidor.",
-verificar:["Verifique conexão Wi-Fi","Confirme IP configurado","Verifique status da licença","Contate suporte KVA se persistir"],
-protecao:"Impede monitoramento remoto até resolução.",
-reset:true,
-ref:"Seção 6.12 — Página 61"
-}
 ];
 
 
@@ -1247,20 +1213,8 @@ const SINTOMAS = [
     tags:["partiu mas nao assumiu","partiu mas não assumiu","motor funcionando sem carga","gerador nao assumiu a carga","gerador não assumiu a carga","grupo nao alimentou","grupo não alimentou","nao aparece grupo alimentando","não aparece grupo alimentando","gerador ligou mas nao transferiu","gerador ligou mas não transferiu","motor rodando sem assumir","carga nao foi para o gerador","carga não foi para o gerador","gerador estavel mas sem carga","gerador estável mas sem carga"],
     alarmes:["cgr_nao_fecha","baixa_tensao_gerador","sub_frequencia"]
   }
-// Adicione ao array SINTOMAS (após linha ~1400):
-{
-id:"s_nao_conecta_kvanet",
-msg:"O controlador não está conectando à plataforma KvaNet+. As causas mais comuns são:",
-tags:["kvanet não conecta","não conecta plataforma","plataforma offline","monitoramento não funciona","app não conecta"],
-alarmes:["wifi_desconectado","wifi_sem_servidor","falha_conexao_kvanet","falha_conexao_can"]
-},
-{
-id:"s_wifi_problema",
-msg:"Problemas de Wi-Fi podem ter várias origens. Verifique em ordem:",
-tags:["wi-fi não conecta","wifi não funciona","rede wi-fi","conectar wi-fi","configurar wi-fi"],
-alarmes:["wifi_desconectado","wifi_sem_servidor"]
-}
 ];
+
 
 const MODOS_IHM = [
   {
@@ -1294,79 +1248,6 @@ const MODOS_IHM = [
       "o que faz o modo manual","quando usar manual","modo operação manual",
       "operar manualmente","controle manual","comandos manuais",
       "abrir chave manual","fechar chave manual"
-      // Adicione ao seu array INSTALACAO (após linha ~1250):
-{
-id:"configurar_wifi",
-tags:[
-"configurar wi-fi","wi-fi","wifi","conectar rede","rede wireless",
-"como conectar wi-fi","configuração wi-fi","wi-fi k30i",
-"rede 2.4ghz","não conecta wi-fi","wi-fi não conecta"
-],
-titulo:"📶 CONFIGURAR WI-FI",
-passos:[
-"⚠️ ATENÇÃO:<br>O K30i possui conectividade Wi-Fi integrada, compatível com redes 2.4 GHz.<br>Essa conexão permite comunicação com KvaNet+ e KvaNet P2P.",
-"<strong>1. Habilitar Wi-Fi</strong><br>Toque no botão para habilitar o Wi-Fi no display.",
-"<strong>2. Selecionar Rede</strong><br>O controlador exibirá lista com redes disponíveis. Selecione a rede desejada.",
-"<strong>3. Inserir Senha</strong><br>Insira a senha utilizando o teclado virtual e aperte Conectar.",
-"<strong>4. Confirmar Conexão</strong><br>Se bem-sucedida, será exibido 'Conectado' ao lado do nome da rede."
-],
-alerta:"⚠️ Ao selecionar nova rede Wi-Fi, os dados da conexão anterior serão apagados automaticamente.",
-ref:"Seção 6.10 — Página 58"
-},
-{
-id:"configurar_ip",
-tags:[
-"configurar ip","ip estático","ip fixo","configuração ip","ip k30i",
-"endereco ip","mascara rede","gateway","dns","ip manual",
-"dhcp","ip automatico","rede sem dhcp"
-],
-titulo:"🌐 CONFIGURAR IP",
-passos:[
-"⚠️ ATENÇÃO:<br>O menu Configurar IP permite definir endereço IP fixo. Necessário em redes sem DHCP.",
-"<strong>Campos configuráveis:</strong><br>" +
-"<table style='width:100%;border-collapse:collapse;font-size:13px;'>" +
-"<tr style='background:#f0f0f0;'><th style='padding:5px;border:1px solid #ddd;'>Campo</th><th style='padding:5px;border:1px solid #ddd;'>Descrição</th><th style='padding:5px;border:1px solid #ddd;'>Exemplo</th></tr>" +
-"<tr><td style='padding:5px;border:1px solid #eee;'>IP</td><td style='padding:5px;border:1px solid #eee;'>Endereço IP do controlador</td><td style='padding:5px;border:1px solid #eee;'>192.168.0.100</td></tr>" +
-"<tr style='background:#f9f9f9;'><td style='padding:5px;border:1px solid #eee;'>Máscara</td><td style='padding:5px;border:1px solid #eee;'>Define tamanho da rede</td><td style='padding:5px;border:1px solid #eee;'>255.255.255.0</td></tr>" +
-"<tr><td style='padding:5px;border:1px solid #eee;'>Gateway</td><td style='padding:5px;border:1px solid #eee;'>Endereço de saída da rede</td><td style='padding:5px;border:1px solid #eee;'>192.168.0.1</td></tr>" +
-"<tr style='background:#f9f9f9;'><td style='padding:5px;border:1px solid #eee;'>DNS</td><td style='padding:5px;border:1px solid #eee;'>Servidor de nomes</td><td style='padding:5px;border:1px solid #eee;'>8.8.8.8</td></tr>" +
-"</table>",
-"<strong>Procedimento:</strong><br>" +
-"<ol>" +
-"<li>Toque no botão para habilitar IP estático</li>" +
-"<li>Toque sobre qualquer campo para habilitar edição</li>" +
-"<li>Insira valores com números e pontos</li>" +
-"<li>Pressione [OK] para salvar</li>" +
-"</ol>"
-],
-alerta:"⚠️ Gateway e IP devem estar na mesma rede! Ex: IP 192.168.0.X → Gateway 192.168.0.Y",
-ref:"Seção 6.11 — Página 59"
-},
-{
-id:"configurar_kvanet",
-tags:[
-"kvanet+","kvanet","plataforma","monitoramento remoto","kva net",
-"configurar kvanet","acesso remoto","app kvanet","web kvanet",
-"cadastro equipamento","licença kvanet","conta empresa"
-],
-titulo:"☁️ KvaNet+ — MONITORAMENTO REMOTO",
-passos:[
-"<strong>Duas opções disponíveis:</strong><br>" +
-"<ul>" +
-"<li><strong>KvaNet+:</strong> Plataforma completa para múltiplos geradores (Web + App)</li>" +
-"<li><strong>KvaNet P2P:</strong> Solução para único gerador (App apenas)</li>" +
-"</ul>" +
-"⚠️ É possível utilizar apenas um serviço por vez.",
-"<strong>Passo 1: Conectar Wi-Fi</strong><br>Acesse menu Wi-Fi e selecione rede disponível. Se exigir IP fixo, configure em Configurar IP.",
-"<strong>Passo 2: Selecionar Serviço</strong><br>Escolha KvaNet+ ou P2P. Por padrão, já vem configurado para KvaNet+.",
-"<strong>Passo 3: Acessar Aplicação</strong><br>Baixe app KvaNet+ ou acesse www.kvanetplus.com. Requer cadastro prévio da empresa.",
-"<strong>Passo 4: Incluir Controlador</strong><br>No app, busque 'Adicionar equipamento'. Informe ID do controlador via QR Code ou digitação manual.",
-"<strong>Passo 5: Validar Cadastro</strong><br>Insira código de ativação exibido no controlador. Código é dinâmico."
-],
-alerta:"⚠️ Equipamentos sem licença permanecem vinculados por 30 dias. Após, são excluídos automaticamente.",
-ref:"Seção 6.12 — Páginas 60-61"
-}
-]
     ],
     titulo:"🔵 MODO MANUAL",
     descricao:"No modo Manual o técnico assume o controle total do grupo. O controlador não age automaticamente — todos os comandos devem ser feitos pelo operador:<br><br>" +
@@ -1768,6 +1649,7 @@ function normalizar(t) {
   for(const[k,v] of Object.entries(DICIONARIO)) s = s.replace(new RegExp(k,'gi'),v);
   return s;
 }
+
 function adicionarMensagem(tipo, html, opcoes=null) {
   const chat = document.getElementById('chat');
   const wrap = document.createElement('div');
@@ -1788,56 +1670,7 @@ function adicionarMensagem(tipo, html, opcoes=null) {
     chat.scrollTop = chat.scrollHeight;
     return;
   }
-function wizardConfiguracao(tipo) {
-const wizards = {
-wifi: {
-titulo: "📶 Assistente de Configuração Wi-Fi",
-passos: [
-{ pergunta: "O Wi-Fi está habilitado no display?", sim: 2, nao: "toque_no_botao_wifi" },
-{ pergunta: "Redes aparecem na lista?", sim: 3, nao: "verifique_roteador" },
-{ pergunta: "Conseguiu conectar?", sim: "sucesso", nao: "verifique_senha" }
-]
-},
-ip: {
-titulo: "🌐 Assistente de Configuração IP",
-passos: [
-{ pergunta: "Sua rede tem DHCP?", sim: "use_dhcp", nao: 2 },
-{ pergunta: "Sabe o IP do gateway?", sim: 3, nao: "geralmente_192_168_0_1" }
-]
-}
-};
-// Implementar lógica de navegação
-}
-  function mostrarChecklist(tipo) {
-const checklists = {
-wifi: [
-"☐ Wi-Fi 2.4 GHz disponível no local",
-"☐ Senha da rede conhecida",
-"☐ Internet no roteador funcionando",
-"☐ Controlador ao alcance do sinal"
-],
-kvanet: [
-"☐ Wi-Fi configurado e conectado",
-"☐ Conta empresa criada em kvanetplus.com",
-"☐ E-mail validado",
-"☐ Licença atribuída ao equipamento"
-]
-};
-// Renderizar checklist interativa
-}
-  function validarIP(ip) {
-const partes = ip.split('.');
-if(partes.length !== 4) return false;
-return partes.every(p => {
-const n = parseInt(p);
-return n >= 0 && n <= 255;
-});
-}
 
-function validarRede(ip, gateway, mascara) {
-// Verifica se IP e gateway estão na mesma rede
-// Implementar lógica de máscara de rede
-}
   // ═══ RESPOSTA TÉCNICA EXPANDIDA (full-width) ═══
   const card = document.createElement('div');
   card.className = 'resp-tecnica';
